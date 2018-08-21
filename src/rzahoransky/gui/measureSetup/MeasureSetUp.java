@@ -11,10 +11,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 
+import rzahoransky.dqpipeline.visualization.DQSinglePeriodMeasurementVisualizer;
+
 public class MeasureSetUp extends Properties{
 	
 	private static File propertyFile = new File("measureSetupProperties.properties");
 	private static MeasureSetUp myInstance = new MeasureSetUp();
+	private DQSinglePeriodMeasurementVisualizer singlePeriodVisualizer;
 
 	
 	
@@ -62,6 +65,14 @@ public class MeasureSetUp extends Properties{
 	public void setProperty(MeasureSetupEntry entry, String value) {
 		setProperty(entry.toString(), value);
 		save();
+	}
+	
+	public void setPeriodVisualizer(DQSinglePeriodMeasurementVisualizer visualizer) {
+		this.singlePeriodVisualizer = visualizer;
+	}
+	
+	public DQSinglePeriodMeasurementVisualizer getSinglePeriodVisualizer() {
+		return singlePeriodVisualizer;
 	}
 	
 	public boolean save() {

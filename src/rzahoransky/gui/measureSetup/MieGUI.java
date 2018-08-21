@@ -36,11 +36,11 @@ import storage.dqMeas.read.RefIndexReader;
 
 public class MieGUI extends JPanel implements CalculationAssignmentListener {
 	
-	FileGui mieFile = new FileGui("Mie-File: ");
+	protected FileGui mieFile = new FileGui("Mie-File: ");
 	//MieParameterGui mieParams = new Mie
-	GridBagConstraints c = new GridBagConstraints();
+	protected GridBagConstraints c = new GridBagConstraints();
 	private HashMap<Wavelengths, MieParameterGui> mieParams = new HashMap<>();
-	JPanel dqField = new JPanel();
+	protected JPanel dqField = new JPanel();
 	
 	public static void main(String[] args) {
 		MieGUI test = new MieGUI();
@@ -70,6 +70,12 @@ public class MieGUI extends JPanel implements CalculationAssignmentListener {
 		CalculationAssignment.getInstance().addListener(this);
 	}
 	
+	public void setEditable(boolean editable) {
+		for (MieParameterGui parameterGui: mieParams.values()) {
+			parameterGui.setEditable(editable);
+		}
+	}
+	
 	private void addDQPlot() {
 		dqField.setMinimumSize(new Dimension(150, 150));
 		dqField.setSize(new Dimension(150, 150));
@@ -91,7 +97,7 @@ public class MieGUI extends JPanel implements CalculationAssignmentListener {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new JMieCalcGuiGridBagLayout().setVisible(true);
+				new JMieCalcGuiGridBagLayout(getChoosenFile().getAbsolutePath()).setVisible(true);
 				
 			}
 		});
@@ -100,37 +106,33 @@ public class MieGUI extends JPanel implements CalculationAssignmentListener {
 	}
 
 	private void addMieFileListener() {
-		
+
 		mieFile.getTextField().addTextListener(new TextListener() {
-			
+
 			@Override
 			public void textValueChanged(TextEvent e) {
 				new Thread() {
 					public void run() {
-						try {
-							DQReader reader = new DQReader(mieFile.getChoosenFile());
-							RefIndexReader refIndex = reader.getrefIndexReader();
-							CalculationAssignment.getInstance().setParticles(refIndex.getRefIndices());
-							dqField.removeAll();
-							Container plot = reader.getPlot();
-							//plot.setSize(new Dimension(100, 150));
-							//plot.setPreferredSize(new Dimension(100, 150));
-							//plot.setMaximumSize(new Dimension(100, 100));
-							//plot.setMinimumSize(new Dimension(100, 100));
-							//plot.revalidate();
-							//plot.repaint();
-							dqField.add(plot, BorderLayout.CENTER);
-							revalidate();
-							repaint();
-						} catch (IOException | WavelengthMismatchException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+						if (mieFile.getChoosenFile().exists()) {
+							try {
+								DQReader reader = new DQReader(mieFile.getChoosenFile());
+								RefIndexReader refIndex = reader.getrefIndexReader();
+								CalculationAssignment.getInstance().setParticles(refIndex.getRefIndices());
+								dqField.removeAll();
+								Container plot = reader.getPlot();
+								dqField.add(plot, BorderLayout.CENTER);
+								revalidate();
+								repaint();
+							} catch (IOException | WavelengthMismatchException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 						}
 					}
 				}.start();
-				
+
 			}
-		});		
+		});
 	}
 
 	public void addMieParameters() {
@@ -146,6 +148,10 @@ public class MieGUI extends JPanel implements CalculationAssignmentListener {
 			mieParams.put(wl, gui);
 			x++;
 		}
+	}
+	
+	public File getChoosenFile() {
+		return mieFile.getChoosenFile();
 	}
 
 	@Override

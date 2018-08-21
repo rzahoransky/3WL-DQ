@@ -3,36 +3,28 @@ package rzahoransky.dqpipeline;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-import com.sun.prism.paint.Stop;
-
 import kirkwood.nidaq.access.NiDaq;
 import kirkwood.nidaq.access.NiDaqException;
-import presets.Wavelengths;
-import rzahoransky.dqpipeline.analogueAdapter.AdapterInformation;
 import rzahoransky.dqpipeline.analogueAdapter.AdapterInterface;
 import rzahoransky.dqpipeline.analogueAdapter.FiveWLNIDaqAdapter;
-import rzahoransky.dqpipeline.dataExtraction.ConcentrationExtractor;
 import rzahoransky.dqpipeline.dataExtraction.DQExtractor;
 import rzahoransky.dqpipeline.dataExtraction.FiveWLExtractor;
 import rzahoransky.dqpipeline.dataExtraction.FiveWLMeasurePoints;
 import rzahoransky.dqpipeline.dataExtraction.ParticleSizeExtractor;
 import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
+import rzahoransky.dqpipeline.listener.DQSignalListener;
 import rzahoransky.dqpipeline.periodMarker.FiveWLMarker;
-import rzahoransky.dqpipeline.rawDataWriter.RawDataWriter;
-import rzahoransky.dqpipeline.simulation.DQreplay;
-import rzahoransky.dqpipeline.simulation.FiveWLDevicePlayback;
-import rzahoransky.dqpipeline.simulation.FiveWLDevicePlaybackWithStream;
 import rzahoransky.dqpipeline.simulation.FiveWLOneHeadSimulator;
 import rzahoransky.dqpipeline.visualization.DQMeasurementVisualizer;
 import rzahoransky.dqpipeline.visualization.DQSinglePeriodMeasurementVisualizer;
 import rzahoransky.dqpipeline.visualization.DQVisualizer;
-import rzahoransky.dqpipeline.visualization.ExtractedDataVisualizer;
+import rzahoransky.dqpipeline.visualization.LaserVoltageVisualizer;
 import rzahoransky.dqpipeline.visualization.TransmissionVisualizer;
 import rzahoransky.errors.PipelineAlreadyRunningException;
-import rzahoransky.threadControl.Continue;
 
 public class DQPipeline {
 	
@@ -42,6 +34,8 @@ public class DQPipeline {
 	private ArrayList<DQPipelineElement> pipelineElements = new ArrayList<>();
 	private ArrayList<BlockingQueue<DQSignal>> queues = new ArrayList<>();
 	private ArrayList<Thread> pipelineThreads = new ArrayList<>();
+	
+	private List<DQSignalListener> listeners = new LinkedList<>();
 	
 	private long sleep = 0;
 	
@@ -54,12 +48,12 @@ public class DQPipeline {
 		//adapter = new FiveWLDevicePlayback("testRGB.txt");
 		//adapter = new FiveWLDevicePlaybackWithStream("testInfared.txt");
 		//adapter = new FiveWLDevicePlaybackWithStream("testRGB.txt");
-		//adapter = new FiveWLOneHeadSimulator();
+		adapter = new FiveWLOneHeadSimulator();
 		//adapter.setADCardOrConfigParameter("Dev1");
 		adapter.setADCardOrConfigParameter(NiDaq.getDeviceNames().get(0));
 		
 		DQPipelineElement vis = new DQMeasurementVisualizer();
-		DQPipelineElement vi2 = new DQSinglePeriodMeasurementVisualizer();
+		DQPipelineElement vi2 = new DQSinglePeriodMeasurementVisualizer(true);
 		
 		
 		DQPipeline pipeline = new DQPipeline();
@@ -68,7 +62,7 @@ public class DQPipeline {
 		
 		DQPipelineElement valueExtractor = new FiveWLExtractor(new FiveWLMeasurePoints());
 		
-		DQPipelineElement extractedDataVis = new ExtractedDataVisualizer();
+		DQPipelineElement extractedDataVis = new LaserVoltageVisualizer();
 		
 		DQPipelineElement transmissionExtractor = new TransmissionExtractor();
 		DQPipelineElement dqExtractor = new DQExtractor();
@@ -84,7 +78,7 @@ public class DQPipeline {
 		pipeline.addPipelineElement(valueExtractor);
 		pipeline.addPipelineElement(extractedDataVis);
 		pipeline.addPipelineElement(transmissionExtractor);
-		pipeline.addPipelineElement(new TransmissionVisualizer());
+		pipeline.addPipelineElement(new TransmissionVisualizer(true));
 		pipeline.addPipelineElement(dqExtractor);
 		pipeline.addPipelineElement(new DQVisualizer());
 		pipeline.addPipelineElement(sizeExtractor);
@@ -148,18 +142,28 @@ public class DQPipeline {
 			t.interrupt();
 	}
 	
+	protected void setCurrentSignal(DQSignal signal) {
+		currentSignal = signal;
+		for (DQSignalListener listener: listeners)
+			listener.newSignal(currentSignal);
+	}
 	
+	public DQSignal getCurrentSignal() {
+		return currentSignal;
+	}
 	
+	public void addNewSignalListener(DQSignalListener listener) {
+		listeners.add(listener);
+	}
 	
-	
+	public boolean removeListener(DQSignalListener listener) {
+		return listeners.remove(listener);
+	}
 	
 	
 	
 	
 
-	
-	
-	
 	
 	class AdapterThread extends Thread {
 		
@@ -216,7 +220,7 @@ public class DQPipeline {
 		public void run() {
 			while (run) {
 			try {
-				currentSignal = in.take();
+				setCurrentSignal(in.take());
 				Thread.sleep(sleep);
 			} catch (InterruptedException e) {
 				//check if thread should terminate

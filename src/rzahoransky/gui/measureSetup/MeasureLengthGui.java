@@ -46,7 +46,7 @@ public class MeasureLengthGui extends JPanel implements ChangeListener{
 		c.weightx=1;
 		c.fill=GridBagConstraints.HORIZONTAL;
 		c.gridy=0;
-		JLabel text = new JLabel("<html><b>Set measure length in cm</b></html>");
+		JLabel text = new JLabel("Set measure length in cm");
 		//text.setMinimumSize(new Dimension(20, 60));
 		//add(new JLabel("<html><b>Set measure length in cm</b></html>"),c);
 		add(text, c);
@@ -56,7 +56,7 @@ public class MeasureLengthGui extends JPanel implements ChangeListener{
 		c.fill=GridBagConstraints.BOTH;
 		c.weightx=1;
 		c.weighty=0;
-		slider.setMinimumSize(new Dimension(100, 45));
+		slider.setMinimumSize(new Dimension(100, 43));
 		slider.setMajorTickSpacing(50);
 		slider.setMinorTickSpacing(10);
 		//slider.createStandardLabels(5);

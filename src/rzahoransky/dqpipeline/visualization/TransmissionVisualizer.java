@@ -32,15 +32,20 @@ public class TransmissionVisualizer extends AbstractDQPipelineElement{
 	//ExtractedSignalType[] types = {ExtractedSignalType.wl1wOffset, ExtractedSignalType.wl2wOffset, ExtractedSignalType.wl3wOffset, ExtractedSignalType.offset};
 	//ExtractedSignalType[] typesRef = {ExtractedSignalType.wl1wOffset, ExtractedSignalType.wl2wOffset, ExtractedSignalType.wl3wOffset, ExtractedSignalType.offset};
 
-	public TransmissionVisualizer() {
-		frame = new JFrame("AD-Samples");
+	public TransmissionVisualizer(boolean showAsFrame) {
+
 		TimeSeriesCollection dataset = Charts.getDataSet(TransmissionType.values());
-		JFreeChart chart = Charts.getXYChart("Values", "Time", "Voltage", dataset);
+		JFreeChart chart = Charts.getXYChart("Transmission", "Time", "I/I0", dataset);
 		chartPanel = Charts.getChartPanel("Measurment", chart);
-		frame.setSize(500, 300);
-		frame.add(chartPanel);
-		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+		
+		if(showAsFrame) {
+			frame = new JFrame("AD-Samples");
+			frame.setSize(500, 300);
+			frame.add(chartPanel);
+			frame.setVisible(true);
+			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		}
 	}
 
 	public ChartPanel getChartPanel() {
@@ -90,7 +95,7 @@ public class TransmissionVisualizer extends AbstractDQPipelineElement{
 
 	@Override
 	public String description() {
-		return "Visualizes a single raw data period";
+		return "Visualizes transmissions";
 	}
 
 

@@ -1,5 +1,7 @@
 package rzahoransky.gui.measureGui;
 
+import javax.swing.JPanel;
+
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.annotations.XYAnnotation;
 
@@ -7,7 +9,7 @@ import calculation.CalculationAssignment;
 import calculation.MieList;
 import charts.MieChartPanels;
 
-public class DQGui {
+public class DQGui extends JPanel{
 	
 	JFreeChart chart;
 	private DQAnnotator dqAnnotator;

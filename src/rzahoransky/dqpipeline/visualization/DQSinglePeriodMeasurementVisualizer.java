@@ -23,23 +23,23 @@ public class DQSinglePeriodMeasurementVisualizer extends AbstractDQPipelineEleme
 	JFrame frame;
 	RawSignalType[] signalTypes = {RawSignalType.ref, RawSignalType.meas, RawSignalType.mode, RawSignalType.trigger};
 
-	public DQSinglePeriodMeasurementVisualizer() {
-		frame = new JFrame("AD-Samples");
+	public DQSinglePeriodMeasurementVisualizer(boolean showAsFrame) {
+		
 		XYSeriesCollection dataset = Charts.getDataSet(signalTypes);
-		JFreeChart chart = Charts.getXYChart("Values", "Time", "Voltage", dataset);
+		JFreeChart chart = Charts.getXYChart("Raw Signal", "Time", "Voltage", dataset);
 		chartPanel = Charts.getChartPanel("Measurment", chart);
-		frame.setSize(500, 300);
-		frame.add(chartPanel);
-		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		
+		if (showAsFrame) {
+			frame = new JFrame("AD-Samples");
+			frame.setSize(500, 300);
+			frame.add(chartPanel);
+			frame.setVisible(true);
+			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		}
 	}
 
 	public ChartPanel getChartPanel() {
 		return chartPanel;
-	}
-
-	public JFrame getFrame() {
-		return frame;
 	}
 	
 	public void visualizeDQMeasurement (DQSignal measurement) {

@@ -24,14 +24,14 @@ import rzahoransky.utils.Charts;
 import rzahoransky.utils.ExtractedSignalType;
 import rzahoransky.utils.RawSignalType;
 
-public class ExtractedDataVisualizer extends AbstractDQPipelineElement{
+public class LaserVoltageVisualizer extends AbstractDQPipelineElement{
 	
 	ChartPanel chartPanel;
 	JFrame frame;
 	ExtractedSignalType[] types = {ExtractedSignalType.wl1wOffset, ExtractedSignalType.wl2wOffset, ExtractedSignalType.wl3wOffset, ExtractedSignalType.offset};
 	ExtractedSignalType[] typesRef = {ExtractedSignalType.wl1wOffset, ExtractedSignalType.wl2wOffset, ExtractedSignalType.wl3wOffset, ExtractedSignalType.offset};
 
-	public ExtractedDataVisualizer() {
+	public LaserVoltageVisualizer() {
 		frame = new JFrame("AD-Samples");
 		TimeSeriesCollection dataset = Charts.getDataSet(types);
 		JFreeChart chart = Charts.getXYChart("Values", "Time", "Voltage", dataset);
@@ -88,7 +88,7 @@ public class ExtractedDataVisualizer extends AbstractDQPipelineElement{
 
 	@Override
 	public String description() {
-		return "Visualizes a single raw data period";
+		return "Visualizes raw laser measurement";
 	}
 
 
