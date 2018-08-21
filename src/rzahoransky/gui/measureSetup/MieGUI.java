@@ -1,0 +1,193 @@
+package rzahoransky.gui.measureSetup;
+
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.TextEvent;
+import java.awt.event.TextListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+
+import calculation.CalculationAssignment;
+import calculation.CalculationAssignmentListener;
+import errors.WavelengthMismatchException;
+import gui.FileGui;
+import gui.JMieCalcGuiGridBagLayout;
+import gui.MieParameterGui;
+import javafx.scene.chart.XYChart;
+import presets.Wavelengths;
+import storage.dqMeas.read.DQReader;
+import storage.dqMeas.read.RefIndexReader;
+
+public class MieGUI extends JPanel implements CalculationAssignmentListener {
+	
+	FileGui mieFile = new FileGui("Mie-File: ");
+	//MieParameterGui mieParams = new Mie
+	GridBagConstraints c = new GridBagConstraints();
+	private HashMap<Wavelengths, MieParameterGui> mieParams = new HashMap<>();
+	JPanel dqField = new JPanel();
+	
+	public static void main(String[] args) {
+		MieGUI test = new MieGUI();
+		JFrame testFrame = new JFrame("Mie Params Test");
+		testFrame.setSize(300, 300);
+		testFrame.add(test);
+		testFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		testFrame.setVisible(true);
+	}
+
+	public MieGUI() {
+		setLayout(new GridBagLayout());
+		c.gridwidth=GridBagConstraints.RELATIVE;
+		c.weightx=1;
+		c.fill=GridBagConstraints.HORIZONTAL;
+		mieFile.setDialogType(FileGui.DialogType.OPEN);
+		add(mieFile, c);
+		c.gridwidth=1;
+		c.fill=GridBagConstraints.NONE;
+		c.weightx=0;
+		c.gridx=3;
+		c.insets=new Insets(0, 5, 0, 0);
+		add(calcBtn(),c);
+		addMieParameters();
+		addDQPlot();
+		addMieFileListener();
+		CalculationAssignment.getInstance().addListener(this);
+	}
+	
+	private void addDQPlot() {
+		dqField.setMinimumSize(new Dimension(150, 150));
+		dqField.setSize(new Dimension(150, 150));
+		//dqField.setSize(new Dimension(150, 140));
+		dqField.setLayout(new BorderLayout());
+		dqField.setBorder(BorderFactory.createEtchedBorder());
+		c.gridx=0;
+		c.gridwidth=GridBagConstraints.REMAINDER;
+		c.gridheight=GridBagConstraints.REMAINDER;
+		c.fill=GridBagConstraints.BOTH;
+		c.weighty=1;
+		c.gridy++;
+		add(dqField, c);
+	}
+	
+	private JButton calcBtn() {
+		JButton calc = new JButton("create...");
+		calc.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new JMieCalcGuiGridBagLayout().setVisible(true);
+				
+			}
+		});
+		
+		return calc;
+	}
+
+	private void addMieFileListener() {
+		
+		mieFile.getTextField().addTextListener(new TextListener() {
+			
+			@Override
+			public void textValueChanged(TextEvent e) {
+				new Thread() {
+					public void run() {
+						try {
+							DQReader reader = new DQReader(mieFile.getChoosenFile());
+							RefIndexReader refIndex = reader.getrefIndexReader();
+							CalculationAssignment.getInstance().setParticles(refIndex.getRefIndices());
+							dqField.removeAll();
+							Container plot = reader.getPlot();
+							//plot.setSize(new Dimension(100, 150));
+							//plot.setPreferredSize(new Dimension(100, 150));
+							//plot.setMaximumSize(new Dimension(100, 100));
+							//plot.setMinimumSize(new Dimension(100, 100));
+							//plot.revalidate();
+							//plot.repaint();
+							dqField.add(plot, BorderLayout.CENTER);
+							revalidate();
+							repaint();
+						} catch (IOException | WavelengthMismatchException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}.start();
+				
+			}
+		});		
+	}
+
+	public void addMieParameters() {
+		int x = 0;
+		for(Wavelengths wl:Wavelengths.values()) {
+			MieParameterGui gui = new MieParameterGui(wl);
+			c.gridwidth=1;
+			c.gridx=x;
+			c.gridy=2;
+			c.weightx=1;
+			c.fill=GridBagConstraints.HORIZONTAL;
+			add(gui,c);
+			mieParams.put(wl, gui);
+			x++;
+		}
+	}
+
+	@Override
+	public void mieParticleChanged() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void wavelengthsChanged() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void calculationFinished() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void progress() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void diametersChanged() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void sigmaChanged() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void outputFileChanged() {
+		mieFile.getTextField().setText(CalculationAssignment.getInstance().getOutputFile().getAbsolutePath());
+		
+	}
+
+}

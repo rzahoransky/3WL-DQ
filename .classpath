@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.8.0_151"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JMieCalc"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JNI4NI"/>
+	<classpathentry kind="lib" path="/JMieCalc/res/jcommon-1.0.23.jar"/>
+	<classpathentry kind="lib" path="/JNI4NI/libs/jna/jna.jar"/>
+	<classpathentry kind="lib" path="/JMieCalc/res/jfreechart-1.0.19.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/JMieCalc/res/jfreechart-1.0.19-fx-javadocs.zip!/jfreechart-1.0.19-fx-javadocs"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
