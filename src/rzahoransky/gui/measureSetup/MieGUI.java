@@ -68,6 +68,15 @@ public class MieGUI extends JPanel implements CalculationAssignmentListener {
 		addDQPlot();
 		addMieFileListener();
 		CalculationAssignment.getInstance().addListener(this);
+		try {
+		mieFile.getTextField().setText(MeasureSetUp.getInstance().getMieFile().getAbsolutePath());
+		for (TextListener listener: mieFile.getTextField().getTextListeners()) {
+			listener.textValueChanged(new TextEvent(mieFile.getTextField(), 0));
+		}
+		} catch (Exception e) {
+			//Could not read last MIE-File. Ignore
+		}
+		//mieFile.getTextField().addActionListener(new Action);
 	}
 	
 	public void setEditable(boolean editable) {
@@ -123,6 +132,7 @@ public class MieGUI extends JPanel implements CalculationAssignmentListener {
 								dqField.add(plot, BorderLayout.CENTER);
 								revalidate();
 								repaint();
+								MeasureSetUp.getInstance().setMieFile(mieFile.getChoosenFile());
 							} catch (IOException | WavelengthMismatchException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();

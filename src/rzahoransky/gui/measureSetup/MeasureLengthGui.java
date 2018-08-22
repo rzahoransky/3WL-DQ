@@ -31,11 +31,19 @@ public class MeasureLengthGui extends JPanel implements ChangeListener{
 	}
 	
 	public MeasureLengthGui() {
-		
+
 		placeComponents();
-		
+
 		slider.addChangeListener(this);
 		spinner.addChangeListener(this);
+
+		try {
+			length = Double.parseDouble(MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.MEASURELENGTH_IN_CM));
+			slider.setValue((int) length);
+			spinner.setValue(length);
+		} catch (Exception e) {
+			System.out.println("Cannot parse");
+		}
 
 	}
 
@@ -92,6 +100,7 @@ public class MeasureLengthGui extends JPanel implements ChangeListener{
 		spinner.setValue(length);
 		slider.addChangeListener(this);
 		spinner.addChangeListener(this);
+		MeasureSetUp.getInstance().setProperty(MeasureSetupEntry.MEASURELENGTH_IN_CM, Double.toString(length));
 	}
 	
 	public double getLength() {
@@ -106,6 +115,7 @@ public class MeasureLengthGui extends JPanel implements ChangeListener{
 		spinner.setValue(length);
 		slider.addChangeListener(this);
 		spinner.addChangeListener(this);
+		MeasureSetUp.getInstance().setProperty(MeasureSetupEntry.MEASURELENGTH_IN_CM, Double.toString(length));
 	}
 
 }

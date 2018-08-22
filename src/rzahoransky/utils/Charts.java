@@ -52,6 +52,13 @@ public class Charts {
 		return collection;
 	}
 	
+	public static TimeSeriesCollection getParticleDataSet() {
+		TimeSeriesCollection collection = new TimeSeriesCollection(); 
+		
+		collection.addSeries(new TimeSeries("Particle Size"));
+		return collection;
+	}
+	
 	public static TimeSeriesCollection getDataSet(TransmissionType... names) {
 		TimeSeriesCollection collection = new TimeSeriesCollection();
 		for (TransmissionType s: names) {

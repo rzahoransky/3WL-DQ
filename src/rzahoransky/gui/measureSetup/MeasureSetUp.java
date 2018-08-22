@@ -11,16 +11,23 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 
+import calculation.MieList;
+import rzahoransky.dqpipeline.DQPipelineElement;
 import rzahoransky.dqpipeline.visualization.DQSinglePeriodMeasurementVisualizer;
+import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizer;
+import rzahoransky.dqpipeline.visualization.TransmissionVisualizer;
 
 public class MeasureSetUp extends Properties{
 	
 	private static File propertyFile = new File("measureSetupProperties.properties");
 	private static MeasureSetUp myInstance = new MeasureSetUp();
 	private DQSinglePeriodMeasurementVisualizer singlePeriodVisualizer;
+	private TransmissionVisualizer transmissionVis;
+	private DQPipelineElement periodVis;
+	private MieList[] mieList;
+	private ParticleSizeVisualizer sizeVisualizer;
+	
 
-	
-	
 	private MeasureSetUp() {
 		preparePropertiesFile();
 	}
@@ -47,7 +54,7 @@ public class MeasureSetUp extends Properties{
 	}
 
 	public void setMieFile(File mieFile) {
-		setProperty(MeasureSetupEntry.MIEFILE.toString(), mieFile.getAbsolutePath());
+		setProperty(MeasureSetupEntry.MIEFILE, mieFile.getAbsolutePath());
 	}
 
 	public File getOutputFile() {
@@ -55,7 +62,7 @@ public class MeasureSetUp extends Properties{
 	}
 
 	public void setOutputFile(File outputFile) {
-		setProperty(MeasureSetupEntry.OUTPUTFILE.toString(), outputFile.getAbsolutePath());
+		setProperty(MeasureSetupEntry.OUTPUTFILE, outputFile.getAbsolutePath());
 	}
 	
 	public String getProperty(MeasureSetupEntry entry) {
@@ -67,12 +74,12 @@ public class MeasureSetUp extends Properties{
 		save();
 	}
 	
-	public void setPeriodVisualizer(DQSinglePeriodMeasurementVisualizer visualizer) {
-		this.singlePeriodVisualizer = visualizer;
-	}
-	
 	public DQSinglePeriodMeasurementVisualizer getSinglePeriodVisualizer() {
 		return singlePeriodVisualizer;
+	}
+	
+	public void addSinglePeriodVisualizer(DQSinglePeriodMeasurementVisualizer vis) {
+		singlePeriodVisualizer = vis;
 	}
 	
 	public boolean save() {
@@ -85,6 +92,33 @@ public class MeasureSetUp extends Properties{
 		} catch (IOException e) {
 			return false;
 		}
+	}
+
+	public void addTransmissionVisualizer(TransmissionVisualizer transmissionVisualizer) {
+		this.transmissionVis = transmissionVisualizer;
+		
+	}
+
+	
+	public TransmissionVisualizer getTransmissionVis() {
+		return transmissionVis;
+	}
+
+	public void setMieList(MieList... list) {
+		this.mieList = list;
+	}
+	
+	public MieList getMieList(int index) {
+		return mieList[index];
+	}
+
+	public void addParticleVisualizer(ParticleSizeVisualizer sizeVisualizer) {
+		this.sizeVisualizer = sizeVisualizer;
+		
+	}
+
+	public ParticleSizeVisualizer getSizeVisualizer() {
+		return sizeVisualizer;
 	}
 	
 	

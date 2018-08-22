@@ -2,22 +2,31 @@ package rzahoransky.gui.measureGui;
 
 import javax.swing.JPanel;
 
+import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.annotations.XYAnnotation;
-
-import calculation.CalculationAssignment;
 import calculation.MieList;
 import charts.MieChartPanels;
+import rzahoransky.dqpipeline.DQPipeline;
+import rzahoransky.gui.measureSetup.MeasureSetUp;
+import rzahoransky.utils.Charts;
 
 public class DQGui extends JPanel{
 	
 	JFreeChart chart;
 	private DQAnnotator dqAnnotator;
+	MeasureSetUp setup = MeasureSetUp.getInstance();
 
-	public DQGui(MieList wl1, MieList wl2, MieList wl3) {
-		chart = MieChartPanels.getDQFieldDataset(wl1, wl2, wl3, true);
+	public DQGui(DQPipeline pipeline) {
+		chart = MieChartPanels.getDQFieldDataset(setup.getMieList(0), setup.getMieList(1), setup.getMieList(2), true);
 		dqAnnotator = new DQAnnotator();
 		chart.getXYPlot().addAnnotation(dqAnnotator);
+		pipeline.addNewSignalListener(dqAnnotator);
+		ChartPanel panel = Charts.getChartPanel("DQ", chart);
+		add(panel);
+	}
+	
+	public JFreeChart getChart() {
+		return chart;
 	}
 
 }

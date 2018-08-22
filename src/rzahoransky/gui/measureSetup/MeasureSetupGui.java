@@ -48,11 +48,14 @@ import rzahoransky.dqpipeline.dataExtraction.FiveWLMeasurePoints;
 import rzahoransky.dqpipeline.dataExtraction.ParticleSizeExtractor;
 import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
 import rzahoransky.dqpipeline.periodMarker.FiveWLMarker;
+import rzahoransky.dqpipeline.simulation.FiveWLOneHeadSimulator;
 import rzahoransky.dqpipeline.visualization.DQMeasurementVisualizer;
 import rzahoransky.dqpipeline.visualization.DQSinglePeriodMeasurementVisualizer;
 import rzahoransky.dqpipeline.visualization.DQVisualizer;
 import rzahoransky.dqpipeline.visualization.LaserVoltageVisualizer;
+import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizer;
 import rzahoransky.dqpipeline.visualization.TransmissionVisualizer;
+import rzahoransky.gui.measureGui.MeasureGui;
 import storage.dqMeas.read.DQReader;
 
 public class MeasureSetupGui extends JFrame{
@@ -76,7 +79,7 @@ public class MeasureSetupGui extends JFrame{
 		try {
 		getWavelengths();
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		setLookAndFeel();
 		setupComponents();
@@ -196,8 +199,10 @@ public class MeasureSetupGui extends JFrame{
 	
 	private void setupPipeline(MieList wl1, MieList wl2, MieList wl3) throws NiDaqException {
 		//NI Adapter
-		AdapterInterface adapter = new FiveWLNIDaqAdapter();
-		adapter.setADCardOrConfigParameter(NiDaq.getDeviceNames().get(0));
+		//AdapterInterface adapter = new FiveWLNIDaqAdapter();
+		//adapter.setADCardOrConfigParameter(NiDaq.getDeviceNames().get(0));
+		
+		AdapterInterface adapter = new FiveWLOneHeadSimulator();
 		
 		//Look for triggers
 		FiveWLMarker triggerMarker = new FiveWLMarker();
@@ -219,14 +224,22 @@ public class MeasureSetupGui extends JFrame{
 		
 		
 		//Graphical Elements
-		DQPipelineElement singelPeriodVisualizer = new DQSinglePeriodMeasurementVisualizer(false);
+		DQSinglePeriodMeasurementVisualizer singelPeriodVisualizer = new DQSinglePeriodMeasurementVisualizer(false);
 		TransmissionVisualizer transmissionVisualizer = new TransmissionVisualizer(false);
 		LaserVoltageVisualizer laserVoltage = new LaserVoltageVisualizer();
+		ParticleSizeVisualizer sizeVisualizer = new ParticleSizeVisualizer(true);
 		
 		//create Pipeline
 		pipeline = new DQPipeline();
 		
-
+		setup.addTransmissionVisualizer(transmissionVisualizer);
+		setup.addSinglePeriodVisualizer(singelPeriodVisualizer);
+		setup.addParticleVisualizer(sizeVisualizer);
+		
+		MieList[] list = {wl1, wl2, wl3};
+		
+		setup.setMieList(list);
+		
 		
 		
 		
@@ -245,7 +258,10 @@ public class MeasureSetupGui extends JFrame{
 		pipeline.addPipelineElement(dqExtractor);
 		//pipeline.addPipelineElement(new DQVisualizer());
 		pipeline.addPipelineElement(sizeExtractor);
+		pipeline.addPipelineElement(sizeVisualizer);
 		pipeline.addPipelineElement(concentrationExtractor);
+		
+		pipeline.addPipelineElement(new DQVisualizer());
 		//pipeline.addPipelineElement(writer);
 		//pipeline.start();
 	}
@@ -259,6 +275,8 @@ public class MeasureSetupGui extends JFrame{
 				try {
 					DQReader mieReader = new DQReader(mieGUI.getChoosenFile());
 					setupPipeline(mieReader.getWl1(), mieReader.getWl2(), mieReader.getWl3());
+					MeasureGui gui = new MeasureGui(pipeline);
+					//pipeline.start();
 					
 				} catch (IOException e1) {
 					JOptionPane.showMessageDialog((Component) e.getSource(), "Cannot read MIE-File", "I/O error", JOptionPane.ERROR_MESSAGE);
