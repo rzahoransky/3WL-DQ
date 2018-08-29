@@ -88,32 +88,32 @@ public class FiveWLOneHeadSimulator extends AbstractDQPipelineElement implements
 		
 		//WL1
 		for (step = 0;step<0.2*periodLength;step++) {
-			measure.add(r.nextDouble()*0.5+wl1.getValue()); //measure:5V+/-0.5V
-			reference.add(r.nextDouble()*0.5+7); //reference: 7V +/-0.5V
+			measure.add(r.nextDouble()*0.1+wl1.getValue()); //measure:5V+/-0.5V
+			reference.add(r.nextDouble()*0.1+7); //reference: 7V +/-0.5V
 			mode.add(4d); //mode is 4
 			trigger.add(0d);
 		}
 		
 		//WL2
 		for (;step<0.4*periodLength;step++) {
-			measure.add(r.nextDouble()*0.5+wl2.getValue()); //measure:4V+/-0.5V
-			reference.add(r.nextDouble()*0.5+5); //reference: 5V +/-0.5V
+			measure.add(r.nextDouble()*0.1+wl2.getValue()); //measure:4V+/-0.5V
+			reference.add(r.nextDouble()*0.1+5); //reference: 5V +/-0.5V
 			mode.add(4d); //mode is 4
 			trigger.add(0d);
 		}
 		
 		//WL3
 		for (;step<0.6*periodLength;step++) {
-			measure.add(r.nextDouble()*0.3+wl3.getValue()); //measure:3V+/-0.3V
-			reference.add(r.nextDouble()*0.3+4); //reference: 4V +/-0.3V
+			measure.add(r.nextDouble()*0.1+wl3.getValue()); //measure:3V+/-0.3V
+			reference.add(r.nextDouble()*0.1+4); //reference: 4V +/-0.3V
 			mode.add(4d); //mode is 4
 			trigger.add(0d);
 		}
 		
 		//Offset
 		for (;step<periodLength;step++) {
-			measure.add(r.nextDouble()*0.3+0); //measure:0V+/-0.3V
-			reference.add(r.nextDouble()*0.2-2); //reference: -2V +/-0.2V
+			measure.add(r.nextDouble()*0.1+0); //measure:0V+/-0.3V
+			reference.add(r.nextDouble()*0.1-2); //reference: -2V +/-0.2V
 			mode.add(4d); //mode is 4
 			if (step==triggerAt)
 				trigger.add(4d);

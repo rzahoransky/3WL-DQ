@@ -220,7 +220,7 @@ public class MeasureSetupGui extends JFrame{
 		ParticleSizeExtractor sizeExtractor = new ParticleSizeExtractor(wl1, wl2, wl3);
 		
 		//Calulate particle concentration
-		ConcentrationExtractor concentrationExtractor = new ConcentrationExtractor(length.getLength(), wl1, wl2, wl3);
+		//ConcentrationExtractor concentrationExtractor = new ConcentrationExtractor(length.getLength(), wl1, wl2, wl3);
 		
 		
 		//Graphical Elements
@@ -259,7 +259,7 @@ public class MeasureSetupGui extends JFrame{
 		//pipeline.addPipelineElement(new DQVisualizer());
 		pipeline.addPipelineElement(sizeExtractor);
 		pipeline.addPipelineElement(sizeVisualizer);
-		pipeline.addPipelineElement(concentrationExtractor);
+		//pipeline.addPipelineElement(concentrationExtractor);
 		
 		pipeline.addPipelineElement(new DQVisualizer());
 		//pipeline.addPipelineElement(writer);

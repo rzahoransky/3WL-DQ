@@ -3,8 +3,8 @@ package rzahoransky.dqpipeline.periodMarker;
 import java.util.concurrent.BlockingQueue;
 
 import rzahoransky.dqpipeline.AbstractDQPipelineElement;
-import rzahoransky.dqpipeline.DQSignal;
 import rzahoransky.dqpipeline.DQPipelineElement;
+import rzahoransky.dqpipeline.DQSignal;
 import rzahoransky.utils.RawSignalType;
 
 public class FiveWLMarker extends AbstractDQPipelineElement {

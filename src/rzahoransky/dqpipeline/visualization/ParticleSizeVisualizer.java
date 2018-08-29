@@ -18,8 +18,8 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import rzahoransky.dqpipeline.AbstractDQPipelineElement;
-import rzahoransky.dqpipeline.DQSignal;
 import rzahoransky.dqpipeline.DQPipelineElement;
+import rzahoransky.dqpipeline.DQSignal;
 import rzahoransky.utils.Charts;
 import rzahoransky.utils.RawSignalType;
 

@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import rzahoransky.dqpipeline.AbstractDQPipelineElement;
 import rzahoransky.dqpipeline.DQSignal;
+import rzahoransky.dqpipeline.dqSignal.DQSignalEntry;
 import rzahoransky.utils.TransmissionType;
 import rzahoransky.utils.DQtype;
 import rzahoransky.utils.RawSignalType;
@@ -30,9 +31,15 @@ public class DQExtractor extends AbstractDQPipelineElement {
 		
 		double dq1 = Math.log(transmissionWl1/transmissionWl2);
 		double dq2 = Math.log(transmissionWl2/transmissionWl3);
+		double dq3 = Math.log(transmissionWl1/transmissionWl3);
 		
-		in.setDQ(DQtype.DQ1, dq1);
-		in.setDQ(DQtype.DQ2, dq2);
+		DQSignalEntry dq1Entry = new DQSignalEntry(DQtype.DQ1, in.getWL1(), in.getWL2(), dq1);
+		DQSignalEntry dq2Entry = new DQSignalEntry(DQtype.DQ2, in.getWL2(), in.getWL3(), dq2);
+		DQSignalEntry dq3Entry = new DQSignalEntry(DQtype.DQ3, in.getWL1(), in.getWL3(), dq3);
+		
+		in.setDQ(dq1Entry);
+		in.setDQ(dq2Entry);
+		in.setDQ(dq3Entry);
 		
 		return in;
 	}

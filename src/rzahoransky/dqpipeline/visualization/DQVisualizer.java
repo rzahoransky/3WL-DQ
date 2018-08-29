@@ -18,8 +18,8 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import rzahoransky.dqpipeline.AbstractDQPipelineElement;
-import rzahoransky.dqpipeline.DQSignal;
 import rzahoransky.dqpipeline.DQPipelineElement;
+import rzahoransky.dqpipeline.DQSignal;
 import rzahoransky.utils.Charts;
 import rzahoransky.utils.DQtype;
 import rzahoransky.utils.ExtractedSignalType;
@@ -70,7 +70,7 @@ public class DQVisualizer extends AbstractDQPipelineElement{
 			Millisecond milliSecond = new Millisecond(new Date(measurement.getTimeStamp()));
 			//series.addOrUpdate(milliSecond, measurement.getAveragedValues(RawSignalType.meas, type));
 			//series.addOrUpdate(milliSecond, measurement.getAveragedValues(RawSignalType.meas, type));
-			series.addOrUpdate(milliSecond, measurement.getDQ(type));
+			series.addOrUpdate(milliSecond, measurement.getDQ(type).getDqValue());
 
 
 //			for (int i = measurement.getsin; i < end; i++) {

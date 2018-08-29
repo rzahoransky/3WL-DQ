@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import calculation.MieList;
 import calculation.MieWrapper;
-import dq.DQField;
+import dq.ReverseDQ;
 import rzahoransky.dqpipeline.AbstractDQPipelineElement;
 import rzahoransky.dqpipeline.DQSignal;
 import rzahoransky.utils.ArrayListUtils;
@@ -16,16 +16,16 @@ public class ConcentrationExtractor extends AbstractDQPipelineElement {
 	private MieList wl1;
 	private MieList wl2;
 	private MieList wl3;
-	private DQField dq1;
-	private DQField dq2;
+	private ReverseDQ dq1;
+	private ReverseDQ dq2;
 
 	public ConcentrationExtractor(double measureLengthInCm, MieList wl1, MieList wl2, MieList wl3) {
 		length = measureLengthInCm;
 		this.wl1 = wl1;
 		this.wl2 = wl2;
 		this.wl3 = wl3;
-		this.dq1 = new DQField(wl1, wl2);
-		this.dq2 = new DQField(wl2, wl3);
+		this.dq1 = new ReverseDQ(wl1, wl2);
+		this.dq2 = new ReverseDQ(wl2, wl3);
 	}
 	
 	public ConcentrationExtractor() {

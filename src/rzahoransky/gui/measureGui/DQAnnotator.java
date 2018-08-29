@@ -123,7 +123,7 @@ public class DQAnnotator extends AbstractXYAnnotation implements DQSignalListene
 
 	@Override
 	public void newSignal(DQSignal currentSignal) {
-		addDQ(currentSignal.getDQ(DQtype.DQ1), currentSignal.getDQ(DQtype.DQ2));
+		addDQ(currentSignal.getDQ(DQtype.DQ1).getDqValue(), currentSignal.getDQ(DQtype.DQ2).getDqValue());
 	}
 	
 }

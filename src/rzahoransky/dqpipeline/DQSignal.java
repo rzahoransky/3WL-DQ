@@ -8,6 +8,7 @@ import java.util.OptionalDouble;
 
 import calculation.DistributionFactory;
 import javafx.scene.chart.PieChart.Data;
+import rzahoransky.dqpipeline.dqSignal.DQSignalEntry;
 import rzahoransky.utils.ArrayListUtils;
 import rzahoransky.utils.DQtype;
 import rzahoransky.utils.ExtractedSignalType;
@@ -38,7 +39,7 @@ public class DQSignal {
 	private double sigma = 0;
 	
 	private HashMap<TransmissionType, ArrayList<Double>> measuredValues = new HashMap<>();
-	private HashMap<DQtype, Double> dq = new HashMap<>();
+	private HashMap<DQtype, DQSignalEntry> dq = new HashMap<>();
 
 	private double length;
 
@@ -223,11 +224,11 @@ public class DQSignal {
 		return ArrayListUtils.getAverage(measuredValues.get(type));
 	}
 
-	public void setDQ(DQtype dqType, double dq) {
-		this.dq.put(dqType, dq);
+	public void setDQ(DQSignalEntry entry) {
+		this.dq.put(entry.getType(), entry);
 	}
 	
-	public double getDQ(DQtype dqType) {
+	public DQSignalEntry getDQ(DQtype dqType) {
 		return dq.get(dqType);
 	}
 
