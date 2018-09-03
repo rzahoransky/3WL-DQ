@@ -6,6 +6,11 @@ import java.util.List;
 
 import dq.ReverseDQEntry;
 
+/**
+ * Compare possible diameters according to their error range (max possible found diameter - min possible found diameter
+ * @author richard
+ *
+ */
 public class DiameterComperator implements Comparable<DiameterComperator>{
 
 	private ArrayList<ReverseDQEntry> foundDiameters = new ArrayList<>();
@@ -17,7 +22,7 @@ public class DiameterComperator implements Comparable<DiameterComperator>{
 		sigma = initialEntry.getSigma();
 	}
 
-	public void addClosestEntries(List<ReverseDQEntry> list) {
+	public void filterForBestMatch(List<ReverseDQEntry> list) {
 		double distance = Double.MAX_VALUE;
 		ReverseDQEntry closestElement =  null;
 		for (ReverseDQEntry entry : list) {

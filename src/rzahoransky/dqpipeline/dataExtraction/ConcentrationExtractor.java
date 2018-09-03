@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import calculation.MieList;
 import calculation.MieWrapper;
 import dq.ReverseDQ;
-import rzahoransky.dqpipeline.AbstractDQPipelineElement;
-import rzahoransky.dqpipeline.DQSignal;
+import rzahoransky.dqpipeline.dqSignal.DQSignal;
+import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
+import rzahoransky.gui.measureSetup.MeasureSetUp;
+import rzahoransky.gui.measureSetup.MeasureSetupEntry;
 import rzahoransky.utils.ArrayListUtils;
 import rzahoransky.utils.TransmissionType;
 
@@ -19,8 +21,8 @@ public class ConcentrationExtractor extends AbstractDQPipelineElement {
 	private ReverseDQ dq1;
 	private ReverseDQ dq2;
 
-	public ConcentrationExtractor(double measureLengthInCm, MieList wl1, MieList wl2, MieList wl3) {
-		length = measureLengthInCm;
+	public ConcentrationExtractor(MieList wl1, MieList wl2, MieList wl3) {
+		length = Double.parseDouble(MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.MEASURELENGTH_IN_CM));
 		this.wl1 = wl1;
 		this.wl2 = wl2;
 		this.wl3 = wl3;

@@ -21,7 +21,7 @@ import org.jfree.ui.RectangleEdge;
 
 import charts.Charts;
 import errors.WavelengthMismatchException;
-import rzahoransky.dqpipeline.DQSignal;
+import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.listener.DQSignalListener;
 import rzahoransky.utils.DQtype;
 import storage.dqMeas.read.DQReader;

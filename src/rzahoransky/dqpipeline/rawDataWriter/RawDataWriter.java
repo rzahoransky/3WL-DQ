@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import rzahoransky.dqpipeline.AbstractDQPipelineElement;
-import rzahoransky.dqpipeline.DQSignal;
+import rzahoransky.dqpipeline.dqSignal.DQSignal;
+import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.utils.RawSignalType;
 
 public class RawDataWriter extends AbstractDQPipelineElement {

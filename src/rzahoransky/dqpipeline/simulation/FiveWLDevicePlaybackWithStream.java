@@ -25,9 +25,9 @@ import java.util.stream.Stream;
 import javax.swing.JPanel;
 
 import kirkwood.nidaq.access.NiDaqException;
-import rzahoransky.dqpipeline.AbstractDQPipelineElement;
-import rzahoransky.dqpipeline.DQSignal;
-import rzahoransky.dqpipeline.analogueAdapter.AdapterInterface;
+import rzahoransky.dqpipeline.dqSignal.DQSignal;
+import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
+import rzahoransky.dqpipeline.interfaces.AdapterInterface;
 import rzahoransky.gui.measureSetup.OldAdapterConfigPanel;
 import rzahoransky.utils.BufferedRandomAccess;
 import rzahoransky.utils.RawSignalType;

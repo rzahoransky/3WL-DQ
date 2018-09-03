@@ -3,7 +3,8 @@ package rzahoransky.dqpipeline.dataExtraction;
 import java.util.HashMap;
 import java.util.List;
 
-import rzahoransky.dqpipeline.DQSignalSinglePeriod;
+import rzahoransky.dqpipeline.dqSignal.DQSignalSinglePeriod;
+import rzahoransky.dqpipeline.interfaces.IMeasurePoints;
 import rzahoransky.utils.ExtractedSignalType;
 
 public abstract class AbstractMeasurePoint implements IMeasurePoints {

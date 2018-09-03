@@ -9,13 +9,15 @@ import java.util.concurrent.BlockingQueue;
 
 import kirkwood.nidaq.access.NiDaq;
 import kirkwood.nidaq.access.NiDaqException;
-import rzahoransky.dqpipeline.analogueAdapter.AdapterInterface;
 import rzahoransky.dqpipeline.analogueAdapter.FiveWLNIDaqAdapter;
 import rzahoransky.dqpipeline.dataExtraction.DQExtractor;
 import rzahoransky.dqpipeline.dataExtraction.FiveWLExtractor;
 import rzahoransky.dqpipeline.dataExtraction.FiveWLMeasurePoints;
 import rzahoransky.dqpipeline.dataExtraction.ParticleSizeExtractor;
 import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
+import rzahoransky.dqpipeline.dqSignal.DQSignal;
+import rzahoransky.dqpipeline.interfaces.AdapterInterface;
+import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.dqpipeline.listener.DQSignalListener;
 import rzahoransky.dqpipeline.periodMarker.FiveWLMarker;
 import rzahoransky.dqpipeline.simulation.FiveWLOneHeadSimulator;
@@ -64,7 +66,7 @@ public class DQPipeline {
 		
 		DQPipelineElement extractedDataVis = new LaserVoltageVisualizer();
 		
-		DQPipelineElement transmissionExtractor = new TransmissionExtractor();
+		DQPipelineElement transmissionExtractor = new TransmissionExtractor(true);
 		DQPipelineElement dqExtractor = new DQExtractor();
 		DQPipelineElement sizeExtractor = new ParticleSizeExtractor(new File("D:/mietemp/rgb-latex-in-water.miezip"));
 		//DQPipelineElement concenentrationExtractor = new ConcentrationExtractor(measureLengthInCm, wl1, wl2, wl3)
@@ -87,8 +89,6 @@ public class DQPipeline {
 		//Thread.sleep(1000);
 		//System.out.println("Killing threads");
 		//pipeline.stop();
-		
-		
 	}
 	
 	public void addPipelineElement(DQPipelineElement element) {
@@ -174,6 +174,7 @@ public class DQPipeline {
 
 		public AdapterThread(DQPipelineElement element) {
 			this.element = element;
+			setDaemon(true);
 		}
 		
 		public void setInQueue(BlockingQueue<DQSignal> in) {
@@ -215,6 +216,7 @@ public class DQPipeline {
 
 		public NullThread(BlockingQueue<DQSignal> lastQueueElement) {
 			this.in=lastQueueElement;
+			setDaemon(true);
 		}
 		
 		public void run() {

@@ -5,8 +5,8 @@ import javax.swing.JPanel;
 
 import kirkwood.nidaq.access.NiDaq;
 import kirkwood.nidaq.access.NiDaqException;
-import rzahoransky.dqpipeline.analogueAdapter.AdapterInterface;
 import rzahoransky.dqpipeline.analogueAdapter.FiveWLNIDaqAdapter;
+import rzahoransky.dqpipeline.interfaces.AdapterInterface;
 import rzahoransky.dqpipeline.simulation.FiveWLDevicePlaybackWithStream;
 
 public class AdapterConfigPanel extends JPanel{

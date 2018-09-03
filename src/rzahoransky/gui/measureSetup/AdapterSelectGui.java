@@ -11,8 +11,8 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import rzahoransky.dqpipeline.DQPipelineElement;
 import rzahoransky.dqpipeline.analogueAdapter.FiveWLNIDaqAdapter;
+import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.dqpipeline.simulation.FiveWLDevicePlaybackWithStream;
 
 public class AdapterSelectGui extends JPanel implements ActionListener {

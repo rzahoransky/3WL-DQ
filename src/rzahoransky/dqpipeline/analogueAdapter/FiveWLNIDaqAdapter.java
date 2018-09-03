@@ -12,8 +12,9 @@ import com.sun.jna.Pointer;
 import kirkwood.nidaq.access.NiDaq;
 import kirkwood.nidaq.access.NiDaqException;
 import kirkwood.nidaq.jna.Nicaiu;
-import rzahoransky.dqpipeline.AbstractDQPipelineElement;
-import rzahoransky.dqpipeline.DQSignal;
+import rzahoransky.dqpipeline.dqSignal.DQSignal;
+import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
+import rzahoransky.dqpipeline.interfaces.AdapterInterface;
 import rzahoransky.gui.measureSetup.OldAdapterConfigPanel;
 
 public class FiveWLNIDaqAdapter extends AbstractDQPipelineElement implements AdapterInterface {

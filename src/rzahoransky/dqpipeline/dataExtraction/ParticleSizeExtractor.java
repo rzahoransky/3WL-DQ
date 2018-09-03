@@ -18,9 +18,9 @@ import calculation.MieList;
 import dq.ReverseDQ;
 import dq.ReverseDQEntry;
 import errors.WavelengthMismatchException;
-import rzahoransky.dqpipeline.AbstractDQPipelineElement;
-import rzahoransky.dqpipeline.DQSignal;
+import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.dqSignal.DQSignalEntry;
+import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.utils.DQtype;
 import storage.dqMeas.read.DQReader;
 
@@ -108,7 +108,7 @@ public class ParticleSizeExtractor extends AbstractDQPipelineElement {
 
 		for (DQtype remaining : remainingDQs) {
 			for (DiameterComperator comperator : comperators) {
-				comperator.addClosestEntries(dqHits.get(remaining)); // match best diameters from remaining DQs
+				comperator.filterForBestMatch(dqHits.get(remaining)); // match best diameters from remaining DQs
 			}
 		}
 

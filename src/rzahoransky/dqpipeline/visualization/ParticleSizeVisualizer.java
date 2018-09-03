@@ -17,22 +17,22 @@ import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-import rzahoransky.dqpipeline.AbstractDQPipelineElement;
-import rzahoransky.dqpipeline.DQPipelineElement;
-import rzahoransky.dqpipeline.DQSignal;
+import rzahoransky.dqpipeline.dqSignal.DQSignal;
+import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
+import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
+import rzahoransky.dqpipeline.interfaces.ParticleDiameterVisualizer;
 import rzahoransky.utils.Charts;
 import rzahoransky.utils.RawSignalType;
 
-public class ParticleSizeVisualizer extends AbstractDQPipelineElement {
+public class ParticleSizeVisualizer extends AbstractDQPipelineElement implements ParticleDiameterVisualizer {
 
 	ChartPanel chartPanel;
 	JFrame frame;
-	RawSignalType[] signalTypes = { RawSignalType.ref, RawSignalType.meas, RawSignalType.mode, RawSignalType.trigger };
 
 	public ParticleSizeVisualizer(boolean showAsFrame) {
 
 		TimeSeriesCollection dataset = Charts.getParticleDataSet();
-		JFreeChart chart = Charts.getXYChart("Particle Size", "Time", "Diameter in µm", dataset);
+		JFreeChart chart = Charts.getXYChart("Particle Information", "Time", "Diameter in µm", dataset);
 		chartPanel = Charts.getChartPanel("Measurment", chart);
 
 		if (showAsFrame) {
@@ -84,7 +84,7 @@ public class ParticleSizeVisualizer extends AbstractDQPipelineElement {
 
 	@Override
 	public String description() {
-		return "Visualizes Particle Sizes";
+		return "Visualizes Particle Diameter";
 	}
 
 }

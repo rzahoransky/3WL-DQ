@@ -7,9 +7,10 @@ import java.util.List;
 
 import org.jfree.chart.util.RelativeDateFormat;
 
-import rzahoransky.dqpipeline.AbstractDQPipelineElement;
-import rzahoransky.dqpipeline.DQSignal;
-import rzahoransky.dqpipeline.DQSignalSinglePeriod;
+import rzahoransky.dqpipeline.dqSignal.DQSignal;
+import rzahoransky.dqpipeline.dqSignal.DQSignalSinglePeriod;
+import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
+import rzahoransky.dqpipeline.interfaces.IMeasurePoints;
 import rzahoransky.utils.ExtractedSignalType;
 import rzahoransky.utils.RawSignalType;
 

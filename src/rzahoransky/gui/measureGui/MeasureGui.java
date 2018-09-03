@@ -40,13 +40,53 @@ private DQPipeline pipeline;
 	}
 	
 	private void positionElements() {
-		//c.fill = GridBagConstraints.BOTH;
+		
+		//Particle Diameter History
+		c.fill = GridBagConstraints.BOTH;
+		c.gridx=0;
+		c.gridy=0;
+		c.gridwidth=GridBagConstraints.REMAINDER;
+		c.weightx=0.5;
+		c.weighty=0.5;
+		
+		add(setup.getSizeVisualizer().getChartPanel(),c);
+		
 		//add(setup.getSizeVisualizer().getChartPanel(),c);
 		//c.gridx++;
 		//add(setup.getSinglePeriodVisualizer().getChartPanel(),c);
+
 		
+		//DQ Field
+		c.gridwidth=1;
+		c.gridheight=3;
+		c.weightx=1;
+		c.weighty=1;
 		c.gridy++;
 		c.gridx=0;
 		add(new DQGui(pipeline),c);
+		
+		//Transmission
+		c.gridx=1;
+		c.gridheight=1;
+		c.weightx=0.5;
+		c.weighty=0.5;
+		add(setup.getTransmissionVis().getChartPanel(),c);
+		
+		//Single Period
+		c.gridy++;
+		add(setup.getSinglePeriodVisualizer().getChartPanel(),c);
+		
+		//add I0 Btn
+		c.gridy++;
+		add(setup.getTransmissionExtractor().getI0Btn(),c);
+		
+		//add numeric representation
+		c.gridy++;
+		c.gridx=0;
+		c.gridwidth = GridBagConstraints.RELATIVE;
+		add(new NumericDiameterGui(pipeline),c);
+		
+		
+		
 	}
 }

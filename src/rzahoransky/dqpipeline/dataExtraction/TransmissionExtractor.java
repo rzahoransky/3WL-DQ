@@ -9,9 +9,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import presets.Wavelengths;
-import rzahoransky.dqpipeline.AbstractDQPipelineElement;
-import rzahoransky.dqpipeline.DQSignal;
-import rzahoransky.dqpipeline.DQSignalSinglePeriod;
+import rzahoransky.dqpipeline.dqSignal.DQSignal;
+import rzahoransky.dqpipeline.dqSignal.DQSignalSinglePeriod;
+import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.utils.ExtractedSignalType;
 import rzahoransky.utils.TransmissionType;
 import rzahoransky.utils.RawSignalType;
@@ -23,8 +23,9 @@ public class TransmissionExtractor extends AbstractDQPipelineElement {
 	private ExtractedSignalType[] wlSignals = { ExtractedSignalType.wl1wOffset, ExtractedSignalType.wl2wOffset,
 			ExtractedSignalType.wl3wOffset };
 
-	public TransmissionExtractor() {
-		showI0Button();
+	public TransmissionExtractor(boolean showAsFrame) {
+		if (showAsFrame)
+			showI0Button();
 	}
 
 	@Override
@@ -100,9 +101,7 @@ public class TransmissionExtractor extends AbstractDQPipelineElement {
 		setI0 = true;
 	}
 	
-	public void showI0Button() {
-		JFrame io = new JFrame("I0 control");
-		io.setSize(200, 200);
+	public JButton getI0Btn() {
 		JButton iobtn = new JButton("set Io");
 		iobtn.addActionListener(new ActionListener() {
 			
@@ -112,7 +111,13 @@ public class TransmissionExtractor extends AbstractDQPipelineElement {
 				
 			}
 		});
-		io.add(iobtn);
+		return iobtn;
+	}
+	
+	public void showI0Button() {
+		JFrame io = new JFrame("I0 control");
+		io.setSize(200, 200);
+		io.add(getI0Btn());
 		io.setVisible(true);
 	}
 

@@ -2,9 +2,9 @@ package rzahoransky.dqpipeline.dataExtraction;
 
 import java.util.HashMap;
 
-import rzahoransky.dqpipeline.AbstractDQPipelineElement;
-import rzahoransky.dqpipeline.DQSignal;
+import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.dqSignal.DQSignalEntry;
+import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.utils.TransmissionType;
 import rzahoransky.utils.DQtype;
 import rzahoransky.utils.RawSignalType;

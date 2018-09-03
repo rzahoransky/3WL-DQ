@@ -1,12 +1,12 @@
-package rzahoransky.dqpipeline;
+package rzahoransky.dqpipeline.dqSignal;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.OptionalDouble;
 
-import rzahoransky.dqpipeline.dataExtraction.IMeasurePoints;
 import rzahoransky.dqpipeline.dataExtraction.MeasurePointDescriptor;
+import rzahoransky.dqpipeline.interfaces.IMeasurePoints;
 import rzahoransky.utils.ExtractedSignalType;
 import rzahoransky.utils.RawSignalType;
 

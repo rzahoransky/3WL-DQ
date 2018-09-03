@@ -11,8 +11,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import gui.FileGui;
 import kirkwood.nidaq.access.NiDaqException;
-import rzahoransky.dqpipeline.analogueAdapter.AdapterInterface;
 import rzahoransky.dqpipeline.analogueAdapter.FiveWLNIDaqAdapter;
+import rzahoransky.dqpipeline.interfaces.AdapterInterface;
 import rzahoransky.dqpipeline.simulation.FiveWLDevicePlaybackWithStream;
 
 public class OldAdapterConfigPanel extends JPanel {

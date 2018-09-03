@@ -1,11 +1,10 @@
-package rzahoransky.dqpipeline.analogueAdapter;
+package rzahoransky.dqpipeline.interfaces;
 
 
 import javax.swing.JPanel;
 
 import kirkwood.nidaq.access.NiDaqException;
-import rzahoransky.dqpipeline.DQPipelineElement;
-import rzahoransky.dqpipeline.DQSignal;
+import rzahoransky.dqpipeline.dqSignal.DQSignal;
 
 public interface AdapterInterface extends DQPipelineElement{
 	

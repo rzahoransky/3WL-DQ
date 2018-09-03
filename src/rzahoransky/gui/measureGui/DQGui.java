@@ -1,5 +1,9 @@
 package rzahoransky.gui.measureGui;
 
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+
 import javax.swing.JPanel;
 
 import org.jfree.chart.ChartPanel;
@@ -22,7 +26,15 @@ public class DQGui extends JPanel{
 		chart.getXYPlot().addAnnotation(dqAnnotator);
 		pipeline.addNewSignalListener(dqAnnotator);
 		ChartPanel panel = Charts.getChartPanel("DQ", chart);
-		add(panel);
+		setLayout(new GridBagLayout());
+		
+		//panel.setSize(100, 100);
+		//panel.setPreferredSize(new Dimension(100, 100));
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill=GridBagConstraints.BOTH;
+		c.weightx=1;
+		c.weighty=1;
+		add(panel,c);
 	}
 	
 	public JFreeChart getChart() {

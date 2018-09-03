@@ -36,10 +36,7 @@ import kirkwood.nidaq.access.NiDaq;
 import kirkwood.nidaq.access.NiDaqException;
 import presets.Wavelengths;
 import rzahoransky.dqpipeline.DQPipeline;
-import rzahoransky.dqpipeline.DQPipelineElement;
-import rzahoransky.dqpipeline.DQSignal;
 import rzahoransky.dqpipeline.analogueAdapter.AdapterInformation;
-import rzahoransky.dqpipeline.analogueAdapter.AdapterInterface;
 import rzahoransky.dqpipeline.analogueAdapter.FiveWLNIDaqAdapter;
 import rzahoransky.dqpipeline.dataExtraction.ConcentrationExtractor;
 import rzahoransky.dqpipeline.dataExtraction.DQExtractor;
@@ -47,6 +44,9 @@ import rzahoransky.dqpipeline.dataExtraction.FiveWLExtractor;
 import rzahoransky.dqpipeline.dataExtraction.FiveWLMeasurePoints;
 import rzahoransky.dqpipeline.dataExtraction.ParticleSizeExtractor;
 import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
+import rzahoransky.dqpipeline.dqSignal.DQSignal;
+import rzahoransky.dqpipeline.interfaces.AdapterInterface;
+import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.dqpipeline.periodMarker.FiveWLMarker;
 import rzahoransky.dqpipeline.simulation.FiveWLOneHeadSimulator;
 import rzahoransky.dqpipeline.visualization.DQMeasurementVisualizer;
@@ -211,7 +211,7 @@ public class MeasureSetupGui extends JFrame{
 		FiveWLExtractor valueExtractor = new FiveWLExtractor(new FiveWLMeasurePoints());
 		
 		//extract transmissions
-		TransmissionExtractor transmissionExtractor = new TransmissionExtractor();
+		TransmissionExtractor transmissionExtractor = new TransmissionExtractor(false);
 		
 		//calculate DQ
 		DQExtractor dqExtractor = new DQExtractor();
@@ -220,7 +220,7 @@ public class MeasureSetupGui extends JFrame{
 		ParticleSizeExtractor sizeExtractor = new ParticleSizeExtractor(wl1, wl2, wl3);
 		
 		//Calulate particle concentration
-		//ConcentrationExtractor concentrationExtractor = new ConcentrationExtractor(length.getLength(), wl1, wl2, wl3);
+		ConcentrationExtractor concentrationExtractor = new ConcentrationExtractor(wl1, wl2, wl3);
 		
 		
 		//Graphical Elements
@@ -235,6 +235,7 @@ public class MeasureSetupGui extends JFrame{
 		setup.addTransmissionVisualizer(transmissionVisualizer);
 		setup.addSinglePeriodVisualizer(singelPeriodVisualizer);
 		setup.addParticleVisualizer(sizeVisualizer);
+		setup.addTransmissionExtractor(transmissionExtractor);
 		
 		MieList[] list = {wl1, wl2, wl3};
 		
@@ -259,7 +260,7 @@ public class MeasureSetupGui extends JFrame{
 		//pipeline.addPipelineElement(new DQVisualizer());
 		pipeline.addPipelineElement(sizeExtractor);
 		pipeline.addPipelineElement(sizeVisualizer);
-		//pipeline.addPipelineElement(concentrationExtractor);
+		pipeline.addPipelineElement(concentrationExtractor);
 		
 		pipeline.addPipelineElement(new DQVisualizer());
 		//pipeline.addPipelineElement(writer);

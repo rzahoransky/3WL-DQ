@@ -12,7 +12,9 @@ import java.util.Date;
 import java.util.Properties;
 
 import calculation.MieList;
-import rzahoransky.dqpipeline.DQPipelineElement;
+import rzahoransky.dqpipeline.dataExtraction.ConcentrationExtractor;
+import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
+import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.dqpipeline.visualization.DQSinglePeriodMeasurementVisualizer;
 import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizer;
 import rzahoransky.dqpipeline.visualization.TransmissionVisualizer;
@@ -26,6 +28,8 @@ public class MeasureSetUp extends Properties{
 	private DQPipelineElement periodVis;
 	private MieList[] mieList;
 	private ParticleSizeVisualizer sizeVisualizer;
+	private TransmissionExtractor transmissionExtractor;
+	private ConcentrationExtractor concentrationExtractor;
 	
 
 	private MeasureSetUp() {
@@ -120,7 +124,22 @@ public class MeasureSetUp extends Properties{
 	public ParticleSizeVisualizer getSizeVisualizer() {
 		return sizeVisualizer;
 	}
+
+	public void addTransmissionExtractor(TransmissionExtractor transmissionExtractor) {
+		this.transmissionExtractor = transmissionExtractor;
+	}
 	
+	public TransmissionExtractor getTransmissionExtractor() {
+		return this.transmissionExtractor;
+	}
+	
+	public void setConcentrationExtractor(ConcentrationExtractor concentrationExtractor) {
+		this.concentrationExtractor = concentrationExtractor;
+	}
+	
+	public ConcentrationExtractor getConcentrationExtractor() {
+		return concentrationExtractor;
+	}
 	
 
 }

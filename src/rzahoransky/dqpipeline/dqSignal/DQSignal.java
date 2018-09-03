@@ -1,4 +1,4 @@
-package rzahoransky.dqpipeline;
+package rzahoransky.dqpipeline.dqSignal;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -8,7 +8,6 @@ import java.util.OptionalDouble;
 
 import calculation.DistributionFactory;
 import javafx.scene.chart.PieChart.Data;
-import rzahoransky.dqpipeline.dqSignal.DQSignalEntry;
 import rzahoransky.utils.ArrayListUtils;
 import rzahoransky.utils.DQtype;
 import rzahoransky.utils.ExtractedSignalType;
@@ -202,7 +201,7 @@ public class DQSignal {
 
 	public void setDiameter(double diameter) {
 		this.diameter = diameter;
-		System.out.println("Got diameter: "+diameter);
+		// System.out.println("Got diameter: "+diameter);
 	}
 
 	public double getSigma() {

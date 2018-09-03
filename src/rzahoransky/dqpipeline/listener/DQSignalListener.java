@@ -1,6 +1,6 @@
 package rzahoransky.dqpipeline.listener;
 
-import rzahoransky.dqpipeline.DQSignal;
+import rzahoransky.dqpipeline.dqSignal.DQSignal;
 
 public interface DQSignalListener {
 	

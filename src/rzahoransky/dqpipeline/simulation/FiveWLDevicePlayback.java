@@ -16,9 +16,9 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import kirkwood.nidaq.access.NiDaqException;
-import rzahoransky.dqpipeline.AbstractDQPipelineElement;
-import rzahoransky.dqpipeline.DQSignal;
-import rzahoransky.dqpipeline.analogueAdapter.AdapterInterface;
+import rzahoransky.dqpipeline.dqSignal.DQSignal;
+import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
+import rzahoransky.dqpipeline.interfaces.AdapterInterface;
 import rzahoransky.utils.RawSignalType;
 
 public class FiveWLDevicePlayback extends AbstractDQPipelineElement implements AdapterInterface{
