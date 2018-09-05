@@ -8,6 +8,7 @@ import java.util.OptionalDouble;
 
 import calculation.DistributionFactory;
 import javafx.scene.chart.PieChart.Data;
+import rzahoransky.dqpipeline.dataExtraction.DiameterComperator;
 import rzahoransky.utils.ArrayListUtils;
 import rzahoransky.utils.DQtype;
 import rzahoransky.utils.ExtractedSignalType;
@@ -34,7 +35,7 @@ public class DQSignal {
 	private double wl2 = 0;
 	private double wl3 = 0;
 
-	private double diameter = 0;
+	private DiameterComperator diameter = null;
 	private double sigma = 0;
 	
 	private HashMap<TransmissionType, ArrayList<Double>> measuredValues = new HashMap<>();
@@ -195,12 +196,12 @@ public class DQSignal {
 		return wl3;
 	}
 	
-	public double getDiameter() {
+	public DiameterComperator getDiameter() {
 		return diameter;
 	}
 
-	public void setDiameter(double diameter) {
-		this.diameter = diameter;
+	public void setDiameter(DiameterComperator result) {
+		this.diameter = result;
 		// System.out.println("Got diameter: "+diameter);
 	}
 

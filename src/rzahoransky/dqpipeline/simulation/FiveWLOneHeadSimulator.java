@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 
+import javax.swing.BoundedRangeModel;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -18,11 +20,11 @@ public class FiveWLOneHeadSimulator extends AbstractDQPipelineElement implements
 	
 	int step = 0;
 	int periodLength = 80;
-	int sampleSize = 300;
+	int sampleSize = 1200;
 	Random r = new Random();
-	JSlider wl1 = new JSlider(JSlider.VERTICAL,-10,10,5);
-	JSlider wl2 = new JSlider(JSlider.VERTICAL,-10,10,4);
-	JSlider wl3 = new JSlider(JSlider.VERTICAL,-10,10,3);
+	JSlider wl1 = new JSlider(JSlider.VERTICAL,-1000,1000,1000);
+	JSlider wl2 = new JSlider(JSlider.VERTICAL,-1000,1000,1000);
+	JSlider wl3 = new JSlider(JSlider.VERTICAL,-1000,1000,1000);
 
 	public FiveWLOneHeadSimulator() {
 		JFrame control = new JFrame("Simulator Control");
@@ -88,7 +90,7 @@ public class FiveWLOneHeadSimulator extends AbstractDQPipelineElement implements
 		
 		//WL1
 		for (step = 0;step<0.2*periodLength;step++) {
-			measure.add(r.nextDouble()*0.1+wl1.getValue()); //measure:5V+/-0.5V
+			measure.add(r.nextDouble()*0.0+wl1.getValue()/100d); //measure:5V+/-0.5V
 			reference.add(r.nextDouble()*0.1+7); //reference: 7V +/-0.5V
 			mode.add(4d); //mode is 4
 			trigger.add(0d);
@@ -96,7 +98,7 @@ public class FiveWLOneHeadSimulator extends AbstractDQPipelineElement implements
 		
 		//WL2
 		for (;step<0.4*periodLength;step++) {
-			measure.add(r.nextDouble()*0.1+wl2.getValue()); //measure:4V+/-0.5V
+			measure.add(r.nextDouble()*0.0+wl2.getValue()/100d); //measure:4V+/-0.5V
 			reference.add(r.nextDouble()*0.1+5); //reference: 5V +/-0.5V
 			mode.add(4d); //mode is 4
 			trigger.add(0d);
@@ -104,7 +106,7 @@ public class FiveWLOneHeadSimulator extends AbstractDQPipelineElement implements
 		
 		//WL3
 		for (;step<0.6*periodLength;step++) {
-			measure.add(r.nextDouble()*0.1+wl3.getValue()); //measure:3V+/-0.3V
+			measure.add(r.nextDouble()*0.00+wl3.getValue()/100d); //measure:3V+/-0.3V
 			reference.add(r.nextDouble()*0.1+4); //reference: 4V +/-0.3V
 			mode.add(4d); //mode is 4
 			trigger.add(0d);
@@ -112,8 +114,8 @@ public class FiveWLOneHeadSimulator extends AbstractDQPipelineElement implements
 		
 		//Offset
 		for (;step<periodLength;step++) {
-			measure.add(r.nextDouble()*0.1+0); //measure:0V+/-0.3V
-			reference.add(r.nextDouble()*0.1-2); //reference: -2V +/-0.2V
+			measure.add(r.nextDouble()*0.0+-7); //measure:-7V+/-0.3V
+			reference.add(r.nextDouble()*0.0-8); //reference: -8V +/-0.2V
 			mode.add(4d); //mode is 4
 			if (step==triggerAt)
 				trigger.add(4d);

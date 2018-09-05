@@ -13,7 +13,7 @@ import rzahoransky.dqpipeline.analogueAdapter.FiveWLNIDaqAdapter;
 import rzahoransky.dqpipeline.dataExtraction.DQExtractor;
 import rzahoransky.dqpipeline.dataExtraction.FiveWLExtractor;
 import rzahoransky.dqpipeline.dataExtraction.FiveWLMeasurePoints;
-import rzahoransky.dqpipeline.dataExtraction.ParticleSizeExtractor;
+import rzahoransky.dqpipeline.dataExtraction.ProbabilityBasedDiameterExtractor;
 import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AdapterInterface;
@@ -68,7 +68,7 @@ public class DQPipeline {
 		
 		DQPipelineElement transmissionExtractor = new TransmissionExtractor(true);
 		DQPipelineElement dqExtractor = new DQExtractor();
-		DQPipelineElement sizeExtractor = new ParticleSizeExtractor(new File("D:/mietemp/rgb-latex-in-water.miezip"));
+		DQPipelineElement sizeExtractor = new ProbabilityBasedDiameterExtractor(new File("D:/mietemp/rgb-latex-in-water.miezip"));
 		//DQPipelineElement concenentrationExtractor = new ConcentrationExtractor(measureLengthInCm, wl1, wl2, wl3)
 		
 		//DQPipelineElement writer = new RawDataWriter("testInfared.txt");

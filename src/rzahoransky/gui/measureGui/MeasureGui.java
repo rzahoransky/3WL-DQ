@@ -45,7 +45,7 @@ private DQPipeline pipeline;
 		c.fill = GridBagConstraints.BOTH;
 		c.gridx=0;
 		c.gridy=0;
-		c.gridwidth=GridBagConstraints.REMAINDER;
+		c.gridwidth=GridBagConstraints.RELATIVE;
 		c.weightx=0.5;
 		c.weighty=0.5;
 		
@@ -55,6 +55,12 @@ private DQPipeline pipeline;
 		//c.gridx++;
 		//add(setup.getSinglePeriodVisualizer().getChartPanel(),c);
 
+		
+		//Single DQs
+		c.gridx++;
+		c.gridwidth=1;
+		c.gridheight=2;
+		add(new SingleDQGui(),c);
 		
 		//DQ Field
 		c.gridwidth=1;
@@ -67,6 +73,7 @@ private DQPipeline pipeline;
 		
 		//Transmission
 		c.gridx=1;
+		c.gridy++;
 		c.gridheight=1;
 		c.weightx=0.5;
 		c.weighty=0.5;
@@ -81,9 +88,11 @@ private DQPipeline pipeline;
 		add(setup.getTransmissionExtractor().getI0Btn(),c);
 		
 		//add numeric representation
-		c.gridy++;
+		//c.gridy++;
 		c.gridx=0;
 		c.gridwidth = GridBagConstraints.RELATIVE;
+		c.gridheight = 1;
+		c.fill = GridBagConstraints.HORIZONTAL;
 		add(new NumericDiameterGui(pipeline),c);
 		
 		

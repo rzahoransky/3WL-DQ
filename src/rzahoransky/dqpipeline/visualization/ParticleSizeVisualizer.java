@@ -28,6 +28,7 @@ public class ParticleSizeVisualizer extends AbstractDQPipelineElement implements
 
 	ChartPanel chartPanel;
 	JFrame frame;
+	private long maxAge;
 
 	public ParticleSizeVisualizer(boolean showAsFrame) {
 
@@ -62,10 +63,10 @@ public class ParticleSizeVisualizer extends AbstractDQPipelineElement implements
 
 	private void updateSeries(DQSignal measurement, TimeSeries series) {
 		// series.clear();
-		double d = measurement.getDiameter();
+		double d = measurement.getDiameter().getAverageDiameter();
 		RegularTimePeriod period = new Millisecond(new Date(measurement.getTimeStamp()));
 		series.add(period, d);
-		//series.setMaximumItemAge(100);
+		series.setMaximumItemAge(maxAge);
 		// series.notify();
 	}
 
@@ -85,6 +86,10 @@ public class ParticleSizeVisualizer extends AbstractDQPipelineElement implements
 	@Override
 	public String description() {
 		return "Visualizes Particle Diameter";
+	}
+	
+	public void setMaximumAge(long entries) {
+		this.maxAge = entries;
 	}
 
 }

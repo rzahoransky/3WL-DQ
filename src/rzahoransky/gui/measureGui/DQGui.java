@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.LogarithmicAxis;
+
 import calculation.MieList;
 import charts.MieChartPanels;
 import rzahoransky.dqpipeline.DQPipeline;

@@ -12,8 +12,12 @@ import org.jfree.data.general.Dataset;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYIntervalSeries;
+import org.jfree.data.xy.XYIntervalSeriesCollection;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.data.xy.YIntervalSeries;
+import org.jfree.data.xy.YIntervalSeriesCollection;
 
 public class Charts {
 
@@ -49,6 +53,13 @@ public class Charts {
 			collection.addSeries(new XYSeries(s));
 		}
 		
+		return collection;
+	}
+	
+	public static YIntervalSeriesCollection getParticleIntervalCollection() {
+		YIntervalSeriesCollection collection = new YIntervalSeriesCollection();
+		collection.addSeries(new YIntervalSeries("Particle Diameter"));
+		collection.addSeries(new YIntervalSeries("Sigma"));
 		return collection;
 	}
 	

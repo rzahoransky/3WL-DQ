@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NavigableSet;
+import java.util.Set;
 
 import javax.crypto.spec.DHGenParameterSpec;
 import javax.swing.JOptionPane;
@@ -24,7 +25,7 @@ import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.utils.DQtype;
 import storage.dqMeas.read.DQReader;
 
-public class ParticleSizeExtractor extends AbstractDQPipelineElement {
+public class ProbabilityBasedDiameterExtractor extends AbstractDQPipelineElement {
 
 	private MieList wl1;
 	private MieList wl3;
@@ -36,25 +37,24 @@ public class ParticleSizeExtractor extends AbstractDQPipelineElement {
 		double dq1 = 3;
 		double dq2 = 4;
 
-		ParticleSizeExtractor extractor = new ParticleSizeExtractor(new File("D:/mietemp/2018-08-08.miezip"));
+		ProbabilityBasedDiameterExtractor extractor = new ProbabilityBasedDiameterExtractor(new File("D:/mietemp/2018-08-08.miezip"));
 		DQSignal in = new DQSignal();
 		in.setDQ(new DQSignalEntry(DQtype.DQ1, 1, 2, 1.8));
 		in.setDQ(new DQSignalEntry(DQtype.DQ2, 1, 2, 3.4));
 		in.setDQ(new DQSignalEntry(DQtype.DQ3, 1, 2, 6.12));
 		extractor.processDQElement(in);
-
 	}
 
-	public ParticleSizeExtractor(MieList wl1, MieList wl2, MieList wl3) {
+	public ProbabilityBasedDiameterExtractor(MieList wl1, MieList wl2, MieList wl3) {
 		this.wl1 = wl1;
 		this.wl2 = wl2;
 		this.wl3 = wl3;
 		dqs.put(DQtype.DQ1, new ReverseDQ(wl1, wl2));
 		dqs.put(DQtype.DQ2, new ReverseDQ(wl2, wl3));
-		dqs.put(DQtype.DQ3, new ReverseDQ(wl1, wl3));
+		//dqs.put(DQtype.DQ3, new ReverseDQ(wl1, wl3));
 	}
 
-	public ParticleSizeExtractor(File zippedMie) {
+	public ProbabilityBasedDiameterExtractor(File zippedMie) {
 		DQReader reader;
 		try {
 			reader = new DQReader(zippedMie);
@@ -63,7 +63,7 @@ public class ParticleSizeExtractor extends AbstractDQPipelineElement {
 			this.wl3 = reader.getWl3();
 			dqs.put(DQtype.DQ1, new ReverseDQ(wl1, wl2));
 			dqs.put(DQtype.DQ2, new ReverseDQ(wl2, wl3));
-			dqs.put(DQtype.DQ3, new ReverseDQ(wl1, wl3));
+			//dqs.put(DQtype.DQ3, new ReverseDQ(wl1, wl3));
 
 		} catch (IOException | WavelengthMismatchException e) {
 			e.printStackTrace();
@@ -77,12 +77,16 @@ public class ParticleSizeExtractor extends AbstractDQPipelineElement {
 			checkWavelengths(in);
 			wavelengthCheck = false;
 		}
+		double now = System.currentTimeMillis();
 
 		try {
 			extractDiameterAndSigma(in);
+			System.out.println("Probability Lookup: d: "+in.getDiameter().getAverageDiameter()+" sigma: "+in.getSigma()+" time: "+Double.toString(System.currentTimeMillis()-now));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+
 
 		return in;
 	}
@@ -90,7 +94,7 @@ public class ParticleSizeExtractor extends AbstractDQPipelineElement {
 	public void extractDiameterAndSigma(DQSignal signal) {
 		HashMap<DQtype, List<ReverseDQEntry>> dqHits = new HashMap<>();
 
-		for (DQtype dqType : DQtype.values()) {
+		for (DQtype dqType : dqs.keySet()) {
 			dqHits.put(dqType, getDQHits(signal.getDQ(dqType))); // get all possible diameter matches from dqs
 		}
 
@@ -103,23 +107,25 @@ public class ParticleSizeExtractor extends AbstractDQPipelineElement {
 			comperators.add(new DiameterComperator(entry)); // take every single possible diameter as starting point
 		}
 
-		LinkedList<DQtype> remainingDQs = new LinkedList<>(Arrays.asList(DQtype.values()));
+		//LinkedList<DQtype> remainingDQs = new LinkedList<>(Arrays.asList(dqs.keySet()));
+		Set<DQtype> remainingDQs = new HashSet<>(dqs.keySet());
 		remainingDQs.remove(mostHits);
 
 		for (DQtype remaining : remainingDQs) {
 			for (DiameterComperator comperator : comperators) {
-				comperator.filterForBestMatch(dqHits.get(remaining)); // match best diameters from remaining DQs
+				//comperator.filterForBestMatchWithAbsoluteDistance(dqHits.get(remaining)); // match best diameters from remaining DQs
+				comperator.filterForBestMatchWithProbabilityFunction(dqHits.get(remaining));
 			}
 		}
 
 		DiameterComperator result = getBestMatchingComperatorElement(comperators);
-		signal.setDiameter(result.getMedianDiameter());
+		signal.setDiameter(result);
 		signal.setSigma(result.getSigma());
 	}
 
 	private DiameterComperator getBestMatchingComperatorElement(ArrayList<DiameterComperator> comperators) {
 		LinkedList<DiameterComperator> result = new LinkedList<>();
-		for (DiameterComperator comp : comperators) {
+		for (DiameterComperator comp : comperators) { //filkter for null elements and element with only one match
 			if (comp != null && comp.getSize() > 1)
 				result.add(comp);
 		}

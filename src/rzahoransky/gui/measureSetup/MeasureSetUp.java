@@ -12,11 +12,13 @@ import java.util.Date;
 import java.util.Properties;
 
 import calculation.MieList;
+import rzahoransky.dqpipeline.DQPipeline;
 import rzahoransky.dqpipeline.dataExtraction.ConcentrationExtractor;
 import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
 import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.dqpipeline.visualization.DQSinglePeriodMeasurementVisualizer;
 import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizer;
+import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizerChart;
 import rzahoransky.dqpipeline.visualization.TransmissionVisualizer;
 
 public class MeasureSetUp extends Properties{
@@ -27,9 +29,10 @@ public class MeasureSetUp extends Properties{
 	private TransmissionVisualizer transmissionVis;
 	private DQPipelineElement periodVis;
 	private MieList[] mieList;
-	private ParticleSizeVisualizer sizeVisualizer;
+	private ParticleSizeVisualizerChart sizeVisualizer;
 	private TransmissionExtractor transmissionExtractor;
 	private ConcentrationExtractor concentrationExtractor;
+	private DQPipeline pipeline;
 	
 
 	private MeasureSetUp() {
@@ -115,13 +118,22 @@ public class MeasureSetUp extends Properties{
 	public MieList getMieList(int index) {
 		return mieList[index];
 	}
+	
+	public MieList getMieListForWavelength(double wavelength) {
+		for (MieList list: mieList) {
+			if(list.getWavelength() == wavelength)
+				return list;
+		}
+		
+		return null;
+	}
 
-	public void addParticleVisualizer(ParticleSizeVisualizer sizeVisualizer) {
-		this.sizeVisualizer = sizeVisualizer;
+	public void addParticleVisualizer(ParticleSizeVisualizerChart sizeVisualizer2) {
+		this.sizeVisualizer = sizeVisualizer2;
 		
 	}
 
-	public ParticleSizeVisualizer getSizeVisualizer() {
+	public ParticleSizeVisualizerChart getSizeVisualizer() {
 		return sizeVisualizer;
 	}
 
@@ -139,6 +151,14 @@ public class MeasureSetUp extends Properties{
 	
 	public ConcentrationExtractor getConcentrationExtractor() {
 		return concentrationExtractor;
+	}
+
+	public void setPipeline(DQPipeline pipeline) {
+		this.pipeline = pipeline;
+	}
+	
+	public DQPipeline getPipeline() {
+		return this.pipeline;
 	}
 	
 

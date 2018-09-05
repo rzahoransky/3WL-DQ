@@ -47,9 +47,9 @@ public class ConcentrationExtractor extends AbstractDQPipelineElement {
 		ArrayList<Double> volumeConcentrations = new ArrayList<>();
 		
 		try {
-		volumeConcentrations.add(getVolumeConcentration(transmissionWl1, in.getSigma(), wl1.getClosesElementForDiameter(in.getDiameter())));
-		volumeConcentrations.add(getVolumeConcentration(transmissionWl2, in.getSigma(), wl2.getClosesElementForDiameter(in.getDiameter())));
-		volumeConcentrations.add(getVolumeConcentration(transmissionWl3, in.getSigma(), wl3.getClosesElementForDiameter(in.getDiameter())));
+		volumeConcentrations.add(getVolumeConcentration(transmissionWl1, in.getSigma(), wl1.getClosesElementForDiameter(in.getDiameter().getAverageDiameter())));
+		volumeConcentrations.add(getVolumeConcentration(transmissionWl2, in.getSigma(), wl2.getClosesElementForDiameter(in.getDiameter().getAverageDiameter())));
+		volumeConcentrations.add(getVolumeConcentration(transmissionWl3, in.getSigma(), wl3.getClosesElementForDiameter(in.getDiameter().getAverageDiameter())));
 		
 		
 		in.setVolumeConcentration(ArrayListUtils.getAverage(volumeConcentrations));

@@ -3,6 +3,7 @@ package rzahoransky.gui.measureGui;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.LayoutManager;
+import java.text.DecimalFormat;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -19,6 +20,7 @@ public class NumericDiameterGui extends JPanel implements DQSignalListener{
 	protected static final JLabel diameterString = new JLabel("Diameter in μm");
 	protected static final JLabel sigmaString = new JLabel("Sigma:");
 	protected static final JLabel densityString = new JLabel("Particles / m³");
+	DecimalFormat df = new DecimalFormat("0.000"); 
 	
 	
 	public NumericDiameterGui(DQPipeline pipeline) {
@@ -48,7 +50,7 @@ public class NumericDiameterGui extends JPanel implements DQSignalListener{
 	@Override
 	public void newSignal(DQSignal currentSignal) {
 		try {
-		diameter.setText(formatDouble(currentSignal.getDiameter()));
+		diameter.setText(formatDouble(currentSignal.getDiameter().getAverageDiameter()));
 		sigma.setText(formatDouble(currentSignal.getSigma()));
 		density.setText(formatDouble(currentSignal.getVolumeConcentration()));
 		} catch (Exception e) {
@@ -63,7 +65,7 @@ public class NumericDiameterGui extends JPanel implements DQSignalListener{
 	}
 	
 	public String formatDouble(double d) {
-		return formatDouble(d, 3);
+		return df.format(d);
 	}
 
 }

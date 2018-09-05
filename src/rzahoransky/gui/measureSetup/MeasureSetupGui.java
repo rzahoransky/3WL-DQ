@@ -42,7 +42,8 @@ import rzahoransky.dqpipeline.dataExtraction.ConcentrationExtractor;
 import rzahoransky.dqpipeline.dataExtraction.DQExtractor;
 import rzahoransky.dqpipeline.dataExtraction.FiveWLExtractor;
 import rzahoransky.dqpipeline.dataExtraction.FiveWLMeasurePoints;
-import rzahoransky.dqpipeline.dataExtraction.ParticleSizeExtractor;
+import rzahoransky.dqpipeline.dataExtraction.ProbabilityBasedDiameterExtractor;
+import rzahoransky.dqpipeline.dataExtraction.SimpleDQEntryDiameterExtractor;
 import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AdapterInterface;
@@ -54,6 +55,7 @@ import rzahoransky.dqpipeline.visualization.DQSinglePeriodMeasurementVisualizer;
 import rzahoransky.dqpipeline.visualization.DQVisualizer;
 import rzahoransky.dqpipeline.visualization.LaserVoltageVisualizer;
 import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizer;
+import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizerChart;
 import rzahoransky.dqpipeline.visualization.TransmissionVisualizer;
 import rzahoransky.gui.measureGui.MeasureGui;
 import storage.dqMeas.read.DQReader;
@@ -217,7 +219,7 @@ public class MeasureSetupGui extends JFrame{
 		DQExtractor dqExtractor = new DQExtractor();
 		
 		//Calculate particles from DQ
-		ParticleSizeExtractor sizeExtractor = new ParticleSizeExtractor(wl1, wl2, wl3);
+		ProbabilityBasedDiameterExtractor sizeExtractor = new ProbabilityBasedDiameterExtractor(wl1, wl2, wl3);
 		
 		//Calulate particle concentration
 		ConcentrationExtractor concentrationExtractor = new ConcentrationExtractor(wl1, wl2, wl3);
@@ -227,7 +229,7 @@ public class MeasureSetupGui extends JFrame{
 		DQSinglePeriodMeasurementVisualizer singelPeriodVisualizer = new DQSinglePeriodMeasurementVisualizer(false);
 		TransmissionVisualizer transmissionVisualizer = new TransmissionVisualizer(false);
 		LaserVoltageVisualizer laserVoltage = new LaserVoltageVisualizer();
-		ParticleSizeVisualizer sizeVisualizer = new ParticleSizeVisualizer(true);
+		ParticleSizeVisualizerChart sizeVisualizer = new ParticleSizeVisualizerChart(false);
 		
 		//create Pipeline
 		pipeline = new DQPipeline();
@@ -262,9 +264,12 @@ public class MeasureSetupGui extends JFrame{
 		pipeline.addPipelineElement(sizeVisualizer);
 		pipeline.addPipelineElement(concentrationExtractor);
 		
-		pipeline.addPipelineElement(new DQVisualizer());
+		pipeline.addPipelineElement(new SimpleDQEntryDiameterExtractor());
+		//pipeline.addPipelineElement(new DQVisualizer());
 		//pipeline.addPipelineElement(writer);
 		//pipeline.start();
+		
+		setup.setPipeline(pipeline);
 	}
 	
 	private JButton getStartBtn() {
