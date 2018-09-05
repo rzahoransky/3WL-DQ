@@ -184,7 +184,7 @@ public class MeasureSetupGui extends JFrame{
 
 	private void setupFrame() {
 		setSize(600, 650);
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationByPlatform(true);
 		//setLayout(new GridBagLayout());
 		getContentPane().setLayout(new GridBagLayout());
@@ -228,7 +228,7 @@ public class MeasureSetupGui extends JFrame{
 		//Graphical Elements
 		DQSinglePeriodMeasurementVisualizer singelPeriodVisualizer = new DQSinglePeriodMeasurementVisualizer(false);
 		TransmissionVisualizer transmissionVisualizer = new TransmissionVisualizer(false);
-		LaserVoltageVisualizer laserVoltage = new LaserVoltageVisualizer();
+		LaserVoltageVisualizer laserVoltage = new LaserVoltageVisualizer(false);
 		ParticleSizeVisualizerChart sizeVisualizer = new ParticleSizeVisualizerChart(false);
 		
 		//create Pipeline
@@ -255,7 +255,7 @@ public class MeasureSetupGui extends JFrame{
 		pipeline.addPipelineElement(triggerMarker);
 		pipeline.addPipelineElement(singelPeriodVisualizer);
 		pipeline.addPipelineElement(valueExtractor);
-		pipeline.addPipelineElement(laserVoltage);
+		//pipeline.addPipelineElement(laserVoltage);
 		pipeline.addPipelineElement(transmissionExtractor);
 		pipeline.addPipelineElement(transmissionVisualizer);
 		pipeline.addPipelineElement(dqExtractor);

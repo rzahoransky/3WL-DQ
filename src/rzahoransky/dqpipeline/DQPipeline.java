@@ -64,7 +64,7 @@ public class DQPipeline {
 		
 		DQPipelineElement valueExtractor = new FiveWLExtractor(new FiveWLMeasurePoints());
 		
-		DQPipelineElement extractedDataVis = new LaserVoltageVisualizer();
+		DQPipelineElement extractedDataVis = new LaserVoltageVisualizer(false);
 		
 		DQPipelineElement transmissionExtractor = new TransmissionExtractor(true);
 		DQPipelineElement dqExtractor = new DQExtractor();
@@ -175,6 +175,7 @@ public class DQPipeline {
 		public AdapterThread(DQPipelineElement element) {
 			this.element = element;
 			setDaemon(true);
+			setName(element.description());
 		}
 		
 		public void setInQueue(BlockingQueue<DQSignal> in) {
@@ -206,6 +207,7 @@ public class DQPipeline {
 					}
 				}
 			}
+			return;
 		}
 		
 	}
@@ -231,6 +233,7 @@ public class DQPipeline {
 				}
 			}
 			}
+			return;
 		}
 
 

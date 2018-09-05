@@ -157,32 +157,6 @@ public class ProbabilityBasedDiameterExtractor extends AbstractDQPipelineElement
 		return dqs.get(dq.getType()).getDQHits(dq.getDqValue());
 	}
 
-	/**
-	 * returns the minimum distance between two elements in the sepcified sets.
-	 * Stores minimum found diameter in SigmaSize
-	 * 
-	 * @param sizesForSigma
-	 * @param sizesForSigma2
-	 * @return
-	 */
-	private double bestMatch(NavigableSet<Double> sizesForSigma, NavigableSet<Double> sizesForSigma2, SigmaSize ss) {
-		double distance = Double.MAX_VALUE;
-		for (double diameter : sizesForSigma) {
-			double floor = sizesForSigma2.floor(diameter);
-			double ceiling = sizesForSigma2.ceiling(diameter);
-			if (Math.abs(floor - diameter) < distance) {
-				distance = Math.abs(floor - diameter);
-				ss.diameter = (diameter + floor) / 2;
-			}
-			if (Math.abs(ceiling - diameter) < diameter) {
-				distance = Math.abs(ceiling - diameter);
-				ss.diameter = (diameter + ceiling) / 2;
-			}
-		}
-
-		return distance;
-	}
-
 	private void checkWavelengths(DQSignal in) {
 		if (Math.abs(in.getWL1() - wl1.getWavelength()) > 0.01 || Math.abs(in.getWL2() - wl2.getWavelength()) > 0.01
 				|| Math.abs(in.getWL3() - wl3.getWavelength()) > 0.01) {

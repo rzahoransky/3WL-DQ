@@ -1,5 +1,6 @@
 package rzahoransky.dqpipeline.visualization;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -9,6 +10,7 @@ import javax.swing.JFrame;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.DateAxis;
 import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.RegularTimePeriod;
 import org.jfree.data.time.Second;
@@ -31,15 +33,19 @@ public class LaserVoltageVisualizer extends AbstractDQPipelineElement{
 	ExtractedSignalType[] types = {ExtractedSignalType.wl1wOffset, ExtractedSignalType.wl2wOffset, ExtractedSignalType.wl3wOffset, ExtractedSignalType.offset};
 	ExtractedSignalType[] typesRef = {ExtractedSignalType.wl1wOffset, ExtractedSignalType.wl2wOffset, ExtractedSignalType.wl3wOffset, ExtractedSignalType.offset};
 
-	public LaserVoltageVisualizer() {
-		frame = new JFrame("AD-Samples");
+	public LaserVoltageVisualizer(boolean showAsFrame) {
 		TimeSeriesCollection dataset = Charts.getDataSet(types);
 		JFreeChart chart = Charts.getXYChart("Values", "Time", "Voltage", dataset);
+		chart.getXYPlot().setDomainAxis(getDateAxis());
 		chartPanel = Charts.getChartPanel("Measurment", chart);
-		frame.setSize(500, 300);
-		frame.add(chartPanel);
-		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		if (showAsFrame) {
+			frame = new JFrame("AD-Samples");
+			frame.setSize(500, 300);
+			frame.add(chartPanel);
+			frame.setVisible(true);
+			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		}
+
 	}
 
 	public ChartPanel getChartPanel() {
@@ -48,6 +54,12 @@ public class LaserVoltageVisualizer extends AbstractDQPipelineElement{
 
 	public JFrame getFrame() {
 		return frame;
+	}
+	
+	private DateAxis getDateAxis() {
+		DateAxis dateAxis = new DateAxis();
+		dateAxis.setDateFormatOverride(new SimpleDateFormat("HH:mm:ss.SSS")); 
+		return dateAxis;
 	}
 	
 	public void visualizeDQMeasurement (DQSignal measurement) {
@@ -65,9 +77,10 @@ public class LaserVoltageVisualizer extends AbstractDQPipelineElement{
 			ExtractedSignalType type = (ExtractedSignalType) series.getKey();
 			
 			Second second = new Second(new Date(measurement.getTimeStamp()));
-			Millisecond milliSecond = new Millisecond(new Date(measurement.getTimeStamp()));
+			//Millisecond milliSecond = new Millisecond(new Date(measurement.getTimeStamp()));
 			//series.addOrUpdate(milliSecond, measurement.getAveragedValues(RawSignalType.meas, type));
-			series.addOrUpdate(milliSecond, measurement.getAveragedValues(RawSignalType.meas, type));
+			series.addOrUpdate(second, measurement.getAveragedValues(RawSignalType.meas, type));
+			
 
 
 //			for (int i = measurement.getsin; i < end; i++) {

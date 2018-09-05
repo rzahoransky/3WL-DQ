@@ -37,20 +37,20 @@ public class DiameterComperator implements Comparable<DiameterComperator> {
 		step = (end - start) / 750;
 	}
 
-	public void filterForBestMatchWithAbsoluteDistance(List<ReverseDQEntry> list) {
-		double distance = Double.MAX_VALUE;
-		ReverseDQEntry closestElement = null;
-		for (ReverseDQEntry entry : list) {
-			if (entry.getSigma() == sigma && Math.abs(getMedianDiameter() - entry.getDiameter()) < distance) { // filter
-																												// for
-																												// absolute
-																												// distance
-				closestElement = entry;
-				distance = Math.abs(getMedianDiameter() - entry.getDiameter());
-			}
-		}
-		add(closestElement);
-	}
+//	public void filterForBestMatchWithAbsoluteDistance(List<ReverseDQEntry> list) {
+//		double distance = Double.MAX_VALUE;
+//		ReverseDQEntry closestElement = null;
+//		for (ReverseDQEntry entry : list) {
+//			if (entry.getSigma() == sigma && Math.abs(getMedianDiameter() - entry.getDiameter()) < distance) { // filter
+//																												// for
+//																												// absolute
+//																												// distance
+//				closestElement = entry;
+//				distance = Math.abs(getMedianDiameter() - entry.getDiameter());
+//			}
+//		}
+//		add(closestElement);
+//	}
 
 	public void filterForBestMatchWithProbabilityFunction(List<ReverseDQEntry> list) {
 		double probability = 0;
@@ -86,7 +86,7 @@ public class DiameterComperator implements Comparable<DiameterComperator> {
 
 	private void add(ReverseDQEntry entry) {
 		foundDiameters.add(entry);
-		this.medianDiameter = calcMedianDiameter();
+//		this.medianDiameter = calcMedianDiameter();
 		this.averageDiameter = calcAverageDiameter();
 		log = new LogNormal(averageDiameter, sigma);
 	}
@@ -99,9 +99,9 @@ public class DiameterComperator implements Comparable<DiameterComperator> {
 		return average / foundDiameters.size();
 	}
 
-	public double getMedianDiameter() {
-		return medianDiameter;
-	}
+//	public double getMedianDiameter() {
+//		return medianDiameter;
+//	}
 
 	public double getAverageDiameter() {
 
@@ -119,17 +119,17 @@ public class DiameterComperator implements Comparable<DiameterComperator> {
 
 	}
 
-	protected double calcMedianDiameter() {
-		Collections.sort(foundDiameters);
-		if (foundDiameters.size() % 2 == 0) {
-			return foundDiameters.get(foundDiameters.size() / 2).getDiameter();
-		} else if (foundDiameters.size() == 1) {
-			return foundDiameters.get(0).getDiameter();
-		} else {
-			return (foundDiameters.get(foundDiameters.size() / 2).getDiameter()
-					+ foundDiameters.get(foundDiameters.size() / 2 - 1).getDiameter()) / 2;
-		}
-	}
+//	protected double calcMedianDiameter() {
+//		Collections.sort(foundDiameters);
+//		if (foundDiameters.size() % 2 == 0) {
+//			return foundDiameters.get(foundDiameters.size() / 2).getDiameter();
+//		} else if (foundDiameters.size() == 1) {
+//			return foundDiameters.get(0).getDiameter();
+//		} else {
+//			return (foundDiameters.get(foundDiameters.size() / 2).getDiameter()
+//					+ foundDiameters.get(foundDiameters.size() / 2 - 1).getDiameter()) / 2;
+//		}
+//	}
 
 	public double getErrorRangeAbsolute() {
 		return Math.abs(Collections.min(foundDiameters).getDiameter() - Collections.max(foundDiameters).getDiameter());

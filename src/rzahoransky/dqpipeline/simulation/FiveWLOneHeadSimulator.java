@@ -29,6 +29,7 @@ public class FiveWLOneHeadSimulator extends AbstractDQPipelineElement implements
 	public FiveWLOneHeadSimulator() {
 		JFrame control = new JFrame("Simulator Control");
 		control.add(sliderPanel());
+		control.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		control.setVisible(true);
 		
 	}

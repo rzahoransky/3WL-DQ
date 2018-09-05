@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
@@ -37,6 +38,13 @@ private DQPipeline pipeline;
 		setSize(new Dimension(600, 500));
 		setTitle("3WL DQ Particle Size Measurement");
 		setLayout(new GridBagLayout());
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent evt) {
+				System.out.println("Stopping...");
+				pipeline.stop();
+			}
+		});
 	}
 	
 	private void positionElements() {
@@ -94,8 +102,5 @@ private DQPipeline pipeline;
 		c.gridheight = 1;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		add(new NumericDiameterGui(pipeline),c);
-		
-		
-		
 	}
 }

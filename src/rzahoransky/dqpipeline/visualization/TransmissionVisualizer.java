@@ -1,5 +1,6 @@
 package rzahoransky.dqpipeline.visualization;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -9,6 +10,7 @@ import javax.swing.JFrame;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.DateAxis;
 import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.RegularTimePeriod;
 import org.jfree.data.time.Second;
@@ -36,6 +38,7 @@ public class TransmissionVisualizer extends AbstractDQPipelineElement{
 
 		TimeSeriesCollection dataset = Charts.getDataSet(TransmissionType.values());
 		JFreeChart chart = Charts.getXYChart("Transmission", "Time", "I/I0", dataset);
+		chart.getXYPlot().setDomainAxis(getDateAxis());
 		chartPanel = Charts.getChartPanel("Measurment", chart);
 
 		
@@ -56,6 +59,12 @@ public class TransmissionVisualizer extends AbstractDQPipelineElement{
 		return frame;
 	}
 	
+	private DateAxis getDateAxis() {
+		DateAxis dateAxis = new DateAxis();
+		dateAxis.setDateFormatOverride(new SimpleDateFormat("HH:mm:ss.SSS")); 
+		return dateAxis;
+	}
+	
 	public void visualizeDQMeasurement (DQSignal measurement) {
 		TimeSeriesCollection collection = (TimeSeriesCollection) chartPanel.getChart().getXYPlot().getDataset();
 		
@@ -74,7 +83,7 @@ public class TransmissionVisualizer extends AbstractDQPipelineElement{
 			Millisecond milliSecond = new Millisecond(new Date(measurement.getTimeStamp()));
 			//series.addOrUpdate(milliSecond, measurement.getAveragedValues(RawSignalType.meas, type));
 			//series.addOrUpdate(milliSecond, measurement.getAveragedValues(RawSignalType.meas, type));
-			series.addOrUpdate(milliSecond, measurement.getTransmission(type));
+			series.addOrUpdate(second, measurement.getTransmission(type));
 
 
 //			for (int i = measurement.getsin; i < end; i++) {

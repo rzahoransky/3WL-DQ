@@ -30,12 +30,6 @@ public class ConcentrationExtractor extends AbstractDQPipelineElement {
 		this.dq2 = new ReverseDQ(wl2, wl3);
 	}
 	
-	public ConcentrationExtractor() {
-		length = 1;
-	}
-	
-	
-
 	@Override
 	public DQSignal processDQElement(DQSignal in) {
 		in.setLength(length);
