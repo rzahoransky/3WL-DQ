@@ -33,6 +33,7 @@ public class MeasureSetUp extends Properties{
 	private TransmissionExtractor transmissionExtractor;
 	private ConcentrationExtractor concentrationExtractor;
 	private DQPipeline pipeline;
+	private boolean deviceIsConnected = false;
 	
 
 	private MeasureSetUp() {
@@ -79,6 +80,14 @@ public class MeasureSetUp extends Properties{
 	public void setProperty(MeasureSetupEntry entry, String value) {
 		setProperty(entry.toString(), value);
 		save();
+	}
+	
+	public void setStorageIntervall(double seconds) {
+		setProperty(MeasureSetupEntry.STOREINTERVAL, Double.toString(seconds));
+	}
+	
+	public double getStorageIntervall() {
+		return Double.parseDouble(getProperty(MeasureSetupEntry.STOREINTERVAL));
 	}
 	
 	public DQSinglePeriodMeasurementVisualizer getSinglePeriodVisualizer() {
@@ -159,6 +168,14 @@ public class MeasureSetUp extends Properties{
 	
 	public DQPipeline getPipeline() {
 		return this.pipeline;
+	}
+
+	public void setDeviceIsConnected(boolean b) {
+		deviceIsConnected = b;
+	}
+	
+	public boolean getDeviceIsConnected() {
+		return deviceIsConnected;
 	}
 	
 

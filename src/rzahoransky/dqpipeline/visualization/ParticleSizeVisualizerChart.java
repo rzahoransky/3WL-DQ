@@ -2,6 +2,7 @@ package rzahoransky.dqpipeline.visualization;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,7 +40,7 @@ public class ParticleSizeVisualizerChart extends AbstractDQPipelineElement imple
 
 	ChartPanel chartPanel;
 	JFrame frame;
-	private int maxAge = 3000;
+	private int maxAge = 4000;
 	private long start;
 
 	public ParticleSizeVisualizerChart(boolean showAsFrame) {
@@ -47,6 +48,7 @@ public class ParticleSizeVisualizerChart extends AbstractDQPipelineElement imple
 
 		YIntervalSeriesCollection dataset = Charts.getParticleIntervalCollection();
 		JFreeChart chart = Charts.getXYChart("Particle Information", "Time", "Diameter in µm", dataset);
+		chart.getTitle().setFont(new Font("Arial", Font.BOLD, 14));
 		DeviationRenderer r = getRenderer();
 		chart.getXYPlot().setRenderer(r);
 		chart.getXYPlot().setDomainAxis(getDateAxis());
@@ -67,13 +69,13 @@ public class ParticleSizeVisualizerChart extends AbstractDQPipelineElement imple
 		r.setSeriesFillPaint(0, Color.ORANGE);
 		r.setAlpha(0.3f);
 		r.setBaseStroke(new BasicStroke(2));
-		r.setSeriesStroke(0, new BasicStroke(3));
+		r.setSeriesStroke(0, new BasicStroke(2.5f));
 		return r;
 	}
 	
 	private DateAxis getDateAxis() {
 		DateAxis dateAxis = new DateAxis();
-		dateAxis.setDateFormatOverride(new SimpleDateFormat("HH:mm:ss.SSS")); 
+		dateAxis.setDateFormatOverride(new SimpleDateFormat("HH:mm:ss")); 
 		return dateAxis;
 	}
 
@@ -118,7 +120,7 @@ public class ParticleSizeVisualizerChart extends AbstractDQPipelineElement imple
 			try {
 			visualizeDQMeasurement(element);
 			} catch (Exception e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		// out.put(element); for debug purpose
 		return element;

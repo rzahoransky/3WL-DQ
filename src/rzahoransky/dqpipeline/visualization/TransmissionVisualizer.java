@@ -1,5 +1,7 @@
 package rzahoransky.dqpipeline.visualization;
 
+import java.awt.BasicStroke;
+import java.awt.Font;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,6 +41,10 @@ public class TransmissionVisualizer extends AbstractDQPipelineElement{
 		TimeSeriesCollection dataset = Charts.getDataSet(TransmissionType.values());
 		JFreeChart chart = Charts.getXYChart("Transmission", "Time", "I/I0", dataset);
 		chart.getXYPlot().setDomainAxis(getDateAxis());
+		for (int i = 0; i<chart.getXYPlot().getSeriesCount();i++) {
+			chart.getXYPlot().getRenderer().setSeriesStroke(i, new BasicStroke(2.0f));
+		}
+		chart.getTitle().setFont(new Font("Arial", Font.BOLD, 14));
 		chartPanel = Charts.getChartPanel("Measurment", chart);
 
 		
@@ -83,7 +89,7 @@ public class TransmissionVisualizer extends AbstractDQPipelineElement{
 			Millisecond milliSecond = new Millisecond(new Date(measurement.getTimeStamp()));
 			//series.addOrUpdate(milliSecond, measurement.getAveragedValues(RawSignalType.meas, type));
 			//series.addOrUpdate(milliSecond, measurement.getAveragedValues(RawSignalType.meas, type));
-			series.addOrUpdate(second, measurement.getTransmission(type));
+			series.addOrUpdate(milliSecond, measurement.getTransmission(type));
 
 
 //			for (int i = measurement.getsin; i < end; i++) {

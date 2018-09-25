@@ -39,39 +39,7 @@ public class FiveWLExtractor extends AbstractDQPipelineElement {
 		return in;
 	}
 
-//	private void extractValues(DQSinglePeriodMeasurement singlePeriod) {
-//		double refOffset = getOffset(singlePeriod, RawSignalType.ref);
-//		double measOffset = getOffset(singlePeriod, RawSignalType.meas);
-//		for (MeasurePointDescriptor descriptor : MeasurePointDescriptor.values()) { //wl1, wl2, wl3
-//			if (!descriptor.equals(MeasurePointDescriptor.offset)) {
-//				for (double measurePoint : measurePoints.getMeasurePoint(descriptor)) {
-//					int periodLength = singlePeriod.getPeriodLength();
-//					double refValue = singlePeriod.get(RawSignalType.ref).get((int) (periodLength * measurePoint))-refOffset;
-//					double measValue = singlePeriod.get(RawSignalType.meas).get((int) (periodLength * measurePoint))-measOffset;
-//
-//					switch (descriptor) {
-//					case wl1:
-//						singlePeriod.add(ProcessedSignalType.wl1wOffset, refValue);
-//						singlePeriod.add(ProcessedSignalType.wl1MeasureWithOffset, measValue);
-//						break;
-//					case wl2:
-//						singlePeriod.add(ProcessedSignalType.wl2wOffset, refValue);
-//						singlePeriod.add(ProcessedSignalType.wl2MeasureWithOffset, measValue);
-//						break;
-//					case wl3:
-//						singlePeriod.add(ProcessedSignalType.wl3wOffset, refValue);
-//						singlePeriod.add(ProcessedSignalType.wl3MeasureWithOffset, measValue);
-//						break;
-//					default:
-//						break;
-//					}
-//
-//				}
-//			}
-//		}
-//
-//	}
-	
+
 	private void getMode(DQSignal element) {
 		double mode = element.get(RawSignalType.mode).get(0);
 		if (mode < 5) {
@@ -83,14 +51,22 @@ public class FiveWLExtractor extends AbstractDQPipelineElement {
 			element.setWL2(0.818);
 			element.setWL3(1.313);
 		}
-		
 	}
+	
+//	public double getWl1 {
+//		double mode = element.get(RawSignalType.mode).get(0);
+//		if (mode < 5) {
+//			return 0.405;
+//		} else {
+//			return 0.635;
+//		}
+//	}
 
 	private void extractValues(DQSignalSinglePeriod singlePeriod) {
 		
 		for (RawSignalType type: RawSignalType.values()) {
 			switch (type) {
-			case ref:
+			case ref: //no break
 			case meas:
 				for (ExtractedSignalType wave: ExtractedSignalType.values()) {
 					switch (wave) {
@@ -115,11 +91,11 @@ public class FiveWLExtractor extends AbstractDQPipelineElement {
 		
 	}
 	
-	private List<Double> extractValue(DQSignalSinglePeriod singlePeriod, RawSignalType refMeas, ExtractedSignalType wavelength) {
+	private List<Double> extractValue(DQSignalSinglePeriod singlePeriod, RawSignalType refOrMeas, ExtractedSignalType wavelength) {
 		ArrayList<Double> result = new ArrayList<>();
-		double offset = getOffset(singlePeriod, refMeas);
+		double offset = getOffset(singlePeriod, refOrMeas);
 		for (double measurePoint: measurePoints.getRelativeMeasurePoint(wavelength)) {
-			List<Double> rawSignal = singlePeriod.getRawSignal(refMeas);
+			List<Double> rawSignal = singlePeriod.getRawSignal(refOrMeas);
 			int signalPeriodLength = singlePeriod.getPeriodLength();
 			double signalValue = rawSignal.get((int) (measurePoint * signalPeriodLength)); //signal value without offset
 			result.add(signalValue - offset); //signal value WITH OFFSET

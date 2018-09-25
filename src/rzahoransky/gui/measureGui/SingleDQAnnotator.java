@@ -22,8 +22,8 @@ public class SingleDQAnnotator extends AbstractXYAnnotation implements DQSignalL
 
 	private DQtype dq;
 	private DQSignalEntry currentDQ;
-	private double maxDiameter;
-	private double minDiameter;
+	private double maxDiameter = MeasureSetUp.getInstance().getMieList(0).getMaxDiameter();
+	private double minDiameter = MeasureSetUp.getInstance().getMieList(0).getMinDiameter();
 
 	public SingleDQAnnotator(DQtype dq) {
 		this.dq = dq;
@@ -33,8 +33,6 @@ public class SingleDQAnnotator extends AbstractXYAnnotation implements DQSignalL
 	@Override
 	public void newSignal(DQSignal currentSignal) {
 		currentDQ = currentSignal.getDQ(dq);
-		 maxDiameter = MeasureSetUp.getInstance().getMieList(0).getMaxDiameter();
-		 minDiameter = MeasureSetUp.getInstance().getMieList(0).getMinDiameter();
 		 fireAnnotationChanged();
 		
 	}
@@ -42,6 +40,8 @@ public class SingleDQAnnotator extends AbstractXYAnnotation implements DQSignalL
 	@Override
 	public void draw(Graphics2D g2, XYPlot plot, Rectangle2D dataArea, ValueAxis domainAxis, ValueAxis rangeAxis,
 			int rendererIndex, PlotRenderingInfo info) {
+		
+		try {
 		
         PlotOrientation orientation = plot.getOrientation();
         RectangleEdge domainEdge = Plot.resolveDomainAxisLocation(plot.getDomainAxisLocation(), orientation);
@@ -61,6 +61,8 @@ public class SingleDQAnnotator extends AbstractXYAnnotation implements DQSignalL
 //            }
 
         	g2.drawLine((int)x1, (int)y, (int)x2, (int)y);
+        	
+		} catch (Exception e ) {} //draw nothing
 		
 	}
 	

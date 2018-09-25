@@ -24,47 +24,31 @@ public class DiameterComperator implements Comparable<DiameterComperator> {
 	private double averageDiameter;
 	private double probability;
 	private LogNormal log;
-	private double start;
-	private double end;
-	private double step;
+	private static double minDiameter = MeasureSetUp.getInstance().getMieList(0).getMinDiameter();
+	private static double maxDiameter = MeasureSetUp.getInstance().getMieList(0).getMaxDiameter();
+	//private static int steps = 400;
+	private static double start = MeasureSetUp.getInstance().getMieList(0).getMinDiameter();
+	private static double end = MeasureSetUp.getInstance().getMieList(0).getMaxDiameter();
+	private static double step = (end - start) / 700;
 
 	public DiameterComperator(ReverseDQEntry initialEntry) {
 		sigma = initialEntry.getSigma();
 		add(initialEntry);
-
-		start = MeasureSetUp.getInstance().getMieList(0).getMinDiameter();
-		end = MeasureSetUp.getInstance().getMieList(0).getMaxDiameter();
-		step = (end - start) / 750;
 	}
-
-//	public void filterForBestMatchWithAbsoluteDistance(List<ReverseDQEntry> list) {
-//		double distance = Double.MAX_VALUE;
-//		ReverseDQEntry closestElement = null;
-//		for (ReverseDQEntry entry : list) {
-//			if (entry.getSigma() == sigma && Math.abs(getMedianDiameter() - entry.getDiameter()) < distance) { // filter
-//																												// for
-//																												// absolute
-//																												// distance
-//				closestElement = entry;
-//				distance = Math.abs(getMedianDiameter() - entry.getDiameter());
-//			}
-//		}
-//		add(closestElement);
-//	}
 
 	public void filterForBestMatchWithProbabilityFunction(List<ReverseDQEntry> list) {
 		double probability = 0;
 		ReverseDQEntry bestMatch = null;
 		for (ReverseDQEntry entry : list) {
 			double current_probability = getProbabilityOfMatch(entry);
-			if (current_probability > probability) { // filter for best probability match
+			if (current_probability >= probability) { // filter for best probability match
 				bestMatch = entry;
 				probability = current_probability;
 			}
-		}
 		// addWithSigmaUpdate(bestMatch);
 		add(bestMatch);
 		this.probability = probability;
+		}
 	}
 
 	private void addWithSigmaUpdate(ReverseDQEntry bestMatch) {
@@ -75,12 +59,14 @@ public class DiameterComperator implements Comparable<DiameterComperator> {
 	protected double getProbabilityOfMatch(ReverseDQEntry entry) {
 		LogNormal two = new LogNormal(entry.getDiameter(), entry.getSigma());
 		double area = 0;
+		//double start = Math.max(minDiameter, entry.getDiameter()/4);
+		//double end = Math.min(maxDiameter, entry.getDiameter()*4);
+		//double step = (end-start) / steps;
 		for (double x = start; x < end; x += step) {
 			double y1Min = Math.min(log.density(x, false), two.density(x, false));
 			double y2Min = Math.min(log.density(x + step, false), two.density(x + step, false));
 			area += MieIntegratorThreat.simpsonRule(x, x + step, y1Min, y2Min);
 		}
-		// System.out.println(area);
 		return area;
 	}
 
@@ -99,10 +85,6 @@ public class DiameterComperator implements Comparable<DiameterComperator> {
 		return average / foundDiameters.size();
 	}
 
-//	public double getMedianDiameter() {
-//		return medianDiameter;
-//	}
-
 	public double getAverageDiameter() {
 
 		// printDebugInfo();
@@ -118,18 +100,6 @@ public class DiameterComperator implements Comparable<DiameterComperator> {
 		System.out.println(s);
 
 	}
-
-//	protected double calcMedianDiameter() {
-//		Collections.sort(foundDiameters);
-//		if (foundDiameters.size() % 2 == 0) {
-//			return foundDiameters.get(foundDiameters.size() / 2).getDiameter();
-//		} else if (foundDiameters.size() == 1) {
-//			return foundDiameters.get(0).getDiameter();
-//		} else {
-//			return (foundDiameters.get(foundDiameters.size() / 2).getDiameter()
-//					+ foundDiameters.get(foundDiameters.size() / 2 - 1).getDiameter()) / 2;
-//		}
-//	}
 
 	public double getErrorRangeAbsolute() {
 		return Math.abs(Collections.min(foundDiameters).getDiameter() - Collections.max(foundDiameters).getDiameter());
@@ -161,6 +131,10 @@ public class DiameterComperator implements Comparable<DiameterComperator> {
 
 	public double getHighestDiameter() {
 		return Collections.max(foundDiameters).getDiameter();
+	}
+	
+	public double getProbability() {
+		return probability;
 	}
 
 }

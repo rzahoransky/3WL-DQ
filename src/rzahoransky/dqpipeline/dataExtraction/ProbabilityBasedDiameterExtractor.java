@@ -77,13 +77,13 @@ public class ProbabilityBasedDiameterExtractor extends AbstractDQPipelineElement
 			checkWavelengths(in);
 			wavelengthCheck = false;
 		}
-		double now = System.currentTimeMillis();
+		//double now = System.currentTimeMillis();
 
 		try {
 			extractDiameterAndSigma(in);
-			System.out.println("Probability Lookup: d: "+in.getDiameter().getAverageDiameter()+" sigma: "+in.getSigma()+" time: "+Double.toString(System.currentTimeMillis()-now));
+			//System.out.println("Probability Lookup: d: "+in.getDiameter().getAverageDiameter()+" sigma: "+in.getSigma()+" time: "+Double.toString(System.currentTimeMillis()-now));
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		
 
@@ -100,7 +100,7 @@ public class ProbabilityBasedDiameterExtractor extends AbstractDQPipelineElement
 
 		ArrayList<DiameterComperator> comperators = new ArrayList<>();
 
-		DQtype mostHits = getBiggestList(dqHits); // get the DQ hits with the most particle diameter matches as starting
+		DQtype mostHits = getBiggestList(dqHits); // get the DQ with the most particle diameter matches as starting
 													// point
 
 		for (ReverseDQEntry entry : dqHits.get(mostHits)) {
@@ -160,7 +160,9 @@ public class ProbabilityBasedDiameterExtractor extends AbstractDQPipelineElement
 	private void checkWavelengths(DQSignal in) {
 		if (Math.abs(in.getWL1() - wl1.getWavelength()) > 0.01 || Math.abs(in.getWL2() - wl2.getWavelength()) > 0.01
 				|| Math.abs(in.getWL3() - wl3.getWavelength()) > 0.01) {
-			JOptionPane.showMessageDialog(null, "Mie File wavelength does not match the current Measurement Device");
+			JOptionPane.showMessageDialog(null, "Mie File wavelength does not match the current Measurement Device: \r\n"
+					+ "Device: "+in.getWL1()+", "+in.getWL2()+", "+ in.getWL3()+
+					". MIE-File: "+wl1.getWavelength()+", "+wl2.getWavelength()+", "+wl3.getWavelength());
 		}
 
 	}

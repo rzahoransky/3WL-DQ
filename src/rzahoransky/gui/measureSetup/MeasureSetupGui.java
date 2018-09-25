@@ -68,7 +68,7 @@ public class MeasureSetupGui extends JFrame{
 	TimeIntevallGui time;
 	MeasureLengthGui length;
 	MieGUI mieGUI;
-	Border test;
+	Border border;
 	DQPipeline pipeline = new DQPipeline();
 	JButton startBtn;
 	
@@ -149,10 +149,18 @@ public class MeasureSetupGui extends JFrame{
 		
 		DQSignal element = valueExtractor.processDQElement(triggerMarker.processDQElement(adapter.processDQElement(null)));
 		
-		
 		Wavelengths.WL1.setValue(element.getWL1());
+		setup.setProperty(MeasureSetupEntry.DEVICEWL1, Double.toString(element.getWL1()));
 		Wavelengths.WL2.setValue(element.getWL2());
+		setup.setProperty(MeasureSetupEntry.DEVICEWL2, Double.toString(element.getWL2()));
 		Wavelengths.WL3.setValue(element.getWL3());
+		setup.setProperty(MeasureSetupEntry.DEVICEWL3, Double.toString(element.getWL3()));
+		
+		System.out.println("Wavelengths: "+ element.getWL1()+", "+element.getWL2()+", "+element.getWL3());
+		
+		setup.setDeviceIsConnected(true);
+		
+		adapter.clearTask();
 	}
 
 	private void setupComponents() {
@@ -162,14 +170,14 @@ public class MeasureSetupGui extends JFrame{
 		length = new MeasureLengthGui();
 		mieGUI = new MieGUI();
 		mieGUI.setEditable(false);
-		test = BorderFactory.createEtchedBorder();
+		border = BorderFactory.createEtchedBorder();
 		
 	}
 
 	private void addBorders() {
-		time.setBorder(test);
-		length.setBorder(test);
-		measureFile.setBorder(test);
+		time.setBorder(border);
+		length.setBorder(border);
+		measureFile.setBorder(border);
 		
 	}
 
@@ -201,10 +209,10 @@ public class MeasureSetupGui extends JFrame{
 	
 	private void setupPipeline(MieList wl1, MieList wl2, MieList wl3) throws NiDaqException {
 		//NI Adapter
-		//AdapterInterface adapter = new FiveWLNIDaqAdapter();
-		//adapter.setADCardOrConfigParameter(NiDaq.getDeviceNames().get(0));
+		AdapterInterface adapter = new FiveWLNIDaqAdapter();
+		adapter.setADCardOrConfigParameter(NiDaq.getDeviceNames().get(0));
 		
-		AdapterInterface adapter = new FiveWLOneHeadSimulator();
+		//AdapterInterface adapter = new FiveWLOneHeadSimulator();
 		
 		//Look for triggers
 		FiveWLMarker triggerMarker = new FiveWLMarker();
@@ -228,7 +236,7 @@ public class MeasureSetupGui extends JFrame{
 		//Graphical Elements
 		DQSinglePeriodMeasurementVisualizer singelPeriodVisualizer = new DQSinglePeriodMeasurementVisualizer(false);
 		TransmissionVisualizer transmissionVisualizer = new TransmissionVisualizer(false);
-		LaserVoltageVisualizer laserVoltage = new LaserVoltageVisualizer(false);
+		LaserVoltageVisualizer laserVoltage = new LaserVoltageVisualizer(true);
 		ParticleSizeVisualizerChart sizeVisualizer = new ParticleSizeVisualizerChart(false);
 		
 		//create Pipeline
@@ -269,6 +277,8 @@ public class MeasureSetupGui extends JFrame{
 		//pipeline.addPipelineElement(writer);
 		//pipeline.start();
 		
+		pipeline.addPipelineElement(laserVoltage);
+		
 		setup.setPipeline(pipeline);
 	}
 	
@@ -280,6 +290,7 @@ public class MeasureSetupGui extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				try {
 					DQReader mieReader = new DQReader(mieGUI.getChoosenFile());
+					setup.setStorageIntervall(time.getValue());
 					setupPipeline(mieReader.getWl1(), mieReader.getWl2(), mieReader.getWl3());
 					MeasureGui gui = new MeasureGui(pipeline);
 					//pipeline.start();
@@ -293,6 +304,9 @@ public class MeasureSetupGui extends JFrame{
 				} catch (NiDaqException e1) {
 					JOptionPane.showMessageDialog((Component) e.getSource(), "Cannot read from A/D converter", "I/O error", JOptionPane.ERROR_MESSAGE);
 					e1.printStackTrace();
+				} catch (Exception e2) {
+					JOptionPane.showMessageDialog((Component) e.getSource(), "Exception occured. Cannot start measurement", "Error", JOptionPane.ERROR_MESSAGE);
+					e2.printStackTrace();
 				}
 				
 			}

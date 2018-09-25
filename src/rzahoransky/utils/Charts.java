@@ -1,5 +1,6 @@
 package rzahoransky.utils;
 
+import java.awt.BasicStroke;
 import java.util.List;
 
 import org.jfree.chart.ChartFactory;
@@ -36,6 +37,7 @@ public class Charts {
 			XYPlot plot = (XYPlot) xylineChart.getPlot();
 			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer( );
 			renderer.setBaseShapesVisible(false);
+			renderer.setBaseStroke(new BasicStroke(2f));
 			plot.setRenderer(renderer);
 	      
 		return xylineChart;

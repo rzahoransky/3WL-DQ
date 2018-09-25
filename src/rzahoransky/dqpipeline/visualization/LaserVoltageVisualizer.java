@@ -93,8 +93,9 @@ public class LaserVoltageVisualizer extends AbstractDQPipelineElement{
 	@Override
 	public DQSignal processDQElement(DQSignal in) {
 		DQSignal element = in;
-		if (element!=null)
+		if (element!=null) {
 			visualizeDQMeasurement(element);
+		}
 		// out.put(element); for debug purpose
 		return element;
 	}

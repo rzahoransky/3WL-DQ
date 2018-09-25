@@ -29,9 +29,9 @@ public class DQExtractor extends AbstractDQPipelineElement {
 		double transmissionWl3=in.getTransmission(TransmissionType.TRANSMISSIONWL3);
 		
 		
-		double dq1 = Math.log(transmissionWl1/transmissionWl2);
-		double dq2 = Math.log(transmissionWl2/transmissionWl3);
-		double dq3 = Math.log(transmissionWl1/transmissionWl3);
+		double dq1 = Math.log(transmissionWl1)/Math.log(transmissionWl2);
+		double dq2 = Math.log(transmissionWl2)/Math.log(transmissionWl3);
+		double dq3 = Math.log(transmissionWl1)/Math.log(transmissionWl3);
 		
 		DQSignalEntry dq1Entry = new DQSignalEntry(DQtype.DQ1, in.getWL1(), in.getWL2(), dq1);
 		DQSignalEntry dq2Entry = new DQSignalEntry(DQtype.DQ2, in.getWL2(), in.getWL3(), dq2);

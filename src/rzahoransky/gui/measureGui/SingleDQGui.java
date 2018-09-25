@@ -1,5 +1,6 @@
 package rzahoransky.gui.measureGui;
 
+import java.awt.Font;
 import java.util.HashMap;
 
 import javax.swing.JPanel;
@@ -17,12 +18,14 @@ import rzahoransky.utils.DQtype;
 public class SingleDQGui extends JTabbedPane{
 	
 	private HashMap<DQtype, JFreeChart> dqPanels = new HashMap<>();
+	
+	private DQtype[] dqs = {DQtype.DQ1, DQtype.DQ2};
 
 	public SingleDQGui() {
 		
 		int qlIndex = 0;
 		
-		for (DQtype dq: DQtype.values()) {
+		for (DQtype dq: dqs) {
 			MieList wl1 = null;
 			MieList wl2 = null;
 			switch (dq) {
@@ -45,6 +48,7 @@ public class SingleDQGui extends JTabbedPane{
 			JFreeChart dqChart = MieChartPanels.getDQDataset(wl1, wl2, true);
 			dqChart.getXYPlot().addAnnotation(new SingleDQAnnotator(dq));
 			dqChart.getXYPlot().setDomainAxis(new LogarithmicAxis("Diameter"));
+			dqChart.getTitle().setFont(new Font("Arial", Font.BOLD, 14));
 			dqPanels.put(dq, dqChart);
 			addTab(dq.toString(),Charts.getChartPanel(dq.toString(), dqChart));
 			qlIndex++;

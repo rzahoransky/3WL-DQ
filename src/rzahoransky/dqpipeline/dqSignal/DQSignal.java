@@ -8,6 +8,7 @@ import java.util.OptionalDouble;
 
 import calculation.DistributionFactory;
 import javafx.scene.chart.PieChart.Data;
+import presets.Wavelengths;
 import rzahoransky.dqpipeline.dataExtraction.DiameterComperator;
 import rzahoransky.utils.ArrayListUtils;
 import rzahoransky.utils.DQtype;
@@ -37,14 +38,17 @@ public class DQSignal {
 
 	private DiameterComperator diameter = null;
 	private double sigma = 0;
+	private double minFoundDiameter = 0;
+	private double maxFoundDiameter = 0;
+	private boolean hasMinAndMaxDiameter = false;
 	
 	private HashMap<TransmissionType, ArrayList<Double>> measuredValues = new HashMap<>();
 	private HashMap<DQtype, DQSignalEntry> dq = new HashMap<>();
+	
+	protected HashMap<TransmissionType, Double> factors = new HashMap<>();
 
 	private double length;
-
 	private double volConcentration;
-
 	private int numberOfParticlesPerCubicMeter;
 	
 
@@ -250,6 +254,10 @@ public class DQSignal {
 
 	public double getVolumeConcentration() {
 		return volConcentration;
+	}
+
+	public void setFactor(TransmissionType type, double factor) {
+		factors.put(type, factor);
 	}
 	
 	

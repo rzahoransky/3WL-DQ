@@ -1,5 +1,7 @@
 package rzahoransky.gui.measureGui;
 
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.LayoutManager;
@@ -18,12 +20,22 @@ public class NumericDiameterGui extends JPanel implements DQSignalListener{
 	protected JLabel sigma = new JLabel("");
 	protected JLabel density = new JLabel("");
 	protected static final JLabel diameterString = new JLabel("Diameter in μm");
-	protected static final JLabel sigmaString = new JLabel("Sigma:");
-	protected static final JLabel densityString = new JLabel("Particles / m³");
+	protected static final JLabel sigmaString = new JLabel("Sigma: ");
+	protected static final JLabel densityString = new JLabel("Particles per cm³");
 	DecimalFormat df = new DecimalFormat("0.000"); 
 	
 	
 	public NumericDiameterGui(DQPipeline pipeline) {
+		Font font = new Font("Arial", Font.BOLD, 14);
+		diameter.setFont(font);
+		sigma.setFont(font);
+		density.setFont(font);
+		
+		Font font_normal = new Font("Arial", Font.PLAIN, 14);
+		diameterString.setFont(font_normal);
+		sigmaString.setFont(font_normal);
+		densityString.setFont(font_normal);
+		
 		pipeline.addNewSignalListener(this);
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -42,6 +54,8 @@ public class NumericDiameterGui extends JPanel implements DQSignalListener{
 		c.gridx++;
 		add(densityString,c);
 		c.gridx++;
+		//density.setSize(50, 20);
+		//density.setMaximumSize(new Dimension(50, 20));
 		add(density,c);
 	}
 	

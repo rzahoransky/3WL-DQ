@@ -34,9 +34,6 @@ public class MeasureLengthGui extends JPanel implements ChangeListener{
 
 		placeComponents();
 
-		slider.addChangeListener(this);
-		spinner.addChangeListener(this);
-
 		try {
 			length = Double.parseDouble(MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.MEASURELENGTH_IN_CM));
 			slider.setValue((int) length);
@@ -44,6 +41,9 @@ public class MeasureLengthGui extends JPanel implements ChangeListener{
 		} catch (Exception e) {
 			System.out.println("Cannot parse");
 		}
+		
+		slider.addChangeListener(this);
+		spinner.addChangeListener(this);
 
 	}
 

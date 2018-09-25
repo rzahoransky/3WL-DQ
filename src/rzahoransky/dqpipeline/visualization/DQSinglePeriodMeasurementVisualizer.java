@@ -1,5 +1,7 @@
 package rzahoransky.dqpipeline.visualization;
 
+import java.awt.BasicStroke;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -26,8 +28,12 @@ public class DQSinglePeriodMeasurementVisualizer extends AbstractDQPipelineEleme
 	public DQSinglePeriodMeasurementVisualizer(boolean showAsFrame) {
 		
 		XYSeriesCollection dataset = Charts.getDataSet(signalTypes);
-		JFreeChart chart = Charts.getXYChart("Raw Signal", "Timing", "Voltage", dataset);
+		JFreeChart chart = Charts.getXYChart("Raw Signal", null, "Voltage", dataset);
+		for (int i = 0; i<chart.getXYPlot().getSeriesCount();i++) {
+			chart.getXYPlot().getRenderer().setSeriesStroke(i, new BasicStroke(2.0f));
+		}
 		chartPanel = Charts.getChartPanel("Measurment", chart);
+		chart.getTitle().setFont(new Font("Arial", Font.BOLD, 14));
 		
 		if (showAsFrame) {
 			frame = new JFrame("AD-Samples");

@@ -25,9 +25,9 @@ public class FiveWLNIDaqAdapter extends AbstractDQPipelineElement implements Ada
 	private static DoubleBuffer db;
 	private static IntBuffer reads = IntBuffer.allocate(1);
 	private double minVoltage = -7.0;
-	private double maxVoltage = 7.0;
+	private double maxVoltage = 7.1;
 	private boolean isInitialized = false;
-	private int samplesPerChannel = 4000;
+	private int samplesPerChannel = 6000;
 
 	public FiveWLNIDaqAdapter() {
 
@@ -71,9 +71,11 @@ public class FiveWLNIDaqAdapter extends AbstractDQPipelineElement implements Ada
 	}
 
 	public void initDAQ() throws NiDaqException {
+		try {
+			Thread.sleep(30);
+		} catch (InterruptedException e1) {}
 
 		try {
-			daq.stopTask(task);
 			daq.clearTask(task);
 		} catch (Exception e) {
 			// ignore

@@ -106,6 +106,12 @@ public class MieGUI extends JPanel implements CalculationAssignmentListener {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				MeasureSetUp setup = MeasureSetUp.getInstance();
+				if (setup.getDeviceIsConnected()) {
+					Wavelengths.WL1.setValue(Double.parseDouble(setup.getProperty(MeasureSetupEntry.DEVICEWL1)));
+					Wavelengths.WL2.setValue(Double.parseDouble(setup.getProperty(MeasureSetupEntry.DEVICEWL2)));
+					Wavelengths.WL3.setValue(Double.parseDouble(setup.getProperty(MeasureSetupEntry.DEVICEWL3)));
+				}
 				new JMieCalcGuiGridBagLayout(getChoosenFile().getAbsolutePath()).setVisible(true);
 				
 			}

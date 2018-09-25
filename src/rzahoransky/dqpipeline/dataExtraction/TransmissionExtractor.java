@@ -39,6 +39,10 @@ public class TransmissionExtractor extends AbstractDQPipelineElement {
 		for (DQSignalSinglePeriod period : in.getSinglePeriods()) {
 			getTransmission(period, in);
 		}
+		
+		in.setFactor(TransmissionType.TRANSMISSIONWL1, factors.get(ExtractedSignalType.wl1wOffset));
+		in.setFactor(TransmissionType.TRANSMISSIONWL2, factors.get(ExtractedSignalType.wl2wOffset));
+		in.setFactor(TransmissionType.TRANSMISSIONWL3, factors.get(ExtractedSignalType.wl3wOffset));
 
 		return in;
 	}
