@@ -63,7 +63,7 @@ public class ParticleSizeVisualizer extends AbstractDQPipelineElement implements
 
 	private void updateSeries(DQSignal measurement, TimeSeries series) {
 		// series.clear();
-		double d = measurement.getDiameter().getAverageDiameter();
+		double d = measurement.getDiameter();
 		RegularTimePeriod period = new Millisecond(new Date(measurement.getTimeStamp()));
 		series.add(period, d);
 		series.setMaximumItemAge(maxAge);

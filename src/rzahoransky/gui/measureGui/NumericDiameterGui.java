@@ -64,7 +64,7 @@ public class NumericDiameterGui extends JPanel implements DQSignalListener{
 	@Override
 	public void newSignal(DQSignal currentSignal) {
 		try {
-		diameter.setText(formatDouble(currentSignal.getDiameter().getAverageDiameter()));
+		diameter.setText(formatDouble(currentSignal.getDiameter()));
 		sigma.setText(formatDouble(currentSignal.getSigma()));
 		density.setText(formatDouble(currentSignal.getVolumeConcentration()));
 		} catch (Exception e) {

@@ -3,8 +3,17 @@ package rzahoransky.dqpipeline.dataWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.Date;
+import java.util.Formatter;
+import java.util.Locale;
+
+import javax.swing.JOptionPane;
+import javax.swing.text.NumberFormatter;
 
 import calculation.CalculationAssignment;
 import presets.Wavelengths;
@@ -12,12 +21,15 @@ import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.gui.measureSetup.MeasureSetupEntry;
+import rzahoransky.utils.ExtractedSignalType;
+import rzahoransky.utils.RawSignalType;
+import rzahoransky.utils.TransmissionType;
 import storage.dqMeas.write.MieInfoWriter;
 
 public class OutputWriter implements DQPipelineElement {
 
 	public static void main(String[] args) {
-		System.out.println(new OutputWriter(new File("bla")).getCurrentDateAsString());
+		System.out.println(getCurrentDateAsGermanString());
 	}
 
 	private File file;
@@ -25,38 +37,48 @@ public class OutputWriter implements DQPipelineElement {
 	protected boolean headerWritten = false;
 	protected boolean integrateOverTime = false;
 	protected MeasureSetUp setup = MeasureSetUp.getInstance();
-	protected int storageInterval;
+	protected double storageInterval;
+	protected NumberFormat formatter = NumberFormat.getInstance(Locale.getDefault());
 
+	
 	public OutputWriter(File file) {
-		this.file = file;
-		storageInterval = Integer.parseInt(setup.getProperty(MeasureSetupEntry.STOREINTERVAL));
+		this.file = new File(file.getParentFile(), getFileNameSaveDateString() +" "+ file.getName());
+		// this.file = file;
+		storageInterval = Double.parseDouble(setup.getProperty(MeasureSetupEntry.STOREINTERVAL));
+		formatter.setMaximumFractionDigits(6);
 		try {
-			this.fw = openFile(file);
+			this.fw = openFile(this.file);
 		} catch (IOException e) {
 			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Cannot write output file", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
 	private FileWriter openFile(File file2) throws IOException {
 		FileWriter fw = new FileWriter(file2);
 		fw.write(generateHeader());
+		fw.write("\r\n");
+		fw.write(generateColumns());
+		fw.write("\r\n");
 		return fw;
 	}
 
 	private String generateHeader() {
 		String header = "# File Generated: " + getCurrentDateAsString();
 		String mieFile = "# MIE-File: " + MeasureSetUp.getInstance().getMieFile().getAbsolutePath();
-		String mieInfo = "# Mie-Info: " + MieInfoWriter.getInfoString(MeasureSetUp.getInstance().getMieList(0),
-				MeasureSetUp.getInstance().getMieList(1), MeasureSetUp.getInstance().getMieList(3));
+		//String mieInfo = "# Mie-Info: " + MieInfoWriter.getInfoString(MeasureSetUp.getInstance().getMieList(0),
+		//		MeasureSetUp.getInstance().getMieList(1), MeasureSetUp.getInstance().getMieList(2));
 		String length = "# Measure length: "
 				+ MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.MEASURELENGTH_IN_CM) + "cm";
-		String deviceWL = "# Device wavelength: "+Wavelengths.WL1.toString()+" "+Wavelengths.WL2.toString()+" "+Wavelengths.WL3.toString();
-		return header+"\n\r"+mieFile+"\n\r"+mieInfo+"\n\r"+length+"\n\r"+deviceWL;
+		String deviceWL = "# Device wavelength: " + Wavelengths.WL1.toString() + " " + Wavelengths.WL2.toString() + " "
+				+ Wavelengths.WL3.toString();
+		return header + "\r\n" + mieFile + "\r\n" + length + "\r\n" + deviceWL;
 	}
-	
+
 	private String generateColumns() {
-		TabbedStringBuilder s = new TabbedStringBuilder();
+		TabbedStringBuilder s = new TabbedStringBuilder(";");
 		s.append("System Time in ms");
+		s.append("Date");
 		s.append("Time");
 		s.append("Particle Diameter in μm");
 		s.append("Sigma Log-Normal");
@@ -65,13 +87,13 @@ public class OutputWriter implements DQPipelineElement {
 		s.append("Transmission WL1");
 		s.append("Transmission WL2");
 		s.append("Transmission WL3");
-		s.append("Voltage Meas WL1");
-		s.append("Voltage Meas WL2");
-		s.append("Voltage Meas WL3");
+		s.append("Voltage Meas WL1 w offset");
+		s.append("Voltage Meas WL2 w offset");
+		s.append("Voltage Meas WL3 w offset");
 		s.append("Voltage Meas Offset");
-		s.append("Voltage Ref WL1");
-		s.append("Voltage Ref WL2");
-		s.append("Voltage Ref WL3");
+		s.append("Voltage Ref WL1 w offset");
+		s.append("Voltage Ref WL2 w offset");
+		s.append("Voltage Ref WL3 w offset");
 		s.append("Voltage Ref Offset");
 		s.append("Factor WL1");
 		s.append("Factor WL2");
@@ -80,15 +102,78 @@ public class OutputWriter implements DQPipelineElement {
 	}
 
 	public String getCurrentDateAsString() {
-		SimpleDateFormat df = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
+		SimpleDateFormat df = new SimpleDateFormat("yyy-MM-dd HH:mm:ss.SSS");
+		return df.format(new Date().getTime());
+	}
+	
+	public static String getCurrentDateAsGermanString() {
+		//SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyy HH:mm:ss.SSS");
+		DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
+		return df.format(new Date().getTime());
+	}
+	
+	public static String getCurrentTimeAsGermanString() {
+		SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss,SSS");
+		//DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
+		return df.format(new Date().getTime());
+	}
+	
+	public String getFileNameSaveDateString() {
+		SimpleDateFormat df = new SimpleDateFormat("yyy-MM-dd HH.mm.ss");
 		return df.format(new Date().getTime());
 	}
 
 	@Override
 	public DQSignal processDQElement(DQSignal in) {
-		if(!integrateOverTime && storageInterval == 0)
-			System.out.println("Writing...");
+		if (!integrateOverTime && storageInterval == 0) {
+			try {
+				write(in);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		return in;
+	}
+
+	private void write(DQSignal in) throws IOException {
+		fw.write(getLineString(in));
+	}
+
+	private String getLineString(DQSignal in) {
+		TabbedStringBuilder b = new TabbedStringBuilder(";");
+		b.append(Long.toString(System.currentTimeMillis()));
+		b.append(getCurrentDateAsGermanString());
+		b.append(getCurrentTimeAsGermanString());
+		b.append(getAsLocale(in.getDiameter()));
+		b.append(getAsLocale(in.getSigma()));
+		b.append(getAsLocale(in.getVolumeConcentration()));
+		b.append("N/A");
+		b.append(getAsLocale(in.getTransmission(TransmissionType.TRANSMISSIONWL1)));
+		b.append(getAsLocale(in.getTransmission(TransmissionType.TRANSMISSIONWL2)));
+		b.append(getAsLocale(in.getTransmission(TransmissionType.TRANSMISSIONWL3)));
+		b.append(getAsLocale(in.getAveragedValues(RawSignalType.meas, ExtractedSignalType.wl1wOffset)));
+		b.append(getAsLocale(in.getAveragedValues(RawSignalType.meas, ExtractedSignalType.wl2wOffset)));
+		b.append(getAsLocale(in.getAveragedValues(RawSignalType.meas, ExtractedSignalType.wl3wOffset)));
+		b.append(getAsLocale(in.getAveragedValues(RawSignalType.meas, ExtractedSignalType.offset)));
+		b.append(getAsLocale(in.getAveragedValues(RawSignalType.ref, ExtractedSignalType.wl1wOffset)));
+		b.append(getAsLocale(in.getAveragedValues(RawSignalType.ref, ExtractedSignalType.wl2wOffset)));
+		b.append(getAsLocale(in.getAveragedValues(RawSignalType.ref, ExtractedSignalType.wl3wOffset)));
+		b.append(getAsLocale(in.getAveragedValues(RawSignalType.ref, ExtractedSignalType.offset)));
+		b.append(getAsLocale(in.getFactor(TransmissionType.TRANSMISSIONWL1)));
+		b.append(getAsLocale(in.getFactor(TransmissionType.TRANSMISSIONWL2)));
+		b.append(getAsLocale(in.getFactor(TransmissionType.TRANSMISSIONWL3)));
+		return b.toString() + "\r\n";
+	}
+
+	public void close() {
+		try {
+			fw.flush();
+			fw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -96,31 +181,43 @@ public class OutputWriter implements DQPipelineElement {
 		// TODO Auto-generated method stub
 		return "Stores Measurement Data";
 	}
+	
+	private String getAsLocale(double d) {
+		return formatter.format(d);
+	}
 
 }
 
 class TabbedStringBuilder {
-	
+
 	private StringBuilder builder = new StringBuilder();
-	private String append = "\t";
+	private String sep = "\t";
 	boolean first = true;
-	
-	public void setAppendCharacter(String s) {
-		this.append = s;
+
+	public TabbedStringBuilder(String string) {
+		sep = string;
 	}
 	
-	public void append(String s) {
+	public TabbedStringBuilder() {
+		
+	}
+
+	public void setAppendCharacter(String s) {
+		this.sep = s;
+	}
+
+	public void append(Object s) {
 		if (first) {
-			first=false;
+			first = false;
 			builder.append(s);
 		} else {
-			builder.append(append);
+			builder.append(sep);
 			builder.append(s);
 		}
 	}
-	
+
 	public String toString() {
 		return builder.toString();
 	}
-	
+
 }

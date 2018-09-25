@@ -15,6 +15,7 @@ import calculation.MieList;
 import rzahoransky.dqpipeline.DQPipeline;
 import rzahoransky.dqpipeline.dataExtraction.ConcentrationExtractor;
 import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
+import rzahoransky.dqpipeline.dataWriter.OutputWriter;
 import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.dqpipeline.visualization.DQSinglePeriodMeasurementVisualizer;
 import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizer;
@@ -34,6 +35,7 @@ public class MeasureSetUp extends Properties{
 	private ConcentrationExtractor concentrationExtractor;
 	private DQPipeline pipeline;
 	private boolean deviceIsConnected = false;
+	private OutputWriter addOutputWriter;
 	
 
 	private MeasureSetUp() {
@@ -176,6 +178,14 @@ public class MeasureSetUp extends Properties{
 	
 	public boolean getDeviceIsConnected() {
 		return deviceIsConnected;
+	}
+
+	public void addOutputWriter(OutputWriter outWriter) {
+		this.addOutputWriter = outWriter;
+	}
+	
+	public OutputWriter getOutputWriter() {
+		return this.addOutputWriter;
 	}
 	
 

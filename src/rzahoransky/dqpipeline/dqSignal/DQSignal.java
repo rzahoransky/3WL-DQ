@@ -36,7 +36,7 @@ public class DQSignal {
 	private double wl2 = 0;
 	private double wl3 = 0;
 
-	private DiameterComperator diameter = null;
+	private double diameter = 0;
 	private double sigma = 0;
 	private double minFoundDiameter = 0;
 	private double maxFoundDiameter = 0;
@@ -200,21 +200,50 @@ public class DQSignal {
 		return wl3;
 	}
 	
-	public DiameterComperator getDiameter() {
+	public double getDiameter() {
 		return diameter;
 	}
-
-	public void setDiameter(DiameterComperator result) {
-		this.diameter = result;
-		// System.out.println("Got diameter: "+diameter);
+	
+	public double getMinDiameter() {
+		return minFoundDiameter;
 	}
-
+	
+	public double getMaxDiameter() {
+		return maxFoundDiameter;
+	}
+	
 	public double getSigma() {
 		return sigma;
 	}
+	
+	public boolean hasMinAndMaxDiameter() {
+		return hasMinAndMaxDiameter;
+	}
+
+	public void setDiameter(DiameterComperator result) {
+		this.diameter = result.getAverageDiameter();
+		this.minFoundDiameter = result.getLowesetDiameter();
+		this.maxFoundDiameter = result.getHighestDiameter();
+		this.hasMinAndMaxDiameter = true;
+		this.sigma = result.getSigma();
+		// System.out.println("Got diameter: "+diameter);
+	}
+	
+	public void setDiameter (double d) {
+		this.diameter = d;
+	}
+
 
 	public void setSigma(double sigma) {
 		this.sigma = sigma;
+	}
+	
+	public void addMinDiameter(double minDiameter) {
+		this.minFoundDiameter = minDiameter;
+	}
+	
+	public void addMaxDiameter(double maxDiameter) {
+		this.maxFoundDiameter = maxDiameter;
 	}
 
 	public void addTransmission(TransmissionType type, double transmissionValue) {
@@ -258,6 +287,10 @@ public class DQSignal {
 
 	public void setFactor(TransmissionType type, double factor) {
 		factors.put(type, factor);
+	}
+	
+	public double getFactor(TransmissionType type) {
+		return factors.get(type);
 	}
 	
 	

@@ -45,6 +45,7 @@ private DQPipeline pipeline;
 			public void windowClosing(WindowEvent evt) {
 				System.out.println("Stopping...");
 				pipeline.stop();
+				MeasureSetUp.getInstance().getOutputWriter().close();
 			}
 		});
 	}

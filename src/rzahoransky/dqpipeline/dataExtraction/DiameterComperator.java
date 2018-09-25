@@ -57,6 +57,11 @@ public class DiameterComperator implements Comparable<DiameterComperator> {
 	}
 
 	protected double getProbabilityOfMatch(ReverseDQEntry entry) {
+		
+		//consider only matches with same Sigma value
+		if (entry.getSigma() != sigma)
+			return 0;
+		
 		LogNormal two = new LogNormal(entry.getDiameter(), entry.getSigma());
 		double area = 0;
 		//double start = Math.max(minDiameter, entry.getDiameter()/4);

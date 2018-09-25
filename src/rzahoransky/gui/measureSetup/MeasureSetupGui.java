@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -32,6 +33,7 @@ import errors.WavelengthMismatchException;
 import gui.FileGui;
 import gui.JMieCalcGuiGridBagLayout;
 import javafx.scene.control.Separator;
+import jdistlib.LogNormal;
 import kirkwood.nidaq.access.NiDaq;
 import kirkwood.nidaq.access.NiDaqException;
 import presets.Wavelengths;
@@ -45,6 +47,7 @@ import rzahoransky.dqpipeline.dataExtraction.FiveWLMeasurePoints;
 import rzahoransky.dqpipeline.dataExtraction.ProbabilityBasedDiameterExtractor;
 import rzahoransky.dqpipeline.dataExtraction.SimpleDQEntryDiameterExtractor;
 import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
+import rzahoransky.dqpipeline.dataWriter.OutputWriter;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AdapterInterface;
 import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
@@ -166,6 +169,7 @@ public class MeasureSetupGui extends JFrame{
 	private void setupComponents() {
 		setup = MeasureSetUp.getInstance();
 		measureFile = new FileGui("Store Measurement: ", new FileNameExtensionFilter("CSV-Files (*.csv)","csv"));
+		measureFile.getTextField().setText(setup.getProperty(MeasureSetupEntry.OUTPUTFILE));
 		time = new TimeIntevallGui();
 		length = new MeasureLengthGui();
 		mieGUI = new MieGUI();
@@ -209,14 +213,22 @@ public class MeasureSetupGui extends JFrame{
 	
 	private void setupPipeline(MieList wl1, MieList wl2, MieList wl3) throws NiDaqException {
 		//NI Adapter
-		AdapterInterface adapter = new FiveWLNIDaqAdapter();
-		adapter.setADCardOrConfigParameter(NiDaq.getDeviceNames().get(0));
-		
-		//AdapterInterface adapter = new FiveWLOneHeadSimulator();
+		AdapterInterface adapter;
+		 List<String> niStrings = NiDaq.getDeviceNames();
+		 if (niStrings !=null && niStrings.size()>0) {
+				adapter = new FiveWLNIDaqAdapter();
+				adapter.setADCardOrConfigParameter(niStrings.get(0));
+		 } else {
+			 adapter = new FiveWLOneHeadSimulator();
+		 }
+		 
+			MieList[] list = {wl1, wl2, wl3};
+			
+			setup.setMieList(list);
+
 		
 		//Look for triggers
 		FiveWLMarker triggerMarker = new FiveWLMarker();
-		
 		//extract single periods
 		FiveWLExtractor valueExtractor = new FiveWLExtractor(new FiveWLMeasurePoints());
 		
@@ -227,7 +239,8 @@ public class MeasureSetupGui extends JFrame{
 		DQExtractor dqExtractor = new DQExtractor();
 		
 		//Calculate particles from DQ
-		ProbabilityBasedDiameterExtractor sizeExtractor = new ProbabilityBasedDiameterExtractor(wl1, wl2, wl3);
+		//DQPipelineElement sizeExtractor = new ProbabilityBasedDiameterExtractor(wl1, wl2, wl3);
+		DQPipelineElement sizeExtractor = new SimpleDQEntryDiameterExtractor(wl1, wl2, wl3);
 		
 		//Calulate particle concentration
 		ConcentrationExtractor concentrationExtractor = new ConcentrationExtractor(wl1, wl2, wl3);
@@ -236,7 +249,7 @@ public class MeasureSetupGui extends JFrame{
 		//Graphical Elements
 		DQSinglePeriodMeasurementVisualizer singelPeriodVisualizer = new DQSinglePeriodMeasurementVisualizer(false);
 		TransmissionVisualizer transmissionVisualizer = new TransmissionVisualizer(false);
-		LaserVoltageVisualizer laserVoltage = new LaserVoltageVisualizer(true);
+		//LaserVoltageVisualizer laserVoltage = new LaserVoltageVisualizer(true);
 		ParticleSizeVisualizerChart sizeVisualizer = new ParticleSizeVisualizerChart(false);
 		
 		//create Pipeline
@@ -246,10 +259,7 @@ public class MeasureSetupGui extends JFrame{
 		setup.addSinglePeriodVisualizer(singelPeriodVisualizer);
 		setup.addParticleVisualizer(sizeVisualizer);
 		setup.addTransmissionExtractor(transmissionExtractor);
-		
-		MieList[] list = {wl1, wl2, wl3};
-		
-		setup.setMieList(list);
+	
 		
 		
 		
@@ -277,7 +287,15 @@ public class MeasureSetupGui extends JFrame{
 		//pipeline.addPipelineElement(writer);
 		//pipeline.start();
 		
-		pipeline.addPipelineElement(laserVoltage);
+		//pipeline.addPipelineElement(laserVoltage);
+		
+		//store measurement
+		if (measureFile.hasChoosenFile()) {
+			OutputWriter outWriter = new OutputWriter(measureFile.getChoosenFile());
+			setup.addOutputWriter(outWriter);
+			pipeline.addPipelineElement(outWriter);
+			setup.setProperty(MeasureSetupEntry.OUTPUTFILE, measureFile.getChoosenFile().getAbsolutePath());
+		}
 		
 		setup.setPipeline(pipeline);
 	}
