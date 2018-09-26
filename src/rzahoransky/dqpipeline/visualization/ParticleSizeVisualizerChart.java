@@ -99,9 +99,9 @@ public class ParticleSizeVisualizerChart extends AbstractDQPipelineElement imple
 		// series.clear();
 		//double d = measurement.getDiameter().getAverageDiameter();
 		//RegularTimePeriod period = new Millisecond(new Date(measurement.getTimeStamp()));
-		double d = measurement.getDiameter();
+		double d = measurement.getGeometricalDiameter();
 		if (measurement.hasMinAndMaxDiameter()) {
-			series.add(now, d,measurement.getMinDiameter(), measurement.getMaxDiameter());
+			series.add(now, d,measurement.getMinGeometricalDiameter(), measurement.getMaxGeometricalDiameter());
 		} else {
 			series.add(now, d, d, d);
 		}

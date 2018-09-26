@@ -36,10 +36,10 @@ public class DQSignal {
 	private double wl2 = 0;
 	private double wl3 = 0;
 
-	private double diameter = 0;
+	private double geometricalDiameter = 0;
 	private double sigma = 0;
-	private double minFoundDiameter = 0;
-	private double maxFoundDiameter = 0;
+	private double minFoundGeometricalDiameter = 0;
+	private double maxFoundGeometricalDiameter = 0;
 	private boolean hasMinAndMaxDiameter = false;
 	
 	private HashMap<TransmissionType, ArrayList<Double>> measuredValues = new HashMap<>();
@@ -48,7 +48,7 @@ public class DQSignal {
 	protected HashMap<TransmissionType, Double> factors = new HashMap<>();
 
 	private double length;
-	private double volConcentration;
+	private double numberConcentration;
 	private int numberOfParticlesPerCubicMeter;
 	
 
@@ -200,16 +200,32 @@ public class DQSignal {
 		return wl3;
 	}
 	
-	public double getDiameter() {
-		return diameter;
+	public double getGeometricalDiameter() {
+		return geometricalDiameter;
 	}
 	
-	public double getMinDiameter() {
-		return minFoundDiameter;
+	public double getMinGeometricalDiameter() {
+		return minFoundGeometricalDiameter;
 	}
 	
-	public double getMaxDiameter() {
-		return maxFoundDiameter;
+	public double getMaxGeometricalDiameter() {
+		return maxFoundGeometricalDiameter;
+	}
+	
+	public static double calculateVolumetricDiameter(double geometricalDiameter, double sigma) {
+		return Math.pow((Math.pow(geometricalDiameter, 3))*Math.pow(Math.E, ((9/2)*sigma*sigma)),(1/3));
+	}
+	
+	public double getVolumetricDiameter() {
+		return calculateVolumetricDiameter(getGeometricalDiameter(), getSigma());
+	}
+	
+	public double getMinVolumetricDiameter() {
+		return calculateVolumetricDiameter(getMinGeometricalDiameter(), getSigma());
+	}
+	
+	public double getMaxVolumetricDiameter() {
+		return calculateVolumetricDiameter(getMaxGeometricalDiameter(), getSigma());
 	}
 	
 	public double getSigma() {
@@ -220,17 +236,17 @@ public class DQSignal {
 		return hasMinAndMaxDiameter;
 	}
 
-	public void setDiameter(DiameterComperator result) {
-		this.diameter = result.getAverageDiameter();
-		this.minFoundDiameter = result.getLowesetDiameter();
-		this.maxFoundDiameter = result.getHighestDiameter();
+	public void setGeometricalDiameter(DiameterComperator result) {
+		this.geometricalDiameter = result.getAverageDiameter();
+		this.minFoundGeometricalDiameter = result.getLowesetDiameter();
+		this.maxFoundGeometricalDiameter = result.getHighestDiameter();
 		this.hasMinAndMaxDiameter = true;
 		this.sigma = result.getSigma();
 		// System.out.println("Got diameter: "+diameter);
 	}
 	
-	public void setDiameter (double d) {
-		this.diameter = d;
+	public void setGeometricalDiameter (double d) {
+		this.geometricalDiameter = d;
 	}
 
 
@@ -239,11 +255,11 @@ public class DQSignal {
 	}
 	
 	public void addMinDiameter(double minDiameter) {
-		this.minFoundDiameter = minDiameter;
+		this.minFoundGeometricalDiameter = minDiameter;
 	}
 	
 	public void addMaxDiameter(double maxDiameter) {
-		this.maxFoundDiameter = maxDiameter;
+		this.maxFoundGeometricalDiameter = maxDiameter;
 	}
 
 	public void addTransmission(TransmissionType type, double transmissionValue) {
@@ -270,8 +286,8 @@ public class DQSignal {
 		
 	}
 
-	public void setVolumeConcentration(double volConcentration) {
-		this.volConcentration = volConcentration;
+	public void setNumberConcentration(double numberConcentration) {
+		this.numberConcentration = numberConcentration;
 		//double averageParticleDiameter = getAverageOfLogDistribution(sigma, diameter);
 		
 		//this.numberOfParticlesPerCubicMeter = 4;
@@ -281,8 +297,12 @@ public class DQSignal {
 		return Math.pow(Math.E, (diameter2+(sigma*sigma)/2));
 	}
 
+	public double getNumberConcentration() {
+		return numberConcentration;
+	}
+	
 	public double getVolumeConcentration() {
-		return volConcentration;
+		return getNumberConcentration()*(Math.PI/6)*Math.pow(getVolumetricDiameter(),3);
 	}
 
 	public void setFactor(TransmissionType type, double factor) {

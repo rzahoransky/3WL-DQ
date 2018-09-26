@@ -27,7 +27,7 @@ public class SimpleDQEntryDiameterExtractor implements DQPipelineElement {
 			double sigma = lookup.getSigmaFor(in.getDQ(DQtype.DQ1).getDqValue(), in.getDQ(DQtype.DQ2).getDqValue());
 			System.out.println("SimpleLookup: d: "+diameter+" sigma: "+sigma+" time: "+Double.toString(System.currentTimeMillis()-now));
 			in.setSigma(sigma);
-			in.setDiameter(diameter);
+			in.setGeometricalDiameter(diameter);
 		} catch (Exception e) {
 			
 		}

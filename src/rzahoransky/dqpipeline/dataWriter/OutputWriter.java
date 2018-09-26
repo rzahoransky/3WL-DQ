@@ -145,9 +145,9 @@ public class OutputWriter implements DQPipelineElement {
 		b.append(Long.toString(System.currentTimeMillis()));
 		b.append(getCurrentDateAsGermanString());
 		b.append(getCurrentTimeAsGermanString());
-		b.append(getAsLocale(in.getDiameter()));
+		b.append(getAsLocale(in.getGeometricalDiameter()));
 		b.append(getAsLocale(in.getSigma()));
-		b.append(getAsLocale(in.getVolumeConcentration()));
+		b.append(getAsLocale(in.getNumberConcentration()));
 		b.append("N/A");
 		b.append(getAsLocale(in.getTransmission(TransmissionType.TRANSMISSIONWL1)));
 		b.append(getAsLocale(in.getTransmission(TransmissionType.TRANSMISSIONWL2)));

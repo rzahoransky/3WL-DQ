@@ -41,12 +41,12 @@ public class ConcentrationExtractor extends AbstractDQPipelineElement {
 		ArrayList<Double> volumeConcentrations = new ArrayList<>();
 		
 		try {
-		volumeConcentrations.add(getParticleConcentration(transmissionWl1, in.getSigma(), wl1.getClosesElementForDiameter(in.getDiameter())));
-		volumeConcentrations.add(getParticleConcentration(transmissionWl2, in.getSigma(), wl2.getClosesElementForDiameter(in.getDiameter())));
-		volumeConcentrations.add(getParticleConcentration(transmissionWl3, in.getSigma(), wl3.getClosesElementForDiameter(in.getDiameter())));
+		volumeConcentrations.add(getParticleConcentration(transmissionWl1, in.getSigma(), wl1.getClosesElementForDiameter(in.getGeometricalDiameter())));
+		volumeConcentrations.add(getParticleConcentration(transmissionWl2, in.getSigma(), wl2.getClosesElementForDiameter(in.getGeometricalDiameter())));
+		volumeConcentrations.add(getParticleConcentration(transmissionWl3, in.getSigma(), wl3.getClosesElementForDiameter(in.getGeometricalDiameter())));
 		
 		
-		in.setVolumeConcentration(ArrayListUtils.getAverage(volumeConcentrations));
+		in.setNumberConcentration(ArrayListUtils.getAverage(volumeConcentrations));
 		} catch (Exception e) {
 			//e.printStackTrace();
 		}
@@ -58,7 +58,7 @@ public class ConcentrationExtractor extends AbstractDQPipelineElement {
 
 	/** concentration for cm³ **/
 	private double getParticleConcentration(double transmission, double sigma, MieWrapper element) {
-		double n = (-1d) * Math.log(transmission) / ((length/100)*Math.PI*element.getIntegratedQext().get(sigma));
+		double n = (-1d) * Math.log(transmission) / ((length/100)*(Math.PI/4)*element.getIntegratedQext().get(sigma));
 		return n;
 	}
 

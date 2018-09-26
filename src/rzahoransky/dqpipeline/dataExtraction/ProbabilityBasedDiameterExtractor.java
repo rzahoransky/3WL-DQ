@@ -119,7 +119,7 @@ public class ProbabilityBasedDiameterExtractor extends AbstractDQPipelineElement
 		}
 
 		DiameterComperator result = getBestMatchingComperatorElement(comperators);
-		signal.setDiameter(result);
+		signal.setGeometricalDiameter(result);
 		signal.setSigma(result.getSigma());
 	}
 
