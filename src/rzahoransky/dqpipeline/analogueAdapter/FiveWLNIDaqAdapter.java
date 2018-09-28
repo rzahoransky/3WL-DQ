@@ -15,6 +15,8 @@ import kirkwood.nidaq.jna.Nicaiu;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.dqpipeline.interfaces.AdapterInterface;
+import rzahoransky.gui.measureSetup.MeasureSetUp;
+import rzahoransky.gui.measureSetup.MeasureSetupEntry;
 import rzahoransky.gui.measureSetup.OldAdapterConfigPanel;
 
 public class FiveWLNIDaqAdapter extends AbstractDQPipelineElement implements AdapterInterface {
@@ -30,8 +32,10 @@ public class FiveWLNIDaqAdapter extends AbstractDQPipelineElement implements Ada
 	private int samplesPerChannel = 6000;
 
 	public FiveWLNIDaqAdapter() {
+		adCard = MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.NIADAPTER);
 
 	}
+
 	public void setSamplesPerChannel(int samples) {
 		this.samplesPerChannel = samples;
 		clearTask();
@@ -55,25 +59,25 @@ public class FiveWLNIDaqAdapter extends AbstractDQPipelineElement implements Ada
 
 		if (!isInitialized)
 			initDAQ();
-		
 
 		daq.readAnalogF64(task, samplesPerChannel, -1, Nicaiu.DAQmx_Val_GroupByChannel, db, db.capacity(), reads);
-		
+
 		if (checkDataAcquisition()) {
 			return readMeasurement();
 		}
 
 		return null;
 	}
-	
+
 	private boolean checkDataAcquisition() {
-		return reads.get(0)==samplesPerChannel;
+		return reads.get(0) == samplesPerChannel;
 	}
 
-	public void initDAQ() throws NiDaqException {
+	public void initDAQ() {
 		try {
 			Thread.sleep(30);
-		} catch (InterruptedException e1) {}
+		} catch (InterruptedException e1) {
+		}
 
 		try {
 			daq.clearTask(task);
@@ -81,78 +85,93 @@ public class FiveWLNIDaqAdapter extends AbstractDQPipelineElement implements Ada
 			// ignore
 		}
 
-		daq = new NiDaq();
-		task = daq.createTask("");
+		try {
 
-		// reference channel
-		daq.createAIVoltageChannel(task, adCard + "/" + "ai0:3", "", Nicaiu.DAQmx_Val_Cfg_Default, minVoltage,
-				maxVoltage, Nicaiu.DAQmx_Val_Volts, null);
-		/**
-		 * 
-		 * // measurement channel daq.createAIVoltageChannel(task, adCard + "/" +
-		 * "ai1:ai1", "", Nicaiu.DAQmx_Val_Cfg_Default, minVoltage, maxVoltage,
-		 * Nicaiu.DAQmx_Val_Volts, null);
-		 * 
-		 * // mode channel daq.createAIVoltageChannel(task, adCard + "/" + "ai2:ai2",
-		 * "", Nicaiu.DAQmx_Val_Cfg_Default, minVoltage, maxVoltage,
-		 * Nicaiu.DAQmx_Val_Volts, null);
-		 * 
-		 * // trigger channel daq.createAIVoltageChannel(task, adCard + "/" + "ai3:ai3",
-		 * "", Nicaiu.DAQmx_Val_Cfg_Default, minVoltage, maxVoltage,
-		 * Nicaiu.DAQmx_Val_Volts, null);
-		 * 
-		 **/
-		//daq.cfgSampClkTiming(task, "", 100000.0, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_FiniteSamps, samplesPerChannel);
-		daq.cfgSampClkTiming(task, "", 100000.0, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_ContSamps, samplesPerChannel);
-		// init Buffer
-		db = DoubleBuffer.allocate(samplesPerChannel * 4);
-		daq.startTask(task);
+			daq = new NiDaq();
+			task = daq.createTask("");
 
-		isInitialized = true;
+			// reference channel
+			daq.createAIVoltageChannel(task, adCard + "/" + "ai0:3", "", Nicaiu.DAQmx_Val_Cfg_Default, minVoltage,
+					maxVoltage, Nicaiu.DAQmx_Val_Volts, null);
+			/**
+			 * 
+			 * // measurement channel daq.createAIVoltageChannel(task, adCard + "/" +
+			 * "ai1:ai1", "", Nicaiu.DAQmx_Val_Cfg_Default, minVoltage, maxVoltage,
+			 * Nicaiu.DAQmx_Val_Volts, null);
+			 * 
+			 * // mode channel daq.createAIVoltageChannel(task, adCard + "/" + "ai2:ai2",
+			 * "", Nicaiu.DAQmx_Val_Cfg_Default, minVoltage, maxVoltage,
+			 * Nicaiu.DAQmx_Val_Volts, null);
+			 * 
+			 * // trigger channel daq.createAIVoltageChannel(task, adCard + "/" + "ai3:ai3",
+			 * "", Nicaiu.DAQmx_Val_Cfg_Default, minVoltage, maxVoltage,
+			 * Nicaiu.DAQmx_Val_Volts, null);
+			 * 
+			 **/
+			// daq.cfgSampClkTiming(task, "", 100000.0, Nicaiu.DAQmx_Val_Rising,
+			// Nicaiu.DAQmx_Val_FiniteSamps, samplesPerChannel);
+			daq.cfgSampClkTiming(task, "", 100000.0, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_ContSamps,
+					samplesPerChannel);
+			// init Buffer
+			db = DoubleBuffer.allocate(samplesPerChannel * 4);
+			daq.startTask(task);
+			isInitialized = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			isInitialized = false;
+		}
+
 	}
-	
+
 	private DQSignal readMeasurement() {
-		//System.out.println("convertToRawData");
+		// System.out.println("convertToRawData");
 		int size = db.capacity();
 		db.rewind();
 		ArrayList<Double> reference = new ArrayList<>();
 		ArrayList<Double> measurement = new ArrayList<>();
 		ArrayList<Double> mode = new ArrayList<>();
 		ArrayList<Double> trigger = new ArrayList<>();
-		
-		for (int i = 0; i<size/4;i++)
+
+		for (int i = 0; i < size / 4; i++)
 			reference.add(db.get());
-		
-		for (int i = size/4; i<size/2;i++)
+
+		for (int i = size / 4; i < size / 2; i++)
 			measurement.add(db.get());
-		
-		//channel 3 is wavelength selector
-		for (int i = size/2;i<(3*size)/4;i++)
+
+		// channel 3 is wavelength selector
+		for (int i = size / 2; i < (3 * size) / 4; i++)
 			mode.add(db.get());
-		
-		for (int i = (3*size)/4;i<size;i++)
+
+		for (int i = (3 * size) / 4; i < size; i++)
 			trigger.add(db.get());
-		
+
 		DQSignal current = new DQSignal(reference, measurement, mode, trigger);
-		
+
 		db.clear();
 		return current;
 	}
+
 	@Override
 	public void setADCardOrConfigParameter(String device) {
-		adCard=device;
-		isInitialized=false;
-		
+		adCard = device;
+		isInitialized = false;
+
 	}
+
 	@Override
 	public DQSignal processDQElement(DQSignal in) {
-		try {
-			DQSignal measurement = getNextMeasurement();
-			return measurement;
-			
-		} catch (NiDaqException e) {
-			e.printStackTrace();
-			return null;
+		DQSignal measurement = null;
+		while (measurement == null) {
+			try {
+				// System.out.println("Trying... "+System.currentTimeMillis());
+				measurement = getNextMeasurement();
+				return measurement;
+
+			} catch (NiDaqException e) {
+				e.printStackTrace();
+			}
+
 		}
+		return null;
 	}
 }

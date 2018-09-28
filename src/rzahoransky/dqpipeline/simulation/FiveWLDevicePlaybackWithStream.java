@@ -226,4 +226,11 @@ public class FiveWLDevicePlaybackWithStream extends AbstractDQPipelineElement im
 		br2.seek(0);
 		return arrayList;
 	}
+
+
+	@Override
+	public void clearTask() {
+		// TODO Auto-generated method stub
+		
+	}
 }

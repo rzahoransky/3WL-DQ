@@ -135,4 +135,10 @@ public class FiveWLDevicePlayback extends AbstractDQPipelineElement implements A
 		
 	}
 
+	@Override
+	public void clearTask() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

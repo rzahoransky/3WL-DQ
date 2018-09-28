@@ -74,6 +74,7 @@ public class MeasureSetupGui extends JFrame{
 	Border border;
 	DQPipeline pipeline = new DQPipeline();
 	JButton startBtn;
+	private AdapterSelectGui adapterSelectGUI;
 	
 	public static void main (String args[]) {
 		MeasureSetupGui gui = new MeasureSetupGui();
@@ -131,9 +132,22 @@ public class MeasureSetupGui extends JFrame{
 		mieGUI.setBorder(test);
 		add(mieGUI, c);
 		
+		//Adapter Select
+		c.gridy++;
+		c.gridx=0;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		c.weighty=0;
+		c.fill=GridBagConstraints.NONE;
+		adapterSelectGUI = new AdapterSelectGui();
+		add(adapterSelectGUI,c);
+		
+		
+		
 		//OK Button
 		
-		c.gridy++;
+		//c.gridy++;
+		c.gridx=GridBagConstraints.RELATIVE;
 		c.gridwidth=GridBagConstraints.REMAINDER;
 		c.anchor=GridBagConstraints.LAST_LINE_END;
 		c.fill=GridBagConstraints.NONE;
@@ -215,10 +229,12 @@ public class MeasureSetupGui extends JFrame{
 		//NI Adapter
 		AdapterInterface adapter;
 		 List<String> niStrings = NiDaq.getDeviceNames();
-		 if (niStrings !=null && niStrings.size()>0) {
+		 if (adapterSelectGUI.isDevice()) {
 				adapter = new FiveWLNIDaqAdapter();
-				adapter.setADCardOrConfigParameter(niStrings.get(0));
+				adapter.setADCardOrConfigParameter(adapterSelectGUI.getSelectedDevice());
+				setup.setProperty(MeasureSetupEntry.NIADAPTER, adapterSelectGUI.getSelectedDevice());
 		 } else {
+			 JOptionPane.showMessageDialog(this, "No NiDAQ adapter. Will start in simulation mode!");
 			 adapter = new FiveWLOneHeadSimulator();
 		 }
 		 
@@ -282,7 +298,7 @@ public class MeasureSetupGui extends JFrame{
 		pipeline.addPipelineElement(sizeVisualizer);
 		pipeline.addPipelineElement(concentrationExtractor);
 		
-		pipeline.addPipelineElement(new SimpleDQEntryDiameterExtractor());
+		//pipeline.addPipelineElement(new SimpleDQEntryDiameterExtractor());
 		//pipeline.addPipelineElement(new DQVisualizer());
 		//pipeline.addPipelineElement(writer);
 		//pipeline.start();
@@ -309,6 +325,7 @@ public class MeasureSetupGui extends JFrame{
 				try {
 					DQReader mieReader = new DQReader(mieGUI.getChoosenFile());
 					setup.setStorageIntervall(time.getValue());
+					setup.setProperty(MeasureSetupEntry.NIADAPTER, adapterSelectGUI.getSelectedDevice());
 					setupPipeline(mieReader.getWl1(), mieReader.getWl2(), mieReader.getWl3());
 					MeasureGui gui = new MeasureGui(pipeline);
 					//pipeline.start();

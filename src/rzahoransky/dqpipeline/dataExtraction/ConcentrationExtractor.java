@@ -32,23 +32,23 @@ public class ConcentrationExtractor extends AbstractDQPipelineElement {
 	
 	@Override
 	public DQSignal processDQElement(DQSignal in) {
+		try {
 		in.setLength(length);
 		
 		double transmissionWl1 = in.getTransmission(TransmissionType.TRANSMISSIONWL1);
 		double transmissionWl2 = in.getTransmission(TransmissionType.TRANSMISSIONWL2);
 		double transmissionWl3 = in.getTransmission(TransmissionType.TRANSMISSIONWL3);
 		
-		ArrayList<Double> volumeConcentrations = new ArrayList<>();
+		ArrayList<Double> numberConcentration = new ArrayList<>();
 		
-		try {
-		volumeConcentrations.add(getParticleConcentration(transmissionWl1, in.getSigma(), wl1.getClosesElementForDiameter(in.getGeometricalDiameter())));
-		volumeConcentrations.add(getParticleConcentration(transmissionWl2, in.getSigma(), wl2.getClosesElementForDiameter(in.getGeometricalDiameter())));
-		volumeConcentrations.add(getParticleConcentration(transmissionWl3, in.getSigma(), wl3.getClosesElementForDiameter(in.getGeometricalDiameter())));
+		numberConcentration.add(getParticleConcentration(transmissionWl1, in.getSigma(), wl1.getClosesElementForDiameter(in.getGeometricalDiameter())));
+		numberConcentration.add(getParticleConcentration(transmissionWl2, in.getSigma(), wl2.getClosesElementForDiameter(in.getGeometricalDiameter())));
+		numberConcentration.add(getParticleConcentration(transmissionWl3, in.getSigma(), wl3.getClosesElementForDiameter(in.getGeometricalDiameter())));
 		
 		
-		in.setNumberConcentration(ArrayListUtils.getAverage(volumeConcentrations));
+		in.setNumberConcentration(ArrayListUtils.getAverage(numberConcentration));
 		} catch (Exception e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 		return in;
 
@@ -56,10 +56,10 @@ public class ConcentrationExtractor extends AbstractDQPipelineElement {
 
 
 
-	/** concentration for cm³ **/
+	/** concentration for m³. All to convert to micrometer **/
 	private double getParticleConcentration(double transmission, double sigma, MieWrapper element) {
-		double n = (-1d) * Math.log(transmission) / ((length/100)*(Math.PI/4)*element.getIntegratedQext().get(sigma));
-		return n;
+		double n = (-1d) * Math.log(transmission) / ((length*10000)*(Math.PI/4)*element.getIntegratedQext().get(sigma));
+		return n*Math.pow(10, 18);
 	}
 
 	@Override

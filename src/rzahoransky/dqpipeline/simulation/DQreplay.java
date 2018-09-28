@@ -128,4 +128,10 @@ public class DQreplay extends AbstractDQPipelineElement implements AdapterInterf
 		
 	}
 
+	@Override
+	public void clearTask() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

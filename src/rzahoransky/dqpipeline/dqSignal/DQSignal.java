@@ -213,7 +213,7 @@ public class DQSignal {
 	}
 	
 	public static double calculateVolumetricDiameter(double geometricalDiameter, double sigma) {
-		return Math.pow((Math.pow(geometricalDiameter, 3))*Math.pow(Math.E, ((9/2)*sigma*sigma)),(1/3));
+		return Math.pow(Math.pow(geometricalDiameter, 3d)*Math.pow(Math.E, ((9d/2d)*sigma*sigma)),(1d/3d));
 	}
 	
 	public double getVolumetricDiameter() {

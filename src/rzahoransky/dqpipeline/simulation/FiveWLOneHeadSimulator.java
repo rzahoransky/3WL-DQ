@@ -134,7 +134,7 @@ public class FiveWLOneHeadSimulator extends AbstractDQPipelineElement implements
 	@Override
 	public DQSignal processDQElement(DQSignal in) {
 		try {
-			Thread.sleep(100);
+			Thread.sleep(10);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -160,6 +160,12 @@ public class FiveWLOneHeadSimulator extends AbstractDQPipelineElement implements
 		panel.add(wl2);
 		panel.add(wl3);
 		return panel;
+	}
+
+	@Override
+	public void clearTask() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -102,10 +102,19 @@ public class TransmissionVisualizer extends AbstractDQPipelineElement{
 	@Override
 	public DQSignal processDQElement(DQSignal in) {
 		DQSignal element = in;
+		try {
 		if (element!=null)
 			visualizeDQMeasurement(element);
+		} catch (Exception e) {} //just continue
 		// out.put(element); for debug purpose
 		return element;
+	}
+	
+	public void setStroke(BasicStroke stroke) {
+		JFreeChart chart = chartPanel.getChart();
+		for (int i = 0; i<chart.getXYPlot().getSeriesCount();i++) {
+			chart.getXYPlot().getRenderer().setSeriesStroke(i, new BasicStroke(2.0f));
+		}
 	}
 
 	@Override

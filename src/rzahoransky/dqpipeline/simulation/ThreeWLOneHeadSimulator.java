@@ -106,4 +106,10 @@ public class ThreeWLOneHeadSimulator extends AbstractDQPipelineElement implement
 		
 	}
 
+	@Override
+	public void clearTask() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

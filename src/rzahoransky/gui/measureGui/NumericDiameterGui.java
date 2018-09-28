@@ -17,21 +17,24 @@ import rzahoransky.dqpipeline.listener.DQSignalListener;
 public class NumericDiameterGui extends JPanel implements DQSignalListener{
 
 	protected JLabel diameter = new JLabel("");
+	protected JLabel diameterVol = new JLabel("");
 	protected JLabel sigma = new JLabel("");
 	protected JLabel density = new JLabel("");
-	protected static final JLabel diameterString = new JLabel("Diameter in μm");
+	protected static final JLabel diameterString = new JLabel("Diameter in μm (geometrical)");
+	protected static final JLabel diameterVolString = new JLabel("Diameter in μm (volumetrical)");
 	protected static final JLabel sigmaString = new JLabel("Sigma: ");
 	protected static final JLabel densityString = new JLabel("Particles per cm³");
 	DecimalFormat df = new DecimalFormat("0.000"); 
+	DecimalFormat scientific = new DecimalFormat("0.##E0");
 	
 	
 	public NumericDiameterGui(DQPipeline pipeline) {
-		Font font = new Font("Arial", Font.BOLD, 14);
+		Font font = new Font("Arial", Font.BOLD, 16);
 		diameter.setFont(font);
 		sigma.setFont(font);
 		density.setFont(font);
 		
-		Font font_normal = new Font("Arial", Font.PLAIN, 14);
+		Font font_normal = new Font("Arial", Font.PLAIN, 16);
 		diameterString.setFont(font_normal);
 		sigmaString.setFont(font_normal);
 		densityString.setFont(font_normal);
@@ -48,6 +51,13 @@ public class NumericDiameterGui extends JPanel implements DQSignalListener{
 		c.gridx++;
 		add(diameter, c);
 		c.gridx++;
+		
+		c.gridx++;
+		add(diameterVolString,c);
+		c.gridx++;
+		add(diameterVol,c);
+		c.gridx++;
+		
 		add(sigmaString,c);
 		c.gridx++;
 		add(sigma,c);
@@ -66,11 +76,14 @@ public class NumericDiameterGui extends JPanel implements DQSignalListener{
 		try {
 		diameter.setText(formatDouble(currentSignal.getGeometricalDiameter()));
 		sigma.setText(formatDouble(currentSignal.getSigma()));
-		density.setText(formatDouble(currentSignal.getNumberConcentration()));
+		density.setText(scientific.format(currentSignal.getNumberConcentration()));
+		diameterVol.setText(formatDouble(currentSignal.getVolumetricDiameter()));
+		
 		} catch (Exception e) {
 			diameter.setText("N/A");
 			sigma.setText("N/A");
 			density.setText("N/A");
+			diameterVol.setText("N/A");
 		}
 	}
 	

@@ -62,7 +62,7 @@ public class DiameterComperator implements Comparable<DiameterComperator> {
 		if (entry.getSigma() != sigma)
 			return 0;
 		
-		LogNormal two = new LogNormal(entry.getDiameter(), entry.getSigma());
+		LogNormal two = new LogNormal(Math.log(entry.getDiameter()), entry.getSigma());
 		double area = 0;
 		//double start = Math.max(minDiameter, entry.getDiameter()/4);
 		//double end = Math.min(maxDiameter, entry.getDiameter()*4);
@@ -79,7 +79,7 @@ public class DiameterComperator implements Comparable<DiameterComperator> {
 		foundDiameters.add(entry);
 //		this.medianDiameter = calcMedianDiameter();
 		this.averageDiameter = calcAverageDiameter();
-		log = new LogNormal(averageDiameter, sigma);
+		log = new LogNormal(Math.log(averageDiameter), sigma);
 	}
 
 	private double calcAverageDiameter() {
