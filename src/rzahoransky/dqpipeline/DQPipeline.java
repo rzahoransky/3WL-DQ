@@ -42,6 +42,7 @@ public class DQPipeline {
 	private long sleep = 0;
 	
 	private volatile DQSignal currentSignal;
+	private AdapterInterface adapter;
 	
 	public static void main (String args[]) throws InterruptedException, NiDaqException {
 		AdapterInterface adapter = new FiveWLNIDaqAdapter();
@@ -96,6 +97,9 @@ public class DQPipeline {
 		
 		pipelineElements.add(element);
 		ArrayBlockingQueue<DQSignal> out = new ArrayBlockingQueue<>(capacity);
+		if (element instanceof AdapterInterface) {
+			this.adapter = (AdapterInterface) element;
+		}
 		
 //		if(!queues.isEmpty())
 //			element.setInQueue(queues.get(queues.size()-1)); //First element must be a producer
@@ -138,8 +142,8 @@ public class DQPipeline {
 	
 	public void stop() {
 		run = false;
-		for (Thread t: pipelineThreads)
-			t.interrupt();
+//		for (Thread t: pipelineThreads)
+//			t.interrupt();
 	}
 	
 	protected void setCurrentSignal(DQSignal signal) {
@@ -191,9 +195,10 @@ public class DQPipeline {
 			return element.description();
 		}
 
+		@SuppressWarnings("deprecation")
 		@Override
 		public void run() {
-			while (run) {
+			while (run && !isInterrupted()) {
 				try {
 					if (in == null)
 						out.put(element.processDQElement(null)); // first thread in Pipeline: Producer
@@ -201,12 +206,15 @@ public class DQPipeline {
 						out.put(element.processDQElement(in.take()));
 				} catch (InterruptedException e) {
 					// check if thread should terminate
-					if (!run) {
+					if (!run || isInterrupted()) {
 						System.out.println("Thread " + element.description() + " ending...");
+						//stop();
 						return;
 					}
 				}
 			}
+			//stop();
+			System.out.println("Thread " + element.description() + " ending...");
 			return;
 		}
 		
@@ -231,6 +239,9 @@ public class DQPipeline {
 				if (!run) {
 					return;
 				}
+			}
+			catch (Exception everythingElse) {
+				everythingElse.printStackTrace();
 			}
 			}
 			return;

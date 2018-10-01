@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -15,6 +16,7 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.renderer.xy.DeviationRenderer;
+import org.jfree.data.ComparableObjectItem;
 import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.RegularTimePeriod;
 import org.jfree.data.time.Second;
@@ -40,7 +42,8 @@ public class ParticleSizeVisualizerChart extends AbstractDQPipelineElement imple
 
 	ChartPanel chartPanel;
 	JFrame frame;
-	private int maxAge = 4000;
+	private int maxAge = 300000; //in milliseconds
+	//private int maxAge = 3000;
 	private long start;
 
 	public ParticleSizeVisualizerChart(boolean showAsFrame) {
@@ -90,10 +93,47 @@ public class ParticleSizeVisualizerChart extends AbstractDQPipelineElement imple
 	public void visualizeDQMeasurement(DQSignal measurement) {
 		YIntervalSeriesCollection collection = (YIntervalSeriesCollection) chartPanel.getChart().getXYPlot().getDataset();
 		updateSeries(measurement, collection);
+		//removeOldEntries(collection);
+
+	}
+
+
+	private void removeOldEntries(YIntervalSeriesCollection collection) {
+		long currentTime = System.currentTimeMillis();
+//
+//		LinkedList<Double> toRemove = new LinkedList<>();
+//		for (int dataItem = 0; dataItem < collection.getSeries(0).getItemCount(); dataItem++) {
+//			double time = (double) collection.getSeries(0).getX(dataItem);
+//			if (currentTime - time > maxAge)
+//				toRemove.add(time);
+//		}
+//		if(!toRemove.isEmpty())
+//			System.out.println("Removing "+toRemove.size()+" elements");
+//		
+//			for (int i = 0; i < collection.getSeriesCount(); i++) {
+//				for (double remove : toRemove) {
+//				//collection.getSeries(i).get
+//				collection.getSeries(i).setNotify(false);
+//				collection.getSeries(i).remove(remove);
+//				collection.getSeries(i).setNotify(true);
+//				
+//				//collection.getSeries(i).setNotify(true);
+//			}
+//		}
+		
+		while (currentTime-collection.getXValue(0, 0) > maxAge) {
+			for (int i = 0; i<collection.getSeriesCount();i++) {
+				try {
+				collection.getSeries(i).remove(collection.getXValue(0, 0));
+				} catch (ArrayIndexOutOfBoundsException e) {};
+			}
+		}
+
 	}
 
 	private void updateSeries(DQSignal measurement, YIntervalSeriesCollection collection) {
 		long now = System.currentTimeMillis();
+		//removeFirstElementIfOld(collection, now);
 		//double seconds = (now - start)/1000d;
 		YIntervalSeries series = collection.getSeries(0);
 		// series.clear();
@@ -103,12 +143,19 @@ public class ParticleSizeVisualizerChart extends AbstractDQPipelineElement imple
 		if (measurement.hasMinAndMaxDiameter()) {
 			series.add(now, d,measurement.getMinGeometricalDiameter(), measurement.getMaxGeometricalDiameter());
 		} else {
-			series.add(now, d, d, d);
+			double sigma = measurement.getSigma();
+			series.add(now, d, d-sigma, d+sigma);
 		}
+		
 		
 		//xyIntervalSeries.add(seconds, measurement.getDiameter().getLowesetDiameter(), measurement.getDiameter().getHighestDiameter(), y, yLow, yHigh);
 		//xyIntervalSeries.setMaximumItemAge(maxAge);
-		series.setMaximumItemCount(maxAge);
+		//series.setMaximumItemCount(maxAge);
+		
+		try {
+			removeFirstElementIfOld(collection, now);
+		} catch (ArrayIndexOutOfBoundsException e) {}
+		
 		series.fireSeriesChanged();
 		
 		//series = collection.getSeries(1);
@@ -116,6 +163,17 @@ public class ParticleSizeVisualizerChart extends AbstractDQPipelineElement imple
 		
 		
 		// series.notify();
+	}
+	
+
+	private void removeFirstElementIfOld(YIntervalSeriesCollection collection, long now) {
+		double history = collection.getXValue(0, 0);
+		if (now - history > maxAge) {
+			for (int i = 0; i<collection.getSeriesCount();i++) {
+				collection.getSeries(i).remove(history);
+			}
+		}
+		
 	}
 
 	@Override
@@ -125,7 +183,7 @@ public class ParticleSizeVisualizerChart extends AbstractDQPipelineElement imple
 			try {
 			visualizeDQMeasurement(element);
 			} catch (Exception e) {
-				//e.printStackTrace();
+				e.printStackTrace();
 			}
 		// out.put(element); for debug purpose
 		return element;
@@ -138,6 +196,12 @@ public class ParticleSizeVisualizerChart extends AbstractDQPipelineElement imple
 	
 	public void setMaximumAge(int entries) {
 		this.maxAge = entries;
+	}
+
+	@Override
+	public void setMaxAge(int ageOrCount) {
+		this.maxAge=ageOrCount;
+		
 	}
 
 }

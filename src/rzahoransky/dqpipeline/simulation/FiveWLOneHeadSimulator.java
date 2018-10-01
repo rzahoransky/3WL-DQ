@@ -136,8 +136,8 @@ public class FiveWLOneHeadSimulator extends AbstractDQPipelineElement implements
 		try {
 			Thread.sleep(10);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
 		return generateMeasurement();
 		

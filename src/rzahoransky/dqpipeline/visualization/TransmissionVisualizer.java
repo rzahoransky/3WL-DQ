@@ -113,7 +113,14 @@ public class TransmissionVisualizer extends AbstractDQPipelineElement{
 	public void setStroke(BasicStroke stroke) {
 		JFreeChart chart = chartPanel.getChart();
 		for (int i = 0; i<chart.getXYPlot().getSeriesCount();i++) {
-			chart.getXYPlot().getRenderer().setSeriesStroke(i, new BasicStroke(2.0f));
+			chart.getXYPlot().getRenderer().setSeriesStroke(i, stroke);
+		}
+	}
+	
+	public void setMaxAge(long age) {
+		TimeSeriesCollection collection = (TimeSeriesCollection) chartPanel.getChart().getXYPlot().getDataset();
+		for(Object series: collection.getSeries()) {
+			((TimeSeries)series).setMaximumItemAge(age);
 		}
 	}
 

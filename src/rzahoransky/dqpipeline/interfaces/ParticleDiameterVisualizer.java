@@ -5,5 +5,7 @@ import org.jfree.chart.ChartPanel;
 public interface ParticleDiameterVisualizer extends DQPipelineElement {
 	
 	public ChartPanel getChartPanel();
+	
+	public void setMaxAge(int ageOrCount);
 
 }

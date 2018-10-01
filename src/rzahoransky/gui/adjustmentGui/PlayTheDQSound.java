@@ -19,8 +19,8 @@ public class PlayTheDQSound implements Runnable, DQSignalListener {
 	private boolean makeSound = true;
 	private AudioFormat af;
 	private SourceDataLine line;
-	public static final int SAMPLE_RATE = 64 * 1024; // ~16KHz
-	private byte[] sin = new byte[300];
+	public static final int SAMPLE_RATE = 2048; // ~16KHz
+	private byte[] sin = new byte[600];
 	
 	public PlayTheDQSound() {
 		try {
@@ -66,10 +66,11 @@ public class PlayTheDQSound implements Runnable, DQSignalListener {
 	            	if (sin[i]<2)
 	            		phaseZero=i;
 	            }
-	            if (line.available()>10)
-	            	line.write(sin, 0, phaseZero);
+	            	int count = line.write(sin, 0, phaseZero);
 	            //System.out.println(line.available());
-	            //System.out.println(count);
+	            
+	            
+	            System.out.println(count);
 	            
 			} else {
 				try {

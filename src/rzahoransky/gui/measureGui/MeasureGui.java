@@ -48,6 +48,7 @@ private DQPipeline pipeline;
 				MeasureSetUp.getInstance().getOutputWriter().close();
 			}
 		});
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 	
 	private void positionElements() {

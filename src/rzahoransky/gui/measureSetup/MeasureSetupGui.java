@@ -45,7 +45,7 @@ import rzahoransky.dqpipeline.dataExtraction.DQExtractor;
 import rzahoransky.dqpipeline.dataExtraction.FiveWLExtractor;
 import rzahoransky.dqpipeline.dataExtraction.FiveWLMeasurePoints;
 import rzahoransky.dqpipeline.dataExtraction.ProbabilityBasedDiameterExtractor;
-import rzahoransky.dqpipeline.dataExtraction.SimpleDQEntryDiameterExtractor;
+import rzahoransky.dqpipeline.dataExtraction.SimpleDQLookupDiameterExtractor;
 import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
 import rzahoransky.dqpipeline.dataWriter.OutputWriter;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
@@ -60,6 +60,7 @@ import rzahoransky.dqpipeline.visualization.LaserVoltageVisualizer;
 import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizer;
 import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizerChart;
 import rzahoransky.dqpipeline.visualization.TransmissionVisualizer;
+import rzahoransky.gui.adjustmentGui.Adjustment;
 import rzahoransky.gui.measureGui.MeasureGui;
 import storage.dqMeas.read.DQReader;
 
@@ -82,11 +83,7 @@ public class MeasureSetupGui extends JFrame{
 	}
 
 	public MeasureSetupGui() {
-		try {
-		getWavelengths();
-		} catch (Exception e) {
-			//e.printStackTrace();
-		}
+
 		setLookAndFeel();
 		setupComponents();
 		setupFrame();
@@ -105,7 +102,9 @@ public class MeasureSetupGui extends JFrame{
 			
 		//choose length
 		c.gridy++;
-		c.gridwidth=1;
+		c.gridwidth=GridBagConstraints.RELATIVE;
+		c.fill=GridBagConstraints.BOTH;
+		c.weightx=1;
 		Border test = BorderFactory.createEtchedBorder();
 		length.setBorder(test);
 		add(length,c);
@@ -134,6 +133,8 @@ public class MeasureSetupGui extends JFrame{
 		
 		//Adapter Select
 		c.gridy++;
+		//c.anchor=GridBagConstraints.LAST_LINE_END;
+		c.anchor=GridBagConstraints.CENTER;
 		c.gridx=0;
 		c.gridwidth = 1;
 		c.gridheight = 1;
@@ -142,17 +143,33 @@ public class MeasureSetupGui extends JFrame{
 		adapterSelectGUI = new AdapterSelectGui();
 		add(adapterSelectGUI,c);
 		
+		c.gridx++;
+		//c.anchor=GridBagConstraints.LAST_LINE_END;
+		JButton adjust = new JButton("Adjustment...");
+		adjust.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new Adjustment().setVisible(true);
+			}
+		});
+		add(adjust,c);
 		
-		
-		//OK Button
+		//START Button
 		
 		//c.gridy++;
 		c.gridx=GridBagConstraints.RELATIVE;
 		c.gridwidth=GridBagConstraints.REMAINDER;
-		c.anchor=GridBagConstraints.LAST_LINE_END;
+		c.anchor=GridBagConstraints.LINE_END;
 		c.fill=GridBagConstraints.NONE;
 		c.weighty=0;
 		add(getStartBtn(),c);
+		
+		try {
+		getWavelengths();
+		} catch (Exception e) {
+			//e.printStackTrace();
+		}
 		
 	}
 
@@ -256,7 +273,7 @@ public class MeasureSetupGui extends JFrame{
 		
 		//Calculate particles from DQ
 		//DQPipelineElement sizeExtractor = new ProbabilityBasedDiameterExtractor(wl1, wl2, wl3);
-		DQPipelineElement sizeExtractor = new SimpleDQEntryDiameterExtractor(wl1, wl2, wl3);
+		DQPipelineElement sizeExtractor = new SimpleDQLookupDiameterExtractor(wl1, wl2, wl3);
 		
 		//Calulate particle concentration
 		ConcentrationExtractor concentrationExtractor = new ConcentrationExtractor(wl1, wl2, wl3);

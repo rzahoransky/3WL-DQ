@@ -81,7 +81,7 @@ public class AdapterSelectGui extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		//MeasureSetUp.getInstance().setProperty(MeasureSetupEntry.NIADAPTER, (String) combo.getSelectedItem());
+		MeasureSetUp.getInstance().setProperty(MeasureSetupEntry.NIADAPTER, (String) combo.getSelectedItem());
 	}
 	
 	public boolean includes(String s) {

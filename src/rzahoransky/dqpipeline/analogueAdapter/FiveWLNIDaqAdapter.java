@@ -5,6 +5,7 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.sun.jna.Pointer;
@@ -30,10 +31,10 @@ public class FiveWLNIDaqAdapter extends AbstractDQPipelineElement implements Ada
 	private double maxVoltage = 7.1;
 	private boolean isInitialized = false;
 	private int samplesPerChannel = 6000;
+	protected boolean errorMessageShown = false;
 
 	public FiveWLNIDaqAdapter() {
 		adCard = MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.NIADAPTER);
-
 	}
 
 	public void setSamplesPerChannel(int samples) {
@@ -42,6 +43,7 @@ public class FiveWLNIDaqAdapter extends AbstractDQPipelineElement implements Ada
 	}
 
 	public void clearTask() {
+		errorMessageShown=false;
 		try {
 			daq.clearTask(task);
 		} catch (Exception e) {
@@ -86,7 +88,6 @@ public class FiveWLNIDaqAdapter extends AbstractDQPipelineElement implements Ada
 		}
 
 		try {
-
 			daq = new NiDaq();
 			task = daq.createTask("");
 
@@ -117,6 +118,10 @@ public class FiveWLNIDaqAdapter extends AbstractDQPipelineElement implements Ada
 			daq.startTask(task);
 			isInitialized = true;
 		} catch (Exception e) {
+			if (!errorMessageShown) {
+				JOptionPane.showMessageDialog(null, "Cannot read from device", "I/O error", JOptionPane.ERROR_MESSAGE);
+				errorMessageShown = true;
+			}
 			e.printStackTrace();
 			isInitialized = false;
 		}

@@ -6,16 +6,16 @@ import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.utils.DQtype;
 
-public class SimpleDQEntryDiameterExtractor implements DQPipelineElement {
+public class SimpleDQLookupDiameterExtractor implements DQPipelineElement {
 	
 	MeasureSetUp setup = MeasureSetUp.getInstance();
 	SimpleDQLookup lookup = new SimpleDQLookup(setup.getMieList(0), setup.getMieList(1), setup.getMieList(2));
 
-	public SimpleDQEntryDiameterExtractor() {
+	public SimpleDQLookupDiameterExtractor() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public SimpleDQEntryDiameterExtractor(MieList wl1, MieList wl2, MieList wl3) {
+	public SimpleDQLookupDiameterExtractor(MieList wl1, MieList wl2, MieList wl3) {
 		lookup = new SimpleDQLookup(wl1, wl2, wl3);
 	}
 
@@ -25,7 +25,7 @@ public class SimpleDQEntryDiameterExtractor implements DQPipelineElement {
 			double now = System.currentTimeMillis();
 			double diameter = lookup.getDiameterFor(in.getDQ(DQtype.DQ1).getDqValue(), in.getDQ(DQtype.DQ2).getDqValue());
 			double sigma = lookup.getSigmaFor(in.getDQ(DQtype.DQ1).getDqValue(), in.getDQ(DQtype.DQ2).getDqValue());
-			System.out.println("SimpleLookup: d: "+diameter+" sigma: "+sigma+" time: "+Double.toString(System.currentTimeMillis()-now));
+			//System.out.println("SimpleLookup: d: "+diameter+" sigma: "+sigma+" time: "+Double.toString(System.currentTimeMillis()-now));
 			in.setSigma(sigma);
 			in.setGeometricalDiameter(diameter);
 		} catch (Exception e) {
