@@ -51,7 +51,10 @@ public class DQSignal {
 	private double numberConcentration;
 	private int numberOfParticlesPerCubicMeter;
 	
-
+	protected HashMap<SignalTypeHash, Double> averagedValues = new HashMap<>();
+	
+	public boolean isValid = true;
+	
 	public ArrayList<DQSignalSinglePeriod> getSinglePeriods() {
 		return singlePeriods;
 	}
@@ -79,6 +82,10 @@ public class DQSignal {
 		for (RawSignalType type: RawSignalType.values())
 			values.put(type, new ArrayList<>());
 		this.timeStamp = System.currentTimeMillis();
+	}
+	
+	public void setTimestamp(long time) {
+		this.timeStamp = time;
 	}
 	
 	public DQSignal(ArrayList<Double> reference, ArrayList<Double> measurement) {
@@ -160,6 +167,11 @@ public class DQSignal {
 	}
 	
 	public double getAveragedValues(RawSignalType refMeas, ExtractedSignalType type) {
+		SignalTypeHash hash = new SignalTypeHash(refMeas, type);
+		if (averagedValues.containsKey(hash)) {
+			return averagedValues.get(hash);
+		}
+		
 		double sum = 0.0;
 		int count = 0;
 		try {
@@ -173,7 +185,12 @@ public class DQSignal {
 			e.printStackTrace();
 			return 0.0;
 		}
+		averagedValues.put(hash, sum/count);
 		return sum/count;
+	}
+	
+	public void setAveragedValue(RawSignalType refMeas, ExtractedSignalType type, double averagedValue) {
+		averagedValues.put(new SignalTypeHash(refMeas, type), averagedValue);
 	}
 
 	public void setWL1(double d) {
@@ -254,11 +271,11 @@ public class DQSignal {
 		this.sigma = sigma;
 	}
 	
-	public void addMinDiameter(double minDiameter) {
+	public void addMinGeometricalDiameter(double minDiameter) {
 		this.minFoundGeometricalDiameter = minDiameter;
 	}
 	
-	public void addMaxDiameter(double maxDiameter) {
+	public void addMaxGeometricalDiameter(double maxDiameter) {
 		this.maxFoundGeometricalDiameter = maxDiameter;
 	}
 
@@ -312,8 +329,41 @@ public class DQSignal {
 	public double getFactor(TransmissionType type) {
 		return factors.get(type);
 	}
-	
-	
-	
+}
 
+class SignalTypeHash {
+	
+	private RawSignalType refOrMeas;
+	private ExtractedSignalType type;
+
+	public SignalTypeHash(RawSignalType refOrMeas, ExtractedSignalType type) {
+		this.refOrMeas = refOrMeas;
+		this.type = type;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((refOrMeas == null) ? 0 : refOrMeas.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SignalTypeHash other = (SignalTypeHash) obj;
+		if (refOrMeas != other.refOrMeas)
+			return false;
+		if (type != other.type)
+			return false;
+		return true;
+	}
+	
 }

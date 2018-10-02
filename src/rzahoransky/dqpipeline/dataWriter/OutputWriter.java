@@ -8,6 +8,7 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Formatter;
 import java.util.Locale;
@@ -21,6 +22,8 @@ import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.gui.measureSetup.MeasureSetupEntry;
+import rzahoransky.utils.ArrayListUtils;
+import rzahoransky.utils.DQtype;
 import rzahoransky.utils.ExtractedSignalType;
 import rzahoransky.utils.RawSignalType;
 import rzahoransky.utils.TransmissionType;
@@ -38,14 +41,19 @@ public class OutputWriter implements DQPipelineElement {
 	protected boolean integrateOverTime = false;
 	protected MeasureSetUp setup = MeasureSetUp.getInstance();
 	protected double storageInterval;
-	protected NumberFormat formatter = NumberFormat.getInstance(Locale.getDefault());
+	protected NumberFormat formatter = NumberFormat.getInstance(Locale.US);
+	protected ArrayList<DQSignal> signals = new ArrayList<>(100);
+	private long lastSaveTime;
+	private boolean errorMessageShown = false; 
 
 	
 	public OutputWriter(File file) {
+		lastSaveTime = System.currentTimeMillis();
 		this.file = new File(file.getParentFile(), getFileNameSaveDateString() +" "+ file.getName());
 		// this.file = file;
 		storageInterval = Double.parseDouble(setup.getProperty(MeasureSetupEntry.STOREINTERVAL));
-		formatter.setMaximumFractionDigits(6);
+		integrateOverTime = Boolean.parseBoolean(setup.getProperty(MeasureSetupEntry.AVERAGE_OVER_TIME));
+		formatter.setMaximumFractionDigits(8);
 		try {
 			this.fw = openFile(this.file);
 		} catch (IOException e) {
@@ -76,7 +84,7 @@ public class OutputWriter implements DQPipelineElement {
 	}
 
 	private String generateColumns() {
-		TabbedStringBuilder s = new TabbedStringBuilder(";");
+		TabbedStringBuilder s = new TabbedStringBuilder("\t");
 		s.append("System Time in ms");
 		s.append("Date");
 		s.append("Time");
@@ -84,6 +92,8 @@ public class OutputWriter implements DQPipelineElement {
 		s.append("Sigma Log-Normal");
 		s.append("Particles per cm³");
 		s.append("Confidence");
+		s.append("DQ1");
+		s.append("DQ2");
 		s.append("Transmission WL1");
 		s.append("Transmission WL2");
 		s.append("Transmission WL3");
@@ -106,6 +116,11 @@ public class OutputWriter implements DQPipelineElement {
 		return df.format(new Date().getTime());
 	}
 	
+	public String getDateAsString() {
+		SimpleDateFormat df = new SimpleDateFormat("yyy-MM-dd");
+		return df.format(new Date().getTime());
+	}
+	
 	public static String getCurrentDateAsGermanString() {
 		//SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyy HH:mm:ss.SSS");
 		DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
@@ -125,30 +140,46 @@ public class OutputWriter implements DQPipelineElement {
 
 	@Override
 	public DQSignal processDQElement(DQSignal in) {
-		if (!integrateOverTime && storageInterval == 0) {
-			try {
+		if (storageInterval == 0) {
+			write(in);
+		} else if (!integrateOverTime) {
+			if (in.getTimeStamp()-lastSaveTime>=storageInterval*1000) {
 				write(in);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			}
+		}
+		else { //integrate over time
+			signals.add(in);
+			if(signals.get(signals.size()-1).getTimeStamp()-signals.get(0).getTimeStamp()>storageInterval*1000) {
+				write(ArrayListUtils.getAverageDQSignal(signals));
+				signals.clear();
 			}
 		}
 		return in;
-	}
+	}	
 
-	private void write(DQSignal in) throws IOException {
-		fw.write(getLineString(in));
+	private void write(DQSignal in) {	
+		try {
+			fw.write(getLineString(in));
+			lastSaveTime = System.currentTimeMillis();
+		} catch (IOException e) {
+			if(!errorMessageShown)
+				JOptionPane.showMessageDialog(null, e.getMessage(), "Cannot write to disk", JOptionPane.ERROR_MESSAGE);
+			errorMessageShown=true;
+			e.printStackTrace();
+		}
 	}
 
 	private String getLineString(DQSignal in) {
-		TabbedStringBuilder b = new TabbedStringBuilder(";");
+		TabbedStringBuilder b = new TabbedStringBuilder("\t");
 		b.append(Long.toString(System.currentTimeMillis()));
-		b.append(getCurrentDateAsGermanString());
+		b.append(getDateAsString());
 		b.append(getCurrentTimeAsGermanString());
 		b.append(getAsLocale(in.getGeometricalDiameter()));
 		b.append(getAsLocale(in.getSigma()));
 		b.append(getAsLocale(in.getNumberConcentration()));
 		b.append("N/A");
+		b.append(in.getDQ(DQtype.DQ1).getDqValue());
+		b.append(in.getDQ(DQtype.DQ2).getDqValue());
 		b.append(getAsLocale(in.getTransmission(TransmissionType.TRANSMISSIONWL1)));
 		b.append(getAsLocale(in.getTransmission(TransmissionType.TRANSMISSIONWL2)));
 		b.append(getAsLocale(in.getTransmission(TransmissionType.TRANSMISSIONWL3)));

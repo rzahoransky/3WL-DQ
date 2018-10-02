@@ -22,6 +22,7 @@ public class FiveWLMarker extends AbstractDQPipelineElement {
 				element.addPeriodMark(i);
 			}
 		}
+		element.isValid = !element.getPeriodMarker().isEmpty();
 		return element;
 
 	}

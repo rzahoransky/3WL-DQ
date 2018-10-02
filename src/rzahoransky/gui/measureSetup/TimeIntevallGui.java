@@ -41,7 +41,7 @@ public class TimeIntevallGui extends JPanel{
 	public TimeIntevallGui() {
 		intervalField = new JSpinner(new SpinnerNumberModel(1, 0.0, 7200, 0.1));
 		averageOverTime = new JCheckBox("average over time");
-		JLabel text = new JLabel("Storage interval in s");
+		JLabel text = new JLabel("<html><body>Storage interval in s<br>0 means as fast as possible</body></html>");
 		text.setHorizontalAlignment(SwingConstants.LEFT);
 		//text.setMinimumSize(new Dimension(100, 100));
 		setLayout(new GridBagLayout());

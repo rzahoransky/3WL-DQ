@@ -25,6 +25,9 @@ public class FiveWLExtractor extends AbstractDQPipelineElement {
 
 	@Override
 	public DQSignal processDQElement(DQSignal in) {
+		
+		if(!in.isValid)
+			return in;
 
 		for (DQSignalSinglePeriod singlePeriod : in.getSinglePeriods()) {
 			extractValues(singlePeriod);

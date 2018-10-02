@@ -96,13 +96,14 @@ public class MeasureSetupGui extends JFrame{
 		c.weighty=0;
 		c.anchor=GridBagConstraints.BASELINE;
 		c.fill=GridBagConstraints.HORIZONTAL;
-		c.gridwidth=2;
+		c.gridwidth=GridBagConstraints.REMAINDER;
 		getContentPane().add(measureFile,c);
 		c.gridwidth=1;
 			
 		//choose length
 		c.gridy++;
-		c.gridwidth=GridBagConstraints.RELATIVE;
+		c.gridx=0;
+		c.gridwidth=2;
 		c.fill=GridBagConstraints.BOTH;
 		c.weightx=1;
 		Border test = BorderFactory.createEtchedBorder();
@@ -114,9 +115,9 @@ public class MeasureSetupGui extends JFrame{
 		c.anchor=GridBagConstraints.NORTH;
 		//c.weighty=1;
 		c.fill=GridBagConstraints.BOTH;
-		c.gridx++;
+		c.gridx+=2;
 		c.insets=new Insets(0, 30, 0, 0);
-		c.weightx=0;
+		c.weightx=1;
 		time.setBorder(test);
 		getContentPane().add(time,c);
 		
@@ -342,6 +343,7 @@ public class MeasureSetupGui extends JFrame{
 				try {
 					DQReader mieReader = new DQReader(mieGUI.getChoosenFile());
 					setup.setStorageIntervall(time.getValue());
+					setup.setAverageOverTime(time.averageOverTime.isSelected());
 					setup.setProperty(MeasureSetupEntry.NIADAPTER, adapterSelectGUI.getSelectedDevice());
 					setupPipeline(mieReader.getWl1(), mieReader.getWl2(), mieReader.getWl3());
 					MeasureGui gui = new MeasureGui(pipeline);

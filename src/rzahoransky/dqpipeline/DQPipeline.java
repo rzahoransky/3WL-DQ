@@ -116,7 +116,7 @@ public class DQPipeline {
 		
 		for (DQPipelineElement element: pipelineElements) {
 			BlockingQueue<DQSignal> out = new ArrayBlockingQueue<>(capacity);
-			AdapterThread dqPipelineThread = new AdapterThread(element);
+			PipelineThread dqPipelineThread = new PipelineThread(element);
 			
 			if (!queues.isEmpty()) { //first thread is producer
 				dqPipelineThread.setInQueue(queues.get(queues.size()-1));
@@ -169,14 +169,14 @@ public class DQPipeline {
 	
 
 	
-	class AdapterThread extends Thread {
+	class PipelineThread extends Thread {
 		
 		private DQPipelineElement element;
 		protected BlockingQueue<DQSignal> in;
 		protected BlockingQueue<DQSignal> out;
 
 
-		public AdapterThread(DQPipelineElement element) {
+		public PipelineThread(DQPipelineElement element) {
 			this.element = element;
 			setDaemon(true);
 			setName(element.description());
@@ -195,7 +195,6 @@ public class DQPipeline {
 			return element.description();
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
 		public void run() {
 			while (run && !isInterrupted()) {

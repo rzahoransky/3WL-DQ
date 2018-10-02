@@ -1,4 +1,4 @@
-package rzahoransky.dqpipeline.rawDataWriter;
+package rzahoransky.dqpipeline.dataWriter.rawDataWriter;
 
 import java.io.File;
 import java.io.FileWriter;

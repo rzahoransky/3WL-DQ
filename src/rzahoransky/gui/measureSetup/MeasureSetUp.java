@@ -11,6 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 
+import javax.swing.JCheckBox;
+
 import calculation.MieList;
 import rzahoransky.dqpipeline.DQPipeline;
 import rzahoransky.dqpipeline.dataExtraction.ConcentrationExtractor;
@@ -186,6 +188,11 @@ public class MeasureSetUp extends Properties{
 	
 	public OutputWriter getOutputWriter() {
 		return this.addOutputWriter;
+	}
+
+	public void setAverageOverTime(boolean averageOverTime) {
+		setProperty(MeasureSetupEntry.AVERAGE_OVER_TIME, Boolean.toString(averageOverTime));
+		
 	}
 	
 
