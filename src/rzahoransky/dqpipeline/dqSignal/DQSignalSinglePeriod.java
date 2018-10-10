@@ -84,7 +84,7 @@ public class DQSignalSinglePeriod {
 		
 	}
 
-	public void add(RawSignalType type, ExtractedSignalType wave, List<Double> extractValue) {
+	public void addExtractedValues(RawSignalType type, ExtractedSignalType wave, List<Double> extractValue) {
 		for (Double d: extractValue) {
 			add(type, wave, d);
 		}

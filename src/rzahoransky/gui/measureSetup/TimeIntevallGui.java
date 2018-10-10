@@ -96,7 +96,7 @@ public class TimeIntevallGui extends JPanel{
 	}
 	
 	public double getValue() {
-		return (double) intervalField.getValue();
+		return Double.parseDouble(intervalField.getValue().toString());
 	}
 
 }

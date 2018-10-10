@@ -32,10 +32,19 @@ public class FiveWLNIDaqAdapter extends AbstractDQPipelineElement implements Ada
 	private boolean isInitialized = false;
 	private int samplesPerChannel = 6000; //6000
 	protected boolean errorMessageShown = false;
+	
+	//DEVICE WAVELENGTHS: 0.405, 0.532, 0.635, 0.635, 0.818, 1.313
 
 	public FiveWLNIDaqAdapter() {
 		daq = new NiDaq();
 		adCard = MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.NIADAPTER);
+		try {
+			samplesPerChannel = Integer.parseInt(MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.SAMPLES_PER_CHANNEL));
+		} catch (Exception e) {
+			samplesPerChannel = 6000;
+			MeasureSetUp.getInstance().setProperty(MeasureSetupEntry.SAMPLES_PER_CHANNEL, Integer.toString(samplesPerChannel));
+		}
+		System.out.println("Samples: "+samplesPerChannel);
 	}
 
 	public void setSamplesPerChannel(int samples) {

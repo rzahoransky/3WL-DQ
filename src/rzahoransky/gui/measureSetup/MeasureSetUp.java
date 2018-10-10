@@ -77,8 +77,36 @@ public class MeasureSetUp extends Properties{
 	}
 	
 	public String getProperty(MeasureSetupEntry entry) {
-		return getProperty(entry.toString());
+		String property = getProperty(entry.toString());
+		if (property == null) {
+			switch (entry) {
+			case AVERAGE_OVER_TIME:
+				return Boolean.toString(false);
+			case DEVICEWL1:
+				return Double.toString(0.635);
+			case DEVICEWL2:
+				return Double.toString(0.818);
+			case DEVICEWL3:
+				return Double.toString(1.313);
+			case MEASURELENGTH_IN_CM:
+				return Integer.toString(1);
+			case MIEFILE:
+				return "";
+			case NIADAPTER:
+				return "Dev1";
+			case OUTPUTFILE:
+				return "";
+			case STOREINTERVAL:
+				return Integer.toString(0);
+			case SAMPLES_PER_CHANNEL:
+				return Integer.toString(6000);
+			default:
+				return Integer.toString(1);
+			}
+		}
+		return property;
 	}
+	
 	
 	public void setProperty(MeasureSetupEntry entry, String value) {
 		setProperty(entry.toString(), value);

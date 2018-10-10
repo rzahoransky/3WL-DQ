@@ -18,6 +18,8 @@ public class FiveWLExtractor extends AbstractDQPipelineElement {
 
 	IMeasurePoints measurePoints;
 	RawSignalType[] refMeas = { RawSignalType.ref, RawSignalType.meas };
+	private boolean useOffset = true;
+	boolean visibleWavelengths = false;
 
 	public FiveWLExtractor(IMeasurePoints measurePoints) {
 		this.measurePoints = measurePoints;
@@ -26,7 +28,7 @@ public class FiveWLExtractor extends AbstractDQPipelineElement {
 	@Override
 	public DQSignal processDQElement(DQSignal in) {
 		
-		getMode(in);
+		visibleWavelengths = isVisibleWavelengths(in);
 		
 		if(!in.isValid)
 			return in;
@@ -44,49 +46,43 @@ public class FiveWLExtractor extends AbstractDQPipelineElement {
 	}
 
 
-	private void getMode(DQSignal element) {
+	private boolean isVisibleWavelengths(DQSignal element) {
 		try {
 			double mode = element.get(RawSignalType.mode).get(0);
 			if (mode < 5) {
-				element.setWL1(0.405);
-				element.setWL2(0.532);
-				element.setWL3(0.635);
+				element.setWL1(0.405); //blue
+				element.setWL2(0.532); //green
+				element.setWL3(0.670); //red
+				return true; //for visible light: reverser Wavelength associatioen
 			} else {
-				element.setWL1(0.635);
-				element.setWL2(0.818);
-				element.setWL3(1.313);
+				element.setWL1(0.670);
+				element.setWL2(0.850);
+				element.setWL3(1.305);
+				return false;
 			}
 		} catch (Exception e) {
-			element.setWL1(0.635);
-			element.setWL2(0.818);
-			element.setWL3(1.313);
+			element.setWL1(0.670);
+			element.setWL2(0.850);
+			element.setWL3(1.305);
+			return false;
 		}
 	}
-	
-//	public double getWl1 {
-//		double mode = element.get(RawSignalType.mode).get(0);
-//		if (mode < 5) {
-//			return 0.405;
-//		} else {
-//			return 0.635;
-//		}
-//	}
 
 	private void extractValues(DQSignalSinglePeriod singlePeriod) {
 		
-		for (RawSignalType type: RawSignalType.values()) {
-			switch (type) {
+		for (RawSignalType refOrMeas: RawSignalType.values()) {
+			switch (refOrMeas) {
 			case ref: //no break
 			case meas:
-				for (ExtractedSignalType wave: ExtractedSignalType.values()) {
-					switch (wave) {
+				for (ExtractedSignalType wavelength: ExtractedSignalType.values()) {
+					switch (wavelength) {
 					case wl1wOffset:
 					case wl2wOffset:
 					case wl3wOffset:
-						singlePeriod.add(type, wave, extractValue(singlePeriod, type, wave));
+						singlePeriod.addExtractedValues(refOrMeas, wavelength, extractValue(singlePeriod, refOrMeas, wavelength));
 						break;
 					case offset:
-						singlePeriod.add(type, wave, getOffset(singlePeriod, type));
+						singlePeriod.add(refOrMeas, wavelength, getOffset(singlePeriod, refOrMeas));
 
 					default:
 						break;
@@ -104,7 +100,7 @@ public class FiveWLExtractor extends AbstractDQPipelineElement {
 	private List<Double> extractValue(DQSignalSinglePeriod singlePeriod, RawSignalType refOrMeas, ExtractedSignalType wavelength) {
 		ArrayList<Double> result = new ArrayList<>();
 		double offset = getOffset(singlePeriod, refOrMeas);
-		for (double measurePoint: measurePoints.getRelativeMeasurePoint(wavelength)) {
+		for (double measurePoint: measurePoints.getRelativeMeasurePoint(wavelength, visibleWavelengths)) {
 			List<Double> rawSignal = singlePeriod.getRawSignal(refOrMeas);
 			int signalPeriodLength = singlePeriod.getPeriodLength();
 			double signalValue = rawSignal.get((int) (measurePoint * signalPeriodLength)); //signal value without offset
@@ -115,13 +111,21 @@ public class FiveWLExtractor extends AbstractDQPipelineElement {
 	}
 	
 	private double getOffset(DQSignalSinglePeriod singlePeriod, RawSignalType type) {
-		double[] measures = measurePoints.getRelativeMeasurePoint(ExtractedSignalType.offset);
+		
+		if(!useOffset)
+			return 0;
+		
+		double[] measures = measurePoints.getRelativeMeasurePoint(ExtractedSignalType.offset, visibleWavelengths);
 		int numberOfMeasures = measures.length;
 		double offsetValue = 0.0;
 		for (double d: measures)
 			offsetValue+=singlePeriod.getRawSignal(type).get((int) (d*singlePeriod.getPeriodLength()));
 		
 		return offsetValue/numberOfMeasures;
+	}
+	
+	public void useOffset(boolean useOffset) {
+		this.useOffset  = useOffset;
 	}
 
 

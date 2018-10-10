@@ -27,6 +27,7 @@ public class PlayTheDQSoundWithMidi extends DQSignalListenerAdapter implements A
 	public Soundbank soundbank;
 	protected Receiver synthRcvr;
 	protected int intrument = 78; //instrument 78
+	//protected int intrument = 94; //instrument 78
 	protected ShortMessage msg;
 
 	public PlayTheDQSoundWithMidi(TransmissionType type) {
@@ -61,7 +62,7 @@ public class PlayTheDQSoundWithMidi extends DQSignalListenerAdapter implements A
 			transmission = currentSignal.getTransmission(type);
 			msg.setMessage(ShortMessage.NOTE_OFF, msg.getChannel(), msg.getData1(), msg.getData2());
 			//synthRcvr.send(msg, -1);
-			double data1 = Math.max(0, Math.min(transmission*60,127));
+			double data1 = Math.max(0, Math.min(transmission*60,120));
 			msg.setMessage(ShortMessage.NOTE_ON, msg.getChannel(),(int) data1, msg.getData2());
 			synthRcvr.send(msg, -1);
 			//System.out.println("Playing...");

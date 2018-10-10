@@ -115,14 +115,14 @@ public class ParticleSizeVisualizerChart extends AbstractDQPipelineElement imple
 	}
 
 	private XYItemRenderer getRenderer() {
-		// DeviationRenderer r = new DeviationRenderer();
-		SamplingXYLineRenderer r = new SamplingXYLineRenderer();
+		DeviationRenderer r = new DeviationRenderer();
+		// SamplingXYLineRenderer r = new SamplingXYLineRenderer();
 		// Shape shape1 = new XYLineAndShapeRenderer().getLegendShape(0);
 		// Shape shape2 = new XYLineAndShapeRenderer().getLegendShape(1);
 
-		// r.setBaseShapesVisible(false);
+		r.setBaseShapesVisible(false);
 		r.setSeriesFillPaint(0, Color.ORANGE);
-		// r.setAlpha(0.3f);
+		r.setAlpha(0.3f);
 		r.setBaseStroke(new BasicStroke(2));
 		r.setSeriesStroke(0, new BasicStroke(2.5f));
 		r.setSeriesStroke(1, new BasicStroke(2.0f));

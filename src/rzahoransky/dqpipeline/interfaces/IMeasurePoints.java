@@ -7,6 +7,6 @@ import rzahoransky.utils.ExtractedSignalType;
 
 public interface IMeasurePoints {
 	
-	public double[] getRelativeMeasurePoint(ExtractedSignalType measureType);
+	public double[] getRelativeMeasurePoint(ExtractedSignalType measureType, boolean visibleWavelengths);
 
 }

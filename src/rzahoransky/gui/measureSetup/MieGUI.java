@@ -67,7 +67,6 @@ public class MieGUI extends JPanel implements CalculationAssignmentListener {
 		addMieParameters();
 		addDQPlot();
 		addMieFileListener();
-		CalculationAssignment.getInstance().addListener(this);
 		try {
 		mieFile.getTextField().setText(MeasureSetUp.getInstance().getMieFile().getAbsolutePath());
 		for (TextListener listener: mieFile.getTextField().getTextListeners()) {
@@ -112,8 +111,8 @@ public class MieGUI extends JPanel implements CalculationAssignmentListener {
 					Wavelengths.WL2.setValue(Double.parseDouble(setup.getProperty(MeasureSetupEntry.DEVICEWL2)));
 					Wavelengths.WL3.setValue(Double.parseDouble(setup.getProperty(MeasureSetupEntry.DEVICEWL3)));
 				}
-				new JMieCalcGuiGridBagLayout(getChoosenFile().getAbsolutePath()).setVisible(true);
-				
+				new JMieCalcGuiGridBagLayout(getChoosenFile().getAbsolutePath()).setVisible(true);	
+				addAsListener();
 			}
 		});
 		
@@ -146,6 +145,7 @@ public class MieGUI extends JPanel implements CalculationAssignmentListener {
 						}
 					}
 				}.start();
+				MeasureSetUp.getInstance().setProperty(MeasureSetupEntry.MIEFILE, mieFile.getChoosenFile().getAbsolutePath());
 
 			}
 		});
@@ -185,7 +185,6 @@ public class MieGUI extends JPanel implements CalculationAssignmentListener {
 	@Override
 	public void calculationFinished() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -208,7 +207,21 @@ public class MieGUI extends JPanel implements CalculationAssignmentListener {
 
 	@Override
 	public void outputFileChanged() {
+
+		
+	}
+	
+	protected void addAsListener() {
+		CalculationAssignment.getInstance().removeListener(this);
+		CalculationAssignment.getInstance().addListener(this);
+	}
+
+	@Override
+	public void fileWritten() {
 		mieFile.getTextField().setText(CalculationAssignment.getInstance().getOutputFile().getAbsolutePath());
+		//for (TextListener listener: mieFile.getTextField().getTextListeners()) {
+		//	listener.textValueChanged(new TextEvent(mieFile.getTextField(), 0));
+		//}
 		
 	}
 

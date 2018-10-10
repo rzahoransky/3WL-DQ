@@ -2,6 +2,7 @@ package rzahoransky.dqpipeline.dataExtraction;
 
 import java.util.ArrayList;
 
+import rzahoransky.dqpipeline.interfaces.AbstractMeasurePoint;
 import rzahoransky.utils.ExtractedSignalType;
 
 public class FiveWLMeasurePoints extends AbstractMeasurePoint {

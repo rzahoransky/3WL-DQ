@@ -6,45 +6,32 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.awt.event.TextEvent;
+import java.awt.event.TextListener;
 import java.io.IOException;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JSeparator;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import com.sun.glass.ui.Window;
-import com.sun.java.swing.plaf.windows.resources.windows;
-
 import calculation.MieList;
 import errors.WavelengthMismatchException;
 import gui.FileGui;
-import gui.JMieCalcGuiGridBagLayout;
-import javafx.scene.control.Separator;
-import jdistlib.LogNormal;
 import kirkwood.nidaq.access.NiDaq;
 import kirkwood.nidaq.access.NiDaqException;
 import presets.Wavelengths;
 import rzahoransky.dqpipeline.DQPipeline;
-import rzahoransky.dqpipeline.analogueAdapter.AdapterInformation;
 import rzahoransky.dqpipeline.analogueAdapter.FiveWLNIDaqAdapter;
 import rzahoransky.dqpipeline.dataExtraction.ConcentrationExtractor;
 import rzahoransky.dqpipeline.dataExtraction.DQExtractor;
 import rzahoransky.dqpipeline.dataExtraction.FiveWLExtractor;
 import rzahoransky.dqpipeline.dataExtraction.FiveWLMeasurePoints;
-import rzahoransky.dqpipeline.dataExtraction.ProbabilityBasedDiameterExtractor;
 import rzahoransky.dqpipeline.dataExtraction.SimpleDQLookupDiameterExtractor;
 import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
 import rzahoransky.dqpipeline.dataWriter.OutputWriter;
@@ -53,10 +40,7 @@ import rzahoransky.dqpipeline.interfaces.AdapterInterface;
 import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.dqpipeline.periodMarker.FiveWLMarker;
 import rzahoransky.dqpipeline.simulation.FiveWLOneHeadSimulator;
-import rzahoransky.dqpipeline.visualization.DQMeasurementVisualizer;
 import rzahoransky.dqpipeline.visualization.DQSinglePeriodMeasurementVisualizer;
-import rzahoransky.dqpipeline.visualization.DQVisualizer;
-import rzahoransky.dqpipeline.visualization.LaserVoltageVisualizer;
 import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizerChart;
 import rzahoransky.dqpipeline.visualization.TransmissionVisualizer;
 import rzahoransky.gui.adjustmentGui.Adjustment;
@@ -209,6 +193,11 @@ public class MeasureSetupGui extends JFrame {
 		setup = MeasureSetUp.getInstance();
 		measureFile = new FileGui("Store Measurement: ", new FileNameExtensionFilter("CSV-Files (*.csv)", "csv"));
 		measureFile.getTextField().setText(setup.getProperty(MeasureSetupEntry.OUTPUTFILE));
+		measureFile.getTextField().addTextListener(new TextListener() {
+			public void textValueChanged(TextEvent e) {
+				setup.setProperty(MeasureSetupEntry.OUTPUTFILE, measureFile.getChoosenFile().getAbsolutePath());
+			}
+		});
 		time = new TimeIntevallGui();
 		length = new MeasureLengthGui();
 		mieGUI = new MieGUI();
