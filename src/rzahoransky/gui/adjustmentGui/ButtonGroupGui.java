@@ -11,6 +11,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
+import rzahoransky.utils.TransmissionType;
+
 public class ButtonGroupGui extends JPanel {
 
 	protected ButtonGroup btnGroup = new ButtonGroup();
@@ -51,6 +53,14 @@ public class ButtonGroupGui extends JPanel {
 		buttons.add(btn);
 		add(btn,c);
 		//c.gridx++;
+	}
+	
+	public void setActive (TransmissionType type) {
+		for (JRadioButton button: buttons) {
+			if (button.getText().toUpperCase().equals(type.toString().toUpperCase()))
+				button.setSelected(true);
+			else button.setSelected(false);
+		}
 	}
 
 }

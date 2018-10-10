@@ -12,6 +12,7 @@ import presets.Wavelengths;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.dqSignal.DQSignalSinglePeriod;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
+import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.utils.ExtractedSignalType;
 import rzahoransky.utils.TransmissionType;
 import rzahoransky.utils.RawSignalType;
@@ -26,6 +27,22 @@ public class TransmissionExtractor extends AbstractDQPipelineElement {
 	public TransmissionExtractor(boolean showAsFrame) {
 		if (showAsFrame)
 			showI0Button();
+	}
+	
+	public void setFactor(TransmissionType type, double factor) {
+		switch (type) {
+		case TRANSMISSIONWL1:
+			factors.put(ExtractedSignalType.wl1wOffset, factor);
+			break;
+		case TRANSMISSIONWL2:
+			factors.put(ExtractedSignalType.wl2wOffset, factor);
+			break;
+		case TRANSMISSIONWL3:
+			factors.put(ExtractedSignalType.wl3wOffset, factor);
+			break;
+		default:
+			break;
+		}
 	}
 
 	@Override

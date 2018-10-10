@@ -1,5 +1,8 @@
 package rzahoransky.dqpipeline.simulation;
 
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.BlockingQueue;
@@ -7,6 +10,7 @@ import java.util.concurrent.BlockingQueue;
 import javax.swing.BoundedRangeModel;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultBoundedRangeModel;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -25,13 +29,20 @@ public class FiveWLOneHeadSimulator extends AbstractDQPipelineElement implements
 	JSlider wl1 = new JSlider(JSlider.VERTICAL,-1000,1000,1000);
 	JSlider wl2 = new JSlider(JSlider.VERTICAL,-1000,1000,1000);
 	JSlider wl3 = new JSlider(JSlider.VERTICAL,-1000,1000,1000);
+	JCheckBox triggerBox = new JCheckBox("Trigger");
+	ArrayList<Double> zeros = new ArrayList<>();
 
 	public FiveWLOneHeadSimulator() {
 		JFrame control = new JFrame("Simulator Control");
+		control.setSize(new Dimension(60, 800));
 		control.add(sliderPanel());
 		control.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		triggerBox.setSelected(true);
 		control.setVisible(true);
 		
+		for (int i = 0; i<periodLength*sampleSize;i++) {
+			zeros.add(0d);
+		}
 	}
 	
 	public FiveWLOneHeadSimulator(int periodLength, int sampleSize) {
@@ -53,7 +64,10 @@ public class FiveWLOneHeadSimulator extends AbstractDQPipelineElement implements
 			measure.addAll(period.getMeasurement());
 			reference.addAll(period.getReference());
 			mode.addAll(period.getMode());
-			trigger.addAll(period.getTrigger());
+			if(triggerBox.isSelected())
+					trigger.addAll(period.getTrigger());
+			else
+				trigger.addAll(zeros);
 		}
 		
 		//begin at random position
@@ -155,10 +169,26 @@ public class FiveWLOneHeadSimulator extends AbstractDQPipelineElement implements
 	
 	private JPanel sliderPanel() {
 		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-		panel.add(wl1);
-		panel.add(wl2);
-		panel.add(wl3);
+		//panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+		panel.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridy=0;
+		c.gridx=0;
+		c.weighty=1;
+		c.fill=GridBagConstraints.VERTICAL;
+		c.gridheight=GridBagConstraints.RELATIVE;
+		panel.add(wl1,c);
+		c.gridx++;
+		panel.add(wl2,c);
+		c.gridx++;
+		panel.add(wl3,c);
+		c.gridy=1;
+		c.gridx=0;
+		c.gridwidth=3;
+		c.weightx=1;
+		c.weighty=0;
+		c.fill=GridBagConstraints.HORIZONTAL;
+		panel.add(triggerBox,c);
 		return panel;
 	}
 

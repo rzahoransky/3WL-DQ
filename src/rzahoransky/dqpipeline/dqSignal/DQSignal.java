@@ -48,12 +48,13 @@ public class DQSignal {
 	protected HashMap<TransmissionType, Double> factors = new HashMap<>();
 
 	private double length;
-	private double numberConcentration;
-	private int numberOfParticlesPerCubicMeter;
+	private double numberConcentration = 0;
 	
 	protected HashMap<SignalTypeHash, Double> averagedValues = new HashMap<>();
 	
 	public boolean isValid = true;
+
+	private long lastFactorUpdate = 0;
 	
 	public ArrayList<DQSignalSinglePeriod> getSinglePeriods() {
 		return singlePeriods;
@@ -74,13 +75,13 @@ public class DQSignal {
 			singlePeriods.add(new DQSignalSinglePeriod(this, periodMarker.get(periodMarker.size()-1), mark));
 		}
 		periodMarker.add(mark);
-
 	}
 
 	public DQSignal() {
 		
 		for (RawSignalType type: RawSignalType.values())
 			values.put(type, new ArrayList<>());
+		
 		this.timeStamp = System.currentTimeMillis();
 	}
 	
@@ -162,7 +163,7 @@ public class DQSignal {
 		return average.isPresent() ? average.getAsDouble() : 0; 
 	}
 	
-	public int getLength() {
+	public int getSize() {
 		return values.get(RawSignalType.ref).size();
 	}
 	
@@ -287,7 +288,11 @@ public class DQSignal {
 	}
 	
 	public double getTransmission(TransmissionType type) {
+		try {
 		return ArrayListUtils.getAverage(measuredValues.get(type));
+		} catch (NullPointerException e) {
+			return 0d;
+		}
 	}
 
 	public void setDQ(DQSignalEntry entry) {
@@ -298,9 +303,18 @@ public class DQSignal {
 		return dq.get(dqType);
 	}
 
-	public void setLength(double cm) {
+	public void setMeasureLength(double cm) {
 		this.length = cm;
-		
+	}
+	
+	public double getMeasureLength() {
+		return length;
+	}
+	
+	public void removeRawSignal() {
+		periodMarker = null;
+		values = null;
+		singlePeriods = null;
 	}
 
 	public void setNumberConcentration(double numberConcentration) {
@@ -319,7 +333,7 @@ public class DQSignal {
 	}
 	
 	public double getVolumeConcentration() {
-		return getNumberConcentration()*(Math.PI/6)*Math.pow(getVolumetricDiameter(),3);
+		return getNumberConcentration()*(Math.PI/6)*Math.pow(getVolumetricDiameter()/(1e6),3);
 	}
 
 	public void setFactor(TransmissionType type, double factor) {
@@ -328,6 +342,35 @@ public class DQSignal {
 	
 	public double getFactor(TransmissionType type) {
 		return factors.get(type);
+	}
+	
+	
+	public double getHighestTransmission() {
+		double maxTransmission = 0;
+		try {
+			for (TransmissionType type : TransmissionType.values()) {
+				maxTransmission = Math.max(maxTransmission, getTransmission(type));
+			}
+			return maxTransmission;
+		} catch (Exception e) {
+			return 0;
+		}
+	}
+	
+	public double getLowestTransmission() {
+		double minTransmission = 1;
+		try {
+			for (TransmissionType type : TransmissionType.values()) {
+				minTransmission = Math.min(minTransmission, getTransmission(type));
+			}
+			return minTransmission;
+		} catch (Exception e) {
+			return 0;
+		}
+	}
+	
+	public boolean checkTransmission(double lower, double upper) {
+		return (getHighestTransmission()<upper) && (getLowestTransmission()>lower);
 	}
 }
 

@@ -14,9 +14,10 @@ import javax.swing.JOptionPane;
 
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.listener.DQSignalListener;
+import rzahoransky.dqpipeline.listener.DQSignalListenerAdapter;
 import rzahoransky.utils.TransmissionType;
 
-public class PlayTheDQSoundWithMidi implements AudioOutput, DQSignalListener {
+public class PlayTheDQSoundWithMidi extends DQSignalListenerAdapter implements AudioOutput {
 
 
 	private volatile TransmissionType type;
@@ -28,15 +29,16 @@ public class PlayTheDQSoundWithMidi implements AudioOutput, DQSignalListener {
 	protected int intrument = 78; //instrument 78
 	protected ShortMessage msg;
 
-	public PlayTheDQSoundWithMidi() {
+	public PlayTheDQSoundWithMidi(TransmissionType type) {
 		try {
 			setupAudio();
+			this.type = type;
 			msg = new ShortMessage(ShortMessage.NOTE_ON,1,0,100);
 		} catch (MidiUnavailableException | InvalidMidiDataException e) {
 			JOptionPane.showMessageDialog(null, "Audio not available");
 		}
 
-		type = TransmissionType.TRANSMISSIONWL1;
+		type = TransmissionType.TRANSMISSIONWL3;
 	}
 
 	private void setupAudio() throws MidiUnavailableException, InvalidMidiDataException {

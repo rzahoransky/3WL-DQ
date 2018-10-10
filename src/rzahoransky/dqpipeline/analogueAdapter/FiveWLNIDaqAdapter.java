@@ -23,17 +23,18 @@ import rzahoransky.gui.measureSetup.OldAdapterConfigPanel;
 public class FiveWLNIDaqAdapter extends AbstractDQPipelineElement implements AdapterInterface {
 
 	private String adCard = "Dev2";
-	private static NiDaq daq;
-	private static Pointer task;
-	private static DoubleBuffer db;
-	private static IntBuffer reads = IntBuffer.allocate(1);
+	private NiDaq daq;
+	private Pointer task;
+	private DoubleBuffer db;
+	private IntBuffer reads = IntBuffer.allocate(1);
 	private double minVoltage = -7.0;
 	private double maxVoltage = 7.1;
 	private boolean isInitialized = false;
-	private int samplesPerChannel = 6000;
+	private int samplesPerChannel = 6000; //6000
 	protected boolean errorMessageShown = false;
 
 	public FiveWLNIDaqAdapter() {
+		daq = new NiDaq();
 		adCard = MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.NIADAPTER);
 	}
 
@@ -44,12 +45,25 @@ public class FiveWLNIDaqAdapter extends AbstractDQPipelineElement implements Ada
 
 	public void clearTask() {
 		errorMessageShown=false;
+		
+		try {
+			daq.stopTask(task);
+		} catch (Exception e) {}
+		
 		try {
 			daq.clearTask(task);
 		} catch (Exception e) {
 			// Only try to clear the task. It may be null. Ignore
 		}
 		isInitialized = false;
+		daq = new NiDaq();
+		sleep(60);
+	}
+	
+	@Override
+	public void endProcessing() {
+		clearTask();
+		reset();
 	}
 
 	@Override
@@ -58,74 +72,82 @@ public class FiveWLNIDaqAdapter extends AbstractDQPipelineElement implements Ada
 	}
 
 	public DQSignal getNextMeasurement() throws NiDaqException {
-
 		if (!isInitialized)
 			initDAQ();
 
-		daq.readAnalogF64(task, samplesPerChannel, -1, Nicaiu.DAQmx_Val_GroupByChannel, db, db.capacity(), reads);
-
-		if (checkDataAcquisition()) {
-			return readMeasurement();
+		if (isInitialized) {
+			daq.readAnalogF64(task, samplesPerChannel, -1, Nicaiu.DAQmx_Val_GroupByChannel, db, db.capacity(), reads);
+			if (checkDataAcquisition()) {
+				return readMeasurement();
+			}
 		}
-
 		return null;
 	}
 
 	private boolean checkDataAcquisition() {
 		return reads.get(0) == samplesPerChannel;
 	}
+	
+	protected void sleep(long ms) {
+		try {
+			Thread.sleep(ms);
+		} catch (InterruptedException e1) {}
+	}
 
 	public void initDAQ() {
-		try {
-			Thread.sleep(30);
-		} catch (InterruptedException e1) {
-		}
+		
+//		sleep(60);
+//		
+//		try {
+//			daq.clearTask(task);
+//		} catch (Exception e) {
+//			// ignore
+//		}
+		//reset();
 
-		try {
-			daq.clearTask(task);
-		} catch (Exception e) {
-			// ignore
-		}
+		sleep(60);
+		
+		for (int tries = 1; tries>0;tries --) {
 
 		try {
 			daq = new NiDaq();
 			task = daq.createTask("");
+			sleep(30);
 
-			// reference channel
 			daq.createAIVoltageChannel(task, adCard + "/" + "ai0:3", "", Nicaiu.DAQmx_Val_Cfg_Default, minVoltage,
 					maxVoltage, Nicaiu.DAQmx_Val_Volts, null);
-			/**
-			 * 
-			 * // measurement channel daq.createAIVoltageChannel(task, adCard + "/" +
-			 * "ai1:ai1", "", Nicaiu.DAQmx_Val_Cfg_Default, minVoltage, maxVoltage,
-			 * Nicaiu.DAQmx_Val_Volts, null);
-			 * 
-			 * // mode channel daq.createAIVoltageChannel(task, adCard + "/" + "ai2:ai2",
-			 * "", Nicaiu.DAQmx_Val_Cfg_Default, minVoltage, maxVoltage,
-			 * Nicaiu.DAQmx_Val_Volts, null);
-			 * 
-			 * // trigger channel daq.createAIVoltageChannel(task, adCard + "/" + "ai3:ai3",
-			 * "", Nicaiu.DAQmx_Val_Cfg_Default, minVoltage, maxVoltage,
-			 * Nicaiu.DAQmx_Val_Volts, null);
-			 * 
-			 **/
-			// daq.cfgSampClkTiming(task, "", 100000.0, Nicaiu.DAQmx_Val_Rising,
-			// Nicaiu.DAQmx_Val_FiniteSamps, samplesPerChannel);
-			daq.cfgSampClkTiming(task, "", 100000.0, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_ContSamps,
-					samplesPerChannel);
+
+			daq.cfgSampClkTiming(task, "", 100000.0, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_ContSamps, samplesPerChannel);
+			
 			// init Buffer
 			db = DoubleBuffer.allocate(samplesPerChannel * 4);
 			daq.startTask(task);
 			isInitialized = true;
+			return;
 		} catch (Exception e) {
 			if (!errorMessageShown) {
-				JOptionPane.showMessageDialog(null, "Cannot read from device", "I/O error", JOptionPane.ERROR_MESSAGE);
+				//JOptionPane.showMessageDialog(null, "Cannot read from device", "I/O error", JOptionPane.ERROR_MESSAGE);
 				errorMessageShown = true;
 			}
 			e.printStackTrace();
 			isInitialized = false;
+			reset();
 		}
-
+		sleep(30);
+		}
+		
+		
+	}
+	
+	public void reset() {
+		try {
+			System.out.println("Resetting "+adCard);
+			daq.resetDevice(adCard);
+			sleep(30);
+		} catch (NiDaqException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 	private DQSignal readMeasurement() {
@@ -158,24 +180,27 @@ public class FiveWLNIDaqAdapter extends AbstractDQPipelineElement implements Ada
 
 	@Override
 	public void setADCardOrConfigParameter(String device) {
-		adCard = device;
-		isInitialized = false;
+		if(!adCard.equals(device)) {
+			adCard = device;
+			isInitialized = false;
+		}
 
 	}
 
 	@Override
 	public DQSignal processDQElement(DQSignal in) {
 		DQSignal measurement = null;
-		while (measurement == null) {
+		for (int tries = 3; tries>0; tries--) {
 			try {
 				// System.out.println("Trying... "+System.currentTimeMillis());
 				measurement = getNextMeasurement();
-				return measurement;
+				if(measurement !=null)
+					return measurement;
 
 			} catch (NiDaqException e) {
+				reset();
 				e.printStackTrace();
 			}
-
 		}
 		return null;
 	}

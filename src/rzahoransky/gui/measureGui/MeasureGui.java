@@ -16,6 +16,7 @@ import java.io.File;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JToolBar;
 
 import org.jfree.chart.JFreeChart;
 
@@ -27,15 +28,18 @@ public class MeasureGui extends JFrame {
 MeasureSetUp setup = MeasureSetUp.getInstance();
 GridBagConstraints c = new GridBagConstraints();
 private DQPipeline pipeline;
+protected JToolBar toolbar;
 
 	public MeasureGui(DQPipeline pipeline) {
 		this.pipeline = pipeline;
 		setupFrame();
+		toolbar = new MeasureToolbar();
 		positionElements();
 		pipeline.start();
+		setLocationByPlatform(true);
 		setVisible(true);
 	}
-	
+
 	private void setupFrame() {
 		setSize(new Dimension(600, 500));
 		setTitle("3WL DQ Particle Size Measurement");
@@ -45,7 +49,7 @@ private DQPipeline pipeline;
 			public void windowClosing(WindowEvent evt) {
 				System.out.println("Stopping...");
 				pipeline.stop();
-				MeasureSetUp.getInstance().getOutputWriter().close();
+				//MeasureSetUp.getInstance().getOutputWriter().close();
 			}
 		});
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -53,21 +57,31 @@ private DQPipeline pipeline;
 	
 	private void positionElements() {
 		
-		//add numeric representation
-		c.gridy=0;
 		c.gridx=0;
+		c.gridy=0;
+		c.weightx=1;
 		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		add(toolbar, c);
+		
+		//add numeric representation
+		c.gridy=1;
+		c.gridx=0;
+		c.gridwidth = 2;
 		c.gridheight = 1;
 		c.weightx=0;
 		c.weighty=0;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		add(new NumericDiameterGui(pipeline),c);
+		//c.fill = GridBagConstraints.NONE;
+		NumericDiameterGui numericDiameter = new NumericDiameterGui(pipeline);
+		numericDiameter.setPreferredSize(new Dimension(600, 60));
+		add(numericDiameter,c);
 		
 		//Particle Diameter History (0/0)
 		c.fill = GridBagConstraints.BOTH;
 		c.gridx=0;
-		c.gridy=1;
-		c.gridwidth=GridBagConstraints.RELATIVE;
+		c.gridy=2;
+		c.gridwidth=1;
 		c.weightx=1;
 		c.weighty=1;
 		c.gridheight=1;
@@ -108,7 +122,7 @@ private DQPipeline pipeline;
 		c.fill=GridBagConstraints.BOTH;
 		c.weightx=1;
 		c.weighty=1;
-		c.gridy=2;
+		c.gridy=3;
 		c.gridx=0;
 		add(new DQGui(pipeline),c);
 		

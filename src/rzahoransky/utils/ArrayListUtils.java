@@ -3,12 +3,21 @@ package rzahoransky.utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
+import java.util.OptionalInt;
 
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.dqSignal.DQSignalEntry;
 import rzahoransky.dqpipeline.dqSignal.DQSignalSinglePeriod;
 
 public class ArrayListUtils {
+	
+	public static void main(String[] args) {
+		ArrayList<Double> test = new ArrayList<>();
+		Double[] numbers = {1d,2d,3d,4d, 5d};
+		for (double n: numbers)
+			test.add(n);
+		System.out.println(test + "Avg: "+getAverage(test));
+	}
 
 	public ArrayListUtils() {
 		// TODO Auto-generated constructor stub
@@ -41,6 +50,7 @@ public class ArrayListUtils {
 		ArrayList<Double> RefWOffset2s = new ArrayList<>(size);
 		ArrayList<Double> RefWOffset3s = new ArrayList<>(size);
 		ArrayList<Double> RefOffsets = new ArrayList<>(size);
+		ArrayList<Double> lengths = new ArrayList<>(size);
 		//ArrayList<Double> FactorWl1s = new ArrayList<>(size);
 		//ArrayList<Double> FactorWl2s = new ArrayList<>(size);
 		//ArrayList<Double> FactorWl3s = new ArrayList<>(size);
@@ -63,6 +73,7 @@ public class ArrayListUtils {
 			RefWOffset2s.add(in.getAveragedValues(RawSignalType.ref, ExtractedSignalType.wl2wOffset));
 			RefWOffset3s.add(in.getAveragedValues(RawSignalType.ref, ExtractedSignalType.wl3wOffset));
 			RefOffsets.add(in.getAveragedValues(RawSignalType.ref, ExtractedSignalType.offset));
+			lengths.add(in.getMeasureLength());
 			//FactorWl1s.add(in.getFactor(TransmissionType.TRANSMISSIONWL1));
 			//FactorWl2s.add(in.getFactor(TransmissionType.TRANSMISSIONWL2));
 			//FactorWl3s.add(in.getFactor(TransmissionType.TRANSMISSIONWL3));
@@ -86,6 +97,7 @@ public class ArrayListUtils {
 		out.setAveragedValue(RawSignalType.ref, ExtractedSignalType.wl2wOffset, getAverage(RefWOffset2s));
 		out.setAveragedValue(RawSignalType.ref, ExtractedSignalType.wl3wOffset, getAverage(RefWOffset3s));
 		out.setAveragedValue(RawSignalType.ref, ExtractedSignalType.offset, getAverage(RefOffsets));
+		out.setMeasureLength(getAverage(lengths));
 		
 		for (TransmissionType transmission : TransmissionType.values())
 			out.setFactor(transmission, last.getFactor(transmission));

@@ -51,28 +51,30 @@ public class AdapterSelectGui extends JPanel implements ActionListener {
 		return (String) combo.getSelectedItem();
 	}
 	
-	public boolean isDevice() {
+	public boolean hasDevices() {
 		return ((String)combo.getSelectedItem()).toUpperCase().contains("DEV");
 	}
 	
 	private void addDevivces() {
 		try {
 			List<String> devices = NiDaq.getDeviceNames();
-			
-			if(!devices.isEmpty()) {
-			for (String device: devices) {
-				combo.addItem(device);
-			}
-			
-			//read old Device
-			String dev = MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.NIADAPTER);
-			if(includes(dev))
-				combo.setSelectedItem(MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.NIADAPTER));
-			
+
+			if (!devices.isEmpty()) {
+				for (String device : devices) {
+					combo.addItem(device);
+				}
+				combo.setSelectedIndex(0);
+				combo.setEditable(false);
+
+				// read old Device
+				String dev = MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.NIADAPTER);
+				if (includes(dev))
+					combo.setSelectedItem(MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.NIADAPTER));
+
 			} else {
 				combo.addItem("NONE FOUND");
 			}
-			
+
 		} catch (NiDaqException e) {
 			combo.addItem("NiDaq Error");
 			e.printStackTrace();

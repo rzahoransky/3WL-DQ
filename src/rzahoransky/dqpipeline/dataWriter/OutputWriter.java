@@ -19,6 +19,7 @@ import javax.swing.text.NumberFormatter;
 import calculation.CalculationAssignment;
 import presets.Wavelengths;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
+import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.gui.measureSetup.MeasureSetupEntry;
@@ -27,9 +28,10 @@ import rzahoransky.utils.DQtype;
 import rzahoransky.utils.ExtractedSignalType;
 import rzahoransky.utils.RawSignalType;
 import rzahoransky.utils.TransmissionType;
+import storage.dqMeas.read.DQReader;
 import storage.dqMeas.write.MieInfoWriter;
 
-public class OutputWriter implements DQPipelineElement {
+public class OutputWriter extends AbstractDQPipelineElement {
 
 	public static void main(String[] args) {
 		System.out.println(getCurrentDateAsGermanString());
@@ -42,6 +44,7 @@ public class OutputWriter implements DQPipelineElement {
 	protected MeasureSetUp setup = MeasureSetUp.getInstance();
 	protected double storageInterval;
 	protected NumberFormat formatter = NumberFormat.getInstance(Locale.US);
+	//protectes String scientificFormat = "";
 	protected ArrayList<DQSignal> signals = new ArrayList<>(100);
 	private long lastSaveTime;
 	private boolean errorMessageShown = false; 
@@ -63,6 +66,7 @@ public class OutputWriter implements DQPipelineElement {
 	}
 
 	private FileWriter openFile(File file2) throws IOException {
+		formatter.setGroupingUsed(false);
 		FileWriter fw = new FileWriter(file2);
 		fw.write(generateHeader());
 		fw.write("\r\n");
@@ -74,13 +78,13 @@ public class OutputWriter implements DQPipelineElement {
 	private String generateHeader() {
 		String header = "# File Generated: " + getCurrentDateAsString();
 		String mieFile = "# MIE-File: " + MeasureSetUp.getInstance().getMieFile().getAbsolutePath();
-		//String mieInfo = "# Mie-Info: " + MieInfoWriter.getInfoString(MeasureSetUp.getInstance().getMieList(0),
-		//		MeasureSetUp.getInstance().getMieList(1), MeasureSetUp.getInstance().getMieList(2));
+		String mieInfo = "# Mie-Info: " + MieInfoWriter.getOneLineInfoString(MeasureSetUp.getInstance().getMieList(0),
+				MeasureSetUp.getInstance().getMieList(1), MeasureSetUp.getInstance().getMieList(2));
 		String length = "# Measure length: "
 				+ MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.MEASURELENGTH_IN_CM) + "cm";
 		String deviceWL = "# Device wavelength: " + Wavelengths.WL1.toString() + " " + Wavelengths.WL2.toString() + " "
 				+ Wavelengths.WL3.toString();
-		return header + "\r\n" + mieFile + "\r\n" + length + "\r\n" + deviceWL;
+		return header + "\r\n" + mieFile + "\r\n"+mieInfo +"\r\n" + length + "\r\n" + deviceWL;
 	}
 
 	private String generateColumns() {
@@ -90,8 +94,10 @@ public class OutputWriter implements DQPipelineElement {
 		s.append("Time");
 		s.append("Particle Diameter in μm");
 		s.append("Sigma Log-Normal");
-		s.append("Particles per cm³");
+		s.append("Particles per m³");
+		s.append("Particle Number Concentration");
 		s.append("Confidence");
+		s.append("Measure length in cm");
 		s.append("DQ1");
 		s.append("DQ2");
 		s.append("Transmission WL1");
@@ -116,9 +122,9 @@ public class OutputWriter implements DQPipelineElement {
 		return df.format(new Date().getTime());
 	}
 	
-	public String getDateAsString() {
+	public String getDateAsString(long timestamp) {
 		SimpleDateFormat df = new SimpleDateFormat("yyy-MM-dd");
-		return df.format(new Date().getTime());
+		return df.format(new Date(timestamp).getTime());
 	}
 	
 	public static String getCurrentDateAsGermanString() {
@@ -127,10 +133,10 @@ public class OutputWriter implements DQPipelineElement {
 		return df.format(new Date().getTime());
 	}
 	
-	public static String getCurrentTimeAsGermanString() {
-		SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss,SSS");
+	public static String getCurrentTimeAsGermanString(long timestamp) {
+		SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss.SSS");
 		//DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
-		return df.format(new Date().getTime());
+		return df.format(new Date(timestamp).getTime());
 	}
 	
 	public String getFileNameSaveDateString() {
@@ -149,7 +155,7 @@ public class OutputWriter implements DQPipelineElement {
 		}
 		else { //integrate over time
 			signals.add(in);
-			if(signals.get(signals.size()-1).getTimeStamp()-signals.get(0).getTimeStamp()>storageInterval*1000) {
+			if(in.getTimeStamp()-signals.get(0).getTimeStamp()>storageInterval*1000) {
 				write(ArrayListUtils.getAverageDQSignal(signals));
 				signals.clear();
 			}
@@ -171,13 +177,15 @@ public class OutputWriter implements DQPipelineElement {
 
 	private String getLineString(DQSignal in) {
 		TabbedStringBuilder b = new TabbedStringBuilder("\t");
-		b.append(Long.toString(System.currentTimeMillis()));
-		b.append(getDateAsString());
-		b.append(getCurrentTimeAsGermanString());
+		b.append(Long.toString(in.getTimeStamp()));
+		b.append(getDateAsString(in.getTimeStamp()));
+		b.append(getCurrentTimeAsGermanString(in.getTimeStamp()));
 		b.append(getAsLocale(in.getGeometricalDiameter()));
 		b.append(getAsLocale(in.getSigma()));
-		b.append(getAsLocale(in.getNumberConcentration()));
-		b.append("N/A");
+		b.append((in.getNumberConcentration()));
+		b.append((in.getVolumeConcentration()));
+		b.append("NaN");
+		b.append(getAsLocale(in.getMeasureLength()));
 		b.append(in.getDQ(DQtype.DQ1).getDqValue());
 		b.append(in.getDQ(DQtype.DQ2).getDqValue());
 		b.append(getAsLocale(in.getTransmission(TransmissionType.TRANSMISSIONWL1)));
@@ -205,6 +213,11 @@ public class OutputWriter implements DQPipelineElement {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public void endProcessing() {
+		close();
 	}
 
 	@Override

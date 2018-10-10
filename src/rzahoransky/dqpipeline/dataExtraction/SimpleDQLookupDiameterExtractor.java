@@ -2,11 +2,12 @@ package rzahoransky.dqpipeline.dataExtraction;
 
 import calculation.MieList;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
+import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.utils.DQtype;
 
-public class SimpleDQLookupDiameterExtractor implements DQPipelineElement {
+public class SimpleDQLookupDiameterExtractor extends AbstractDQPipelineElement {
 	
 	MeasureSetUp setup = MeasureSetUp.getInstance();
 	SimpleDQLookup lookup = new SimpleDQLookup(setup.getMieList(0), setup.getMieList(1), setup.getMieList(2));

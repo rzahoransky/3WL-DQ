@@ -31,7 +31,7 @@ public class DQAnnotator extends AbstractXYAnnotation implements DQSignalListene
 	private Paint paint;
 	private Stroke stroke;
 	private volatile LinkedList<Annotations> annotators = new LinkedList<>();
-	private int size = 10;
+	private int size = 15;
 
 	public static void main(String[] args) throws IOException, WavelengthMismatchException, InterruptedException {
 		JFrame test = new JFrame("DQ Annotator test");
@@ -124,6 +124,12 @@ public class DQAnnotator extends AbstractXYAnnotation implements DQSignalListene
 	@Override
 	public void newSignal(DQSignal currentSignal) {
 		addDQ(currentSignal.getDQ(DQtype.DQ1).getDqValue(), currentSignal.getDQ(DQtype.DQ2).getDqValue());
+	}
+
+	@Override
+	public void closing() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

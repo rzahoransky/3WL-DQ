@@ -9,6 +9,7 @@ import java.text.DecimalFormat;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import rzahoransky.dqpipeline.DQPipeline;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
@@ -16,16 +17,18 @@ import rzahoransky.dqpipeline.listener.DQSignalListener;
 
 public class NumericDiameterGui extends JPanel implements DQSignalListener{
 
-	protected JLabel diameter = new JLabel("");
-	protected JLabel diameterVol = new JLabel("");
-	protected JLabel sigma = new JLabel("");
-	protected JLabel density = new JLabel("");
-	protected static final JLabel diameterString = new JLabel("Diameter in μm (geometrical)");
+	protected int align = SwingConstants.LEFT;
+	protected JLabel diameter = new JLabel("",align);
+	protected JLabel diameterVol = new JLabel("",align);
+	protected JLabel sigma = new JLabel("",align);
+	protected JLabel density = new JLabel("",align);
+	protected static final JLabel diameterLabel = new JLabel("Diameter: ");
 	protected static final JLabel diameterVolString = new JLabel("Diameter in μm (volumetrical)");
-	protected static final JLabel sigmaString = new JLabel("Sigma: ");
-	protected static final JLabel densityString = new JLabel("Particles per cm³");
+	protected static final JLabel sigmaLabel = new JLabel("Sigma: ");
+	protected static final JLabel densityLabel = new JLabel("Density: ");
 	DecimalFormat df = new DecimalFormat("0.000"); 
-	DecimalFormat scientific = new DecimalFormat("0.##E0");
+	DecimalFormat scientific = new DecimalFormat("0.00E00");
+	String densityFormat = "%s p/m³";
 	
 	
 	public NumericDiameterGui(DQPipeline pipeline) {
@@ -35,9 +38,9 @@ public class NumericDiameterGui extends JPanel implements DQSignalListener{
 		density.setFont(font);
 		
 		Font font_normal = new Font("Arial", Font.PLAIN, 16);
-		diameterString.setFont(font_normal);
-		sigmaString.setFont(font_normal);
-		densityString.setFont(font_normal);
+		diameterLabel.setFont(font_normal);
+		sigmaLabel.setFont(font_normal);
+		densityLabel.setFont(font_normal);
 		
 		pipeline.addNewSignalListener(this);
 		setLayout(new GridBagLayout());
@@ -47,28 +50,64 @@ public class NumericDiameterGui extends JPanel implements DQSignalListener{
 		c.weightx=1;
 		c.weighty=1;
 		c.fill=GridBagConstraints.HORIZONTAL;
-		add(diameterString,c);
+		add(diameterLabel,c);
 		c.gridx++;
+		c.anchor=GridBagConstraints.EAST;
 		add(diameter, c);
 		c.gridx++;
 		
-		c.gridx++;
-		add(diameterVolString,c);
-		c.gridx++;
-		add(diameterVol,c);
+		//c.gridx++;
+		//add(diameterVolString,c);
+		//c.gridx++;
+		//add(diameterVol,c);
 		c.gridx++;
 		
-		add(sigmaString,c);
+		add(sigmaLabel,c);
 		c.gridx++;
 		add(sigma,c);
 		c.gridx++;
-		add(densityString,c);
+		add(densityLabel,c);
 		c.gridx++;
 		//density.setSize(50, 20);
 		//density.setMaximumSize(new Dimension(50, 20));
 		add(density,c);
+		
+		setSizes();
 	}
 	
+	protected void setSizes() {
+		Dimension d = densityLabel.getPreferredSize();
+		d.width=d.width+30;
+		diameter.setSize(d);
+		diameter.setPreferredSize(d);
+		diameter.setMinimumSize(d);
+		diameter.setMaximumSize(d);
+		
+		sigma.setSize(d);
+		sigma.setPreferredSize(d);
+		sigma.setMinimumSize(d);
+		sigma.setMaximumSize(d);
+		
+		density.setSize(d);
+		density.setPreferredSize(d);
+		density.setMinimumSize(d);
+		density.setMaximumSize(d);
+		
+//		diameter.setSize(d);
+//		diameter.setPreferredSize(d);
+//		diameter.setMinimumSize(d);
+//		diameter.setMaximumSize(d);
+//		
+//		
+//		protected JLabel diameter = new JLabel("",SwingConstants.LEFT);
+//		protected JLabel diameterVol = new JLabel("",SwingConstants.LEFT);
+//		protected JLabel sigma = new JLabel("",SwingConstants.LEFT);
+//		protected JLabel density = new JLabel("",SwingConstants.LEFT);
+//		protected static final JLabel diameterLabel = new JLabel("Diameter: ");
+//		protected static final JLabel diameterVolString = new JLabel("Diameter in μm (volumetrical)");
+//		protected static final JLabel sigmaLabel = new JLabel("Sigma: ");
+//		protected static final JLabel densityLabel = new JLabel("Density: ");
+	}
 	
 
 	@Override
@@ -76,7 +115,7 @@ public class NumericDiameterGui extends JPanel implements DQSignalListener{
 		try {
 		diameter.setText(formatDouble(currentSignal.getGeometricalDiameter()));
 		sigma.setText(formatDouble(currentSignal.getSigma()));
-		density.setText(scientific.format(currentSignal.getNumberConcentration()));
+		density.setText(String.format(densityFormat,scientific.format(currentSignal.getNumberConcentration())));
 		diameterVol.setText(formatDouble(currentSignal.getVolumetricDiameter()));
 		
 		} catch (Exception e) {
@@ -93,6 +132,12 @@ public class NumericDiameterGui extends JPanel implements DQSignalListener{
 	
 	public String formatDouble(double d) {
 		return df.format(d);
+	}
+
+	@Override
+	public void closing() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

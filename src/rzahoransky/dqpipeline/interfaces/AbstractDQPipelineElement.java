@@ -35,6 +35,11 @@ public abstract class AbstractDQPipelineElement implements DQPipelineElement {
 			 //processDQElement(in);
 	}
 	
+	@Override
+	public void endProcessing() {
+		
+	}
+	
 	
 
 }

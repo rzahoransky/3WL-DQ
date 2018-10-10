@@ -1,5 +1,6 @@
 package rzahoransky.dqpipeline.visualization;
 
+import java.awt.BasicStroke;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,6 +26,7 @@ import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.utils.Charts;
 import rzahoransky.utils.ExtractedSignalType;
 import rzahoransky.utils.RawSignalType;
+import rzahoransky.utils.TransmissionType;
 
 public class LaserVoltageVisualizer extends AbstractDQPipelineElement{
 	
@@ -64,8 +66,8 @@ public class LaserVoltageVisualizer extends AbstractDQPipelineElement{
 	
 	public void visualizeDQMeasurement (DQSignal measurement) {
 		TimeSeriesCollection collection = (TimeSeriesCollection) chartPanel.getChart().getXYPlot().getDataset();
-		
-		for (ExtractedSignalType type: types) {
+		ExtractedSignalType[] typesToShow = {ExtractedSignalType.wl1wOffset, ExtractedSignalType.wl2wOffset, ExtractedSignalType.wl3wOffset};
+		for (ExtractedSignalType type: typesToShow) {
 			TimeSeries series = collection.getSeries(type);
 				updateSeries(measurement, series);
 		}
@@ -76,10 +78,10 @@ public class LaserVoltageVisualizer extends AbstractDQPipelineElement{
 			//series.clear();
 			ExtractedSignalType type = (ExtractedSignalType) series.getKey();
 			
-			Second second = new Second(new Date(measurement.getTimeStamp()));
-			//Millisecond milliSecond = new Millisecond(new Date(measurement.getTimeStamp()));
+			//Second second = new Second(new Date(measurement.getTimeStamp()));
+			Millisecond milliSecond = new Millisecond(new Date(measurement.getTimeStamp()));
 			//series.addOrUpdate(milliSecond, measurement.getAveragedValues(RawSignalType.meas, type));
-			series.addOrUpdate(second, measurement.getAveragedValues(RawSignalType.meas, type));
+			series.addOrUpdate(milliSecond, measurement.getAveragedValues(RawSignalType.meas, type));
 			
 
 
@@ -103,6 +105,29 @@ public class LaserVoltageVisualizer extends AbstractDQPipelineElement{
 	@Override
 	public String description() {
 		return "Visualizes raw laser measurement";
+	}
+	
+	public void setStroke(BasicStroke stroke) {
+		JFreeChart chart = chartPanel.getChart();
+		for (int i = 0; i<chart.getXYPlot().getSeriesCount();i++) {
+			chart.getXYPlot().getRenderer().setSeriesStroke(i, stroke);
+		}
+	}
+	
+	public void setMaxAge(long age) {
+		TimeSeriesCollection collection = (TimeSeriesCollection) chartPanel.getChart().getXYPlot().getDataset();
+		for(Object series: collection.getSeries()) {
+			((TimeSeries)series).setMaximumItemCount((int) age);
+		}
+	}
+	
+	public void clearSeries() {
+		XYSeriesCollection collection = (XYSeriesCollection) chartPanel.getChart().getXYPlot().getDataset();
+		
+		for (TransmissionType type: TransmissionType.values()) {
+			XYSeries series = collection.getSeries(type);
+				series.clear();
+		}
 	}
 
 

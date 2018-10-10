@@ -12,5 +12,7 @@ public interface DQPipelineElement {
 	
 	public String description();
 	
+	public void endProcessing();
+	
 
 }

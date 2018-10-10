@@ -16,6 +16,7 @@ import javax.sound.sampled.SourceDataLine;
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
 import javax.swing.DefaultButtonModel;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -30,20 +31,26 @@ import rzahoransky.dqpipeline.interfaces.AdapterInterface;
 import rzahoransky.dqpipeline.listener.DQSignalListener;
 import rzahoransky.dqpipeline.periodMarker.FiveWLMarker;
 import rzahoransky.dqpipeline.simulation.FiveWLOneHeadSimulator;
+import rzahoransky.dqpipeline.visualization.LaserVoltageVisualizer;
 import rzahoransky.dqpipeline.visualization.TransmissionVisualizer;
+import rzahoransky.gui.measureSetup.MeasureSetUp;
+import rzahoransky.gui.measureSetup.MeasureSetupEntry;
 import rzahoransky.utils.TransmissionType;
 
 public class Adjustment extends JFrame implements DQSignalListener {
 	GridBagConstraints c;
 	DQPipeline pipeline;
-	AdapterInterface adapter = new FiveWLNIDaqAdapter();
+	FiveWLNIDaqAdapter adapter = new FiveWLNIDaqAdapter();
 	private FiveWLMarker triggerMarker;
 	private FiveWLExtractor valueExtractor;
 	private TransmissionExtractor transmissionExtractor;
 	private int maxPitch = 10;
 	private TransmissionVisualizer vis;
-	private AudioOutput sound = new PlayTheDQSoundWithMidi();
+	TransmissionType type = TransmissionType.TRANSMISSIONWL3;
+	private AudioOutput sound = new PlayTheDQSoundWithMidi(type);
 	protected ButtonGroupGui btnGroup;
+	String device = "";
+	int samplesPerChannel = 600;
 
 
 	public static void main(String[] args) {
@@ -52,13 +59,14 @@ public class Adjustment extends JFrame implements DQSignalListener {
 	}
 
 	public Adjustment() {
-		//setupPipeline();
-		//setupFrame();
-		
-		//setVisible(true);
+		device = MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.NIADAPTER);
 	}
 	
 	
+	public Adjustment(String selectedDevice) {
+		device = selectedDevice;
+	}
+
 	public void setVisible(boolean visible) {
 		if (visible) {
 			setupPipeline();
@@ -93,13 +101,17 @@ public class Adjustment extends JFrame implements DQSignalListener {
 			});
 			btnGroup.add(btn);
 		}
+		btnGroup.setActive(type);
 	}
 
 	private void setupPipeline() {
 		pipeline = new DQPipeline();
 		
 		adapter = new FiveWLNIDaqAdapter();
-		adapter = new FiveWLOneHeadSimulator();
+		adapter.setSamplesPerChannel(samplesPerChannel);
+		adapter.setADCardOrConfigParameter(device);
+		
+		//adapter = new FiveWLOneHeadSimulator();
 		//Look for triggers
 		triggerMarker = new FiveWLMarker();
 		//extract single periods
@@ -108,7 +120,7 @@ public class Adjustment extends JFrame implements DQSignalListener {
 		transmissionExtractor = new TransmissionExtractor(false);
 		vis = new TransmissionVisualizer(false);
 		vis.setStroke(new BasicStroke(5.0f));
-		vis.setMaxAge(20000);
+		vis.setMaxAge(1000);
 		
 		pipeline.addPipelineElement(adapter);
 		pipeline.addPipelineElement(triggerMarker);
@@ -152,13 +164,35 @@ public class Adjustment extends JFrame implements DQSignalListener {
 		c.gridy++;
 		c.fill=c.HORIZONTAL;
 		c.weighty=0;
-		add(transmissionExtractor.getI0Btn(),c);
+		add(getI0Button(),c);
 		
+	}
+	
+	protected JButton getI0Button() {
+		JButton i0 = new JButton("Set I0");
+		for (ActionListener l: transmissionExtractor.getI0Btn().getActionListeners())
+			i0.addActionListener(l);
+		i0.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				vis.clearSeries();
+				
+			}
+		});
+		
+		return i0;
 	}
 
 	@Override
 	public void newSignal(DQSignal currentSignal) {
 
+	}
+
+	@Override
+	public void closing() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import kirkwood.nidaq.access.NiDaq;
 import kirkwood.nidaq.access.NiDaqException;
@@ -199,21 +200,27 @@ public class DQPipeline {
 		public void run() {
 			while (run && !isInterrupted()) {
 				try {
-					if (in == null)
-						out.put(element.processDQElement(null)); // first thread in Pipeline: Producer
-					else
-						out.put(element.processDQElement(in.take()));
+					if (in == null) { //NI Adapter
+						DQSignal fromAdapter = element.processDQElement(null);
+						if (fromAdapter != null)
+							out.offer(fromAdapter, 1000, TimeUnit.MILLISECONDS);
+					} else { //normal DQPipelineElement
+						DQSignal fromPreviousElement = in.poll(1000, TimeUnit.MILLISECONDS);
+						if (fromPreviousElement != null)
+							out.offer(element.processDQElement(fromPreviousElement), 1000, TimeUnit.MILLISECONDS);
+					}
 				} catch (InterruptedException e) {
 					// check if thread should terminate
 					if (!run || isInterrupted()) {
 						System.out.println("Thread " + element.description() + " ending...");
-						//stop();
+						element.endProcessing();
 						return;
 					}
 				}
 			}
-			//stop();
+			// stop();
 			System.out.println("Thread " + element.description() + " ending...");
+			element.endProcessing();
 			return;
 		}
 		

@@ -26,6 +26,8 @@ public class FiveWLExtractor extends AbstractDQPipelineElement {
 	@Override
 	public DQSignal processDQElement(DQSignal in) {
 		
+		getMode(in);
+		
 		if(!in.isValid)
 			return in;
 
@@ -33,7 +35,6 @@ public class FiveWLExtractor extends AbstractDQPipelineElement {
 			extractValues(singlePeriod);
 		}
 		
-		getMode(in);
 		
 		
 		
@@ -44,12 +45,18 @@ public class FiveWLExtractor extends AbstractDQPipelineElement {
 
 
 	private void getMode(DQSignal element) {
-		double mode = element.get(RawSignalType.mode).get(0);
-		if (mode < 5) {
-			element.setWL1(0.405);
-			element.setWL2(0.532);
-			element.setWL3(0.635);
-		} else {
+		try {
+			double mode = element.get(RawSignalType.mode).get(0);
+			if (mode < 5) {
+				element.setWL1(0.405);
+				element.setWL2(0.532);
+				element.setWL3(0.635);
+			} else {
+				element.setWL1(0.635);
+				element.setWL2(0.818);
+				element.setWL3(1.313);
+			}
+		} catch (Exception e) {
 			element.setWL1(0.635);
 			element.setWL2(0.818);
 			element.setWL3(1.313);

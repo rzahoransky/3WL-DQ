@@ -40,7 +40,7 @@ public class RawDataWriter extends AbstractDQPipelineElement {
 	}
 
 	private void output(DQSignal element) throws IOException {
-		for (int i = 0; i<element.getLength();i++) {
+		for (int i = 0; i<element.getSize();i++) {
 				fw.write(element.getTimeStamp()+"; "+
 				element.get(RawSignalType.ref).get(i)+"; "+ 
 				element.get(RawSignalType.meas).get(i) +"; "+

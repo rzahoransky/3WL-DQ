@@ -32,8 +32,13 @@ public class ConcentrationExtractor extends AbstractDQPipelineElement {
 	
 	@Override
 	public DQSignal processDQElement(DQSignal in) {
+		
+		if(!in.isValid) {
+			return in;
+		}
+		
 		try {
-		in.setLength(length);
+		in.setMeasureLength(length);
 		
 		double transmissionWl1 = in.getTransmission(TransmissionType.TRANSMISSIONWL1);
 		double transmissionWl2 = in.getTransmission(TransmissionType.TRANSMISSIONWL2);

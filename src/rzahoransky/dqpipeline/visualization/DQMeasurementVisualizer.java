@@ -69,6 +69,9 @@ public class DQMeasurementVisualizer extends AbstractDQPipelineElement{
 
 	@Override
 	public DQSignal processDQElement(DQSignal in) {
+		if(!in.isValid)
+			return in;
+		
 		DQSignal element = in;
 		if (element!=null)
 			visualizeDQMeasurement(element);

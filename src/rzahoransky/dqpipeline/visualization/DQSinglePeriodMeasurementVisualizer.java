@@ -18,12 +18,14 @@ import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.utils.Charts;
 import rzahoransky.utils.RawSignalType;
+import rzahoransky.utils.TimeCounter;
 
 public class DQSinglePeriodMeasurementVisualizer extends AbstractDQPipelineElement{
 	
-	ChartPanel chartPanel;
+	volatile ChartPanel chartPanel;
 	JFrame frame;
 	RawSignalType[] signalTypes = {RawSignalType.ref, RawSignalType.meas, RawSignalType.mode, RawSignalType.trigger};
+	TimeCounter refresh = new TimeCounter(250);
 
 	public DQSinglePeriodMeasurementVisualizer(boolean showAsFrame) {
 		
@@ -48,37 +50,54 @@ public class DQSinglePeriodMeasurementVisualizer extends AbstractDQPipelineEleme
 		return chartPanel;
 	}
 	
+	public void setUpdateIntervallInMs(long ms) {
+		refresh = new TimeCounter(ms);
+	}
+	
 	public void visualizeDQMeasurement (DQSignal measurement) {
 		XYSeriesCollection collection = (XYSeriesCollection) chartPanel.getChart().getXYPlot().getDataset();
 		
 		for (RawSignalType type: signalTypes) {
 			XYSeries series = collection.getSeries(type);
 			if (measurement.contains(type)) {
-				updateSeries(measurement, series);
+					updateSeries(measurement, series);
 			}
 		}
 	}
 	
 	private void updateSeries(DQSignal measurement, XYSeries series) {
+		series.setNotify(false);
+
+		
 		if (measurement.getPeriodMarker().size() > 1) {
-			series.setNotify(false);
 			series.clear();
 			RawSignalType type = (RawSignalType) series.getKey();
-			int start = measurement.getPeriodMarker().get(0);
-			int end = measurement.getPeriodMarker().get(1);
 
+			 int start = measurement.getPeriodMarker().get(0);
+			 int end = measurement.getPeriodMarker().get(1);
+			
 			for (int i = start; i < end; i++) {
 				series.add(i - start, measurement.get(type).get(i));
 			}
-			series.setNotify(true);
-			// series.notify();
+			
+		} else {
+			try {
+				int start = 0;
+				int end = 80;
+				RawSignalType type = (RawSignalType) series.getKey();
+				series.clear();
+				for (int i = start; i < end; i++) {
+					series.add(i - start, measurement.get(type).get(i));
+				}
+			} catch (Exception e) {}
 		}
+		series.setNotify(true);
 	}
 
 	@Override
 	public DQSignal processDQElement(DQSignal in) {
 		DQSignal element = in;
-		if (element!=null)
+		if (element!=null && refresh.timeForUpdate())
 			visualizeDQMeasurement(element);
 		// out.put(element); for debug purpose
 		return element;

@@ -20,7 +20,6 @@ import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
 import rzahoransky.dqpipeline.dataWriter.OutputWriter;
 import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.dqpipeline.visualization.DQSinglePeriodMeasurementVisualizer;
-import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizer;
 import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizerChart;
 import rzahoransky.dqpipeline.visualization.TransmissionVisualizer;
 

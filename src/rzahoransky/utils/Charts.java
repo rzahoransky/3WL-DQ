@@ -52,16 +52,19 @@ public class Charts {
 	public static XYSeriesCollection getDataSet(RawSignalType... names) {
 		XYSeriesCollection collection = new XYSeriesCollection();
 		for (RawSignalType s: names) {
-			collection.addSeries(new XYSeries(s));
+			XYSeries series = new XYSeries(s,false);
+			collection.addSeries(series);
 		}
 		
 		return collection;
 	}
 	
-	public static YIntervalSeriesCollection getParticleIntervalCollection() {
+	public static YIntervalSeriesCollection getDiameterIntervalCollection() {
 		YIntervalSeriesCollection collection = new YIntervalSeriesCollection();
-		collection.addSeries(new YIntervalSeries("Particle Diameter"));
-		collection.addSeries(new YIntervalSeries("Sigma"));
+		YIntervalSeries diameter = new YIntervalSeries("Particle Diameter",false,false);
+		//YIntervalSeries concentration = new YIntervalSeries("Concentration",false,false);
+		collection.addSeries(diameter);
+		//collection.addSeries(concentration);
 		return collection;
 	}
 	
@@ -72,14 +75,38 @@ public class Charts {
 		return collection;
 	}
 	
-	public static TimeSeriesCollection getDataSet(TransmissionType... names) {
+	public static TimeSeriesCollection getTimeSeries(TransmissionType... names) {
 		TimeSeriesCollection collection = new TimeSeriesCollection();
 		for (TransmissionType s: names) {
-			collection.addSeries(new TimeSeries(s));
+			TimeSeries series = new TimeSeries(s);
+			series.setMaximumItemAge(100000);
+			collection.addSeries(series);
 		}
 		
 		return collection;
 	}
+	
+	public static XYSeriesCollection getDataSet(TransmissionType[] names, int maxItemCount) {
+		XYSeriesCollection collection = new XYSeriesCollection();
+		for (TransmissionType s: names) {
+			XYSeries series = new XYSeries(s,false,false);
+			series.setMaximumItemCount(maxItemCount);
+			collection.addSeries(series);
+		}
+		return collection;
+	}
+	
+	public static XYSeriesCollection getDataSet(TransmissionType... names) {
+		XYSeriesCollection collection = new XYSeriesCollection();
+		for (TransmissionType s: names) {
+			XYSeries series = new XYSeries(s,false,false);
+			//series.setMaximumItemCount(maxItemCount);
+			collection.addSeries(series);
+		}
+		return collection;
+	}
+	
+	
 	
 	public static TimeSeriesCollection getDataSet(DQtype... names) {
 		TimeSeriesCollection collection = new TimeSeriesCollection();
@@ -108,6 +135,15 @@ public class Charts {
 			i++;
 		}
 		return series;
+	}
+
+	public static YIntervalSeriesCollection getConcentrationIntervalCollection() {
+		YIntervalSeriesCollection collection = new YIntervalSeriesCollection();
+		YIntervalSeries diameter = new YIntervalSeries("Particle Concentration",false,false);
+		//YIntervalSeries concentration = new YIntervalSeries("Concentration",false,false);
+		collection.addSeries(diameter);
+		//collection.addSeries(concentration);
+		return collection;
 	}
 	
 	

@@ -27,18 +27,21 @@ import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.utils.Charts;
 import rzahoransky.utils.ExtractedSignalType;
 import rzahoransky.utils.RawSignalType;
+import rzahoransky.utils.TimeCounter;
 import rzahoransky.utils.TransmissionType;
 
 public class TransmissionVisualizer extends AbstractDQPipelineElement{
 	
 	ChartPanel chartPanel;
 	JFrame frame;
+	protected TimeCounter refresh = new TimeCounter(33);
 	//ExtractedSignalType[] types = {ExtractedSignalType.wl1wOffset, ExtractedSignalType.wl2wOffset, ExtractedSignalType.wl3wOffset, ExtractedSignalType.offset};
 	//ExtractedSignalType[] typesRef = {ExtractedSignalType.wl1wOffset, ExtractedSignalType.wl2wOffset, ExtractedSignalType.wl3wOffset, ExtractedSignalType.offset};
 
 	public TransmissionVisualizer(boolean showAsFrame) {
 
-		TimeSeriesCollection dataset = Charts.getDataSet(TransmissionType.values());
+		//TimeSeriesCollection dataset = Charts.getTimeSeries(TransmissionType.values());
+		XYSeriesCollection dataset = Charts.getDataSet(TransmissionType.values(),1000);
 		JFreeChart chart = Charts.getXYChart("Transmission", "Time", "I/I0", dataset);
 		chart.getXYPlot().setDomainAxis(getDateAxis());
 		for (int i = 0; i<chart.getXYPlot().getSeriesCount();i++) {
@@ -67,29 +70,31 @@ public class TransmissionVisualizer extends AbstractDQPipelineElement{
 	
 	private DateAxis getDateAxis() {
 		DateAxis dateAxis = new DateAxis();
-		dateAxis.setDateFormatOverride(new SimpleDateFormat("HH:mm:ss.SSS")); 
+		dateAxis.setDateFormatOverride(new SimpleDateFormat("HH:mm:ss")); 
 		return dateAxis;
 	}
 	
 	public void visualizeDQMeasurement (DQSignal measurement) {
-		TimeSeriesCollection collection = (TimeSeriesCollection) chartPanel.getChart().getXYPlot().getDataset();
+		XYSeriesCollection collection = (XYSeriesCollection) chartPanel.getChart().getXYPlot().getDataset();
 		
 		for (TransmissionType type: TransmissionType.values()) {
-			TimeSeries series = collection.getSeries(type);
+			XYSeries series = collection.getSeries(type);
 				updateSeries(measurement, series);
 		}
 	}
 	
-	private void updateSeries(DQSignal measurement, TimeSeries series) {
+	private void updateSeries(DQSignal measurement, XYSeries series) {
 			series.setNotify(false);
 			//series.clear();
 			TransmissionType type = (TransmissionType) series.getKey();
 			
-			Second second = new Second(new Date(measurement.getTimeStamp()));
-			Millisecond milliSecond = new Millisecond(new Date(measurement.getTimeStamp()));
+			//Second second = new Second(new Date(measurement.getTimeStamp()));
+			//Millisecond milliSecond = new Millisecond(new Date(measurement.getTimeStamp()));
 			//series.addOrUpdate(milliSecond, measurement.getAveragedValues(RawSignalType.meas, type));
 			//series.addOrUpdate(milliSecond, measurement.getAveragedValues(RawSignalType.meas, type));
-			series.addOrUpdate(milliSecond, measurement.getTransmission(type));
+			//series.addOrUpdate(milliSecond, measurement.getTransmission(type));
+			//series.addo
+			series.addOrUpdate(measurement.getTimeStamp(),measurement.getTransmission(type));
 
 
 //			for (int i = measurement.getsin; i < end; i++) {
@@ -101,13 +106,15 @@ public class TransmissionVisualizer extends AbstractDQPipelineElement{
 
 	@Override
 	public DQSignal processDQElement(DQSignal in) {
-		DQSignal element = in;
+		if (!in.isValid)
+			return in;
+		
 		try {
-		if (element!=null)
-			visualizeDQMeasurement(element);
+		if (in!=null && refresh.timeForUpdate())
+			visualizeDQMeasurement(in);
 		} catch (Exception e) {} //just continue
 		// out.put(element); for debug purpose
-		return element;
+		return in;
 	}
 	
 	public void setStroke(BasicStroke stroke) {
@@ -118,15 +125,24 @@ public class TransmissionVisualizer extends AbstractDQPipelineElement{
 	}
 	
 	public void setMaxAge(long age) {
-		TimeSeriesCollection collection = (TimeSeriesCollection) chartPanel.getChart().getXYPlot().getDataset();
+		XYSeriesCollection collection = (XYSeriesCollection) chartPanel.getChart().getXYPlot().getDataset();
 		for(Object series: collection.getSeries()) {
-			((TimeSeries)series).setMaximumItemAge(age);
+			((XYSeries)series).setMaximumItemCount((int) age);
 		}
 	}
 
 	@Override
 	public String description() {
 		return "Visualizes transmissions";
+	}
+	
+	public void clearSeries() {
+		XYSeriesCollection collection = (XYSeriesCollection) chartPanel.getChart().getXYPlot().getDataset();
+		
+		for (TransmissionType type: TransmissionType.values()) {
+			XYSeries series = collection.getSeries(type);
+				series.clear();
+		}
 	}
 
 
