@@ -116,6 +116,7 @@ public class Adjustment extends JFrame implements DQSignalListener {
 		triggerMarker = new FiveWLMarker();
 		//extract single periods
 		valueExtractor = new FiveWLExtractor(new FiveWLMeasurePoints());
+		valueExtractor.useOffset(true);
 		//extract transmissions
 		transmissionExtractor = new TransmissionExtractor(false);
 		vis = new TransmissionVisualizer(false);

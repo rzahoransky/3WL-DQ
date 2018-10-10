@@ -23,6 +23,7 @@ public class TransmissionExtractor extends AbstractDQPipelineElement {
 	private HashMap<ExtractedSignalType, Double> factors = new HashMap<>();
 	private ExtractedSignalType[] wlSignals = { ExtractedSignalType.wl1wOffset, ExtractedSignalType.wl2wOffset,
 			ExtractedSignalType.wl3wOffset };
+	private boolean useOffset;
 
 	public TransmissionExtractor(boolean showAsFrame) {
 		if (showAsFrame)
@@ -108,7 +109,7 @@ public class TransmissionExtractor extends AbstractDQPipelineElement {
 		for (ExtractedSignalType wl : wlSignals) {
 			double refValue = element.getAveragedValues(RawSignalType.ref, wl);
 			double measValue = element.getAveragedValues(RawSignalType.meas, wl);
-			factors.put(wl, measValue / refValue);
+			factors.put(wl, Math.abs(measValue / refValue));
 		}
 
 	}

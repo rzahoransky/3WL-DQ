@@ -70,6 +70,8 @@ public class AdapterSelectGui extends JPanel implements ActionListener {
 				String dev = MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.NIADAPTER);
 				if (includes(dev))
 					combo.setSelectedItem(MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.NIADAPTER));
+				else
+					MeasureSetUp.getInstance().setProperty(MeasureSetupEntry.NIADAPTER, devices.get(0));
 
 			} else {
 				combo.addItem("NONE FOUND");

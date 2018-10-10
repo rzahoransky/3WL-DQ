@@ -18,6 +18,7 @@ public class FiveWLExtractor extends AbstractDQPipelineElement {
 
 	IMeasurePoints measurePoints;
 	RawSignalType[] refMeas = { RawSignalType.ref, RawSignalType.meas };
+	private boolean useOffset = true;
 
 	public FiveWLExtractor(IMeasurePoints measurePoints) {
 		this.measurePoints = measurePoints;
@@ -115,6 +116,10 @@ public class FiveWLExtractor extends AbstractDQPipelineElement {
 	}
 	
 	private double getOffset(DQSignalSinglePeriod singlePeriod, RawSignalType type) {
+		
+		if(!useOffset)
+			return 0;
+		
 		double[] measures = measurePoints.getRelativeMeasurePoint(ExtractedSignalType.offset);
 		int numberOfMeasures = measures.length;
 		double offsetValue = 0.0;
@@ -122,6 +127,10 @@ public class FiveWLExtractor extends AbstractDQPipelineElement {
 			offsetValue+=singlePeriod.getRawSignal(type).get((int) (d*singlePeriod.getPeriodLength()));
 		
 		return offsetValue/numberOfMeasures;
+	}
+	
+	public void useOffset(boolean useOffset) {
+		this.useOffset  = useOffset;
 	}
 
 

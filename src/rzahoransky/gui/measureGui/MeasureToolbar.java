@@ -10,6 +10,8 @@ import rzahoransky.gui.measureSetup.MeasureSetUp;
 
 public class MeasureToolbar extends JToolBar {
 	
+	FactorsGui factors = new FactorsGui();
+	
 	public MeasureToolbar() {
 		setFloatable(false);
 		add(getIoBtn());
@@ -22,7 +24,7 @@ public class MeasureToolbar extends JToolBar {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new FactorsGui().setVisible(true);
+				factors.setVisible(true);
 				
 			}
 		});
