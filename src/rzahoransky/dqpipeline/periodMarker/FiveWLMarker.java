@@ -1,10 +1,7 @@
 package rzahoransky.dqpipeline.periodMarker;
 
-import java.util.concurrent.BlockingQueue;
-
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
-import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.utils.RawSignalType;
 
 public class FiveWLMarker extends AbstractDQPipelineElement {

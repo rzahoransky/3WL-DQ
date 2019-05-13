@@ -3,26 +3,19 @@ package rzahoransky.gui.measureSetup;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.Locale.FilteringMode;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSeparator;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import gui.FileGui;
-import gui.JMieCalcGuiGridBagLayout;
-import javafx.scene.control.Separator;
-import presets.Wavelengths;
 
 public class MeasureSetupGuiBackup extends JFrame{
 	

@@ -16,12 +16,8 @@ import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
 
 import calculation.CalculationAssignment;
 import calculation.CalculationAssignmentListener;
@@ -29,7 +25,6 @@ import errors.WavelengthMismatchException;
 import gui.FileGui;
 import gui.JMieCalcGuiGridBagLayout;
 import gui.MieParameterGui;
-import javafx.scene.chart.XYChart;
 import presets.Wavelengths;
 import storage.dqMeas.read.DQReader;
 import storage.dqMeas.read.RefIndexReader;

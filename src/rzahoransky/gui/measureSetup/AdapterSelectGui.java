@@ -3,7 +3,6 @@ package rzahoransky.gui.measureSetup;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -15,9 +14,6 @@ import javax.swing.JPanel;
 
 import kirkwood.nidaq.access.NiDaq;
 import kirkwood.nidaq.access.NiDaqException;
-import rzahoransky.dqpipeline.analogueAdapter.FiveWLNIDaqAdapter;
-import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
-import rzahoransky.dqpipeline.simulation.FiveWLDevicePlaybackWithStream;
 
 public class AdapterSelectGui extends JPanel implements ActionListener {
 	
@@ -52,7 +48,7 @@ public class AdapterSelectGui extends JPanel implements ActionListener {
 	}
 	
 	public boolean hasDevices() {
-		return ((String)combo.getSelectedItem()).toUpperCase().contains("DEV");
+		return ((String)combo.getSelectedItem()).toUpperCase().contains("DEV") || ((String)combo.getSelectedItem()).toUpperCase().contains("DAQ");
 	}
 	
 	private void addDevivces() {

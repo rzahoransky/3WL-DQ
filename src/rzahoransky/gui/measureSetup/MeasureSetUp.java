@@ -3,7 +3,6 @@ package rzahoransky.gui.measureSetup;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -11,14 +10,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 
-import javax.swing.JCheckBox;
-
 import calculation.MieList;
 import rzahoransky.dqpipeline.DQPipeline;
 import rzahoransky.dqpipeline.dataExtraction.ConcentrationExtractor;
 import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
 import rzahoransky.dqpipeline.dataWriter.OutputWriter;
 import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
+import rzahoransky.dqpipeline.periodMarker.MarkerType;
 import rzahoransky.dqpipeline.visualization.DQSinglePeriodMeasurementVisualizer;
 import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizerChart;
 import rzahoransky.dqpipeline.visualization.TransmissionVisualizer;
@@ -78,7 +76,7 @@ public class MeasureSetUp extends Properties{
 	
 	public String getProperty(MeasureSetupEntry entry) {
 		String property = getProperty(entry.toString());
-		if (property == null) {
+		if (property == null) { //fallback if no property file found
 			switch (entry) {
 			case AVERAGE_OVER_TIME:
 				return Boolean.toString(false);
@@ -100,6 +98,8 @@ public class MeasureSetUp extends Properties{
 				return Integer.toString(0);
 			case SAMPLES_PER_CHANNEL:
 				return Integer.toString(6000);
+			case MARKER_TYPE:
+				return MarkerType.FiveWLMarker.toString();
 			default:
 				return Integer.toString(1);
 			}

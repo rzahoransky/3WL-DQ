@@ -1,6 +1,5 @@
 package rzahoransky.dqpipeline.analogueAdapter;
 
-import java.nio.DoubleBuffer;
 import java.util.LinkedList;
 import java.util.List;
 

@@ -7,8 +7,6 @@ import javax.sound.sampled.SourceDataLine;
 import javax.swing.JOptionPane;
 
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
-import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
-import rzahoransky.dqpipeline.listener.DQSignalListener;
 import rzahoransky.dqpipeline.listener.DQSignalListenerAdapter;
 import rzahoransky.utils.TransmissionType;
 

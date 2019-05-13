@@ -3,11 +3,9 @@ package rzahoransky.utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
-import java.util.OptionalInt;
 
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.dqSignal.DQSignalEntry;
-import rzahoransky.dqpipeline.dqSignal.DQSignalSinglePeriod;
 
 public class ArrayListUtils {
 	

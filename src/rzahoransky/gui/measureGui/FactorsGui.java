@@ -18,13 +18,16 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.omg.PortableServer.ServantRetentionPolicyOperations;
-
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.listener.DQSignalListener;
 import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.utils.TransmissionType;
 
+/**
+ * Stores a list of previous factors
+ * @author richard
+ *
+ */
 public class FactorsGui extends JFrame implements DQSignalListener, ListSelectionListener, KeyListener {
 	
 	protected static HashSet<FactorHash> factors = new HashSet<>();

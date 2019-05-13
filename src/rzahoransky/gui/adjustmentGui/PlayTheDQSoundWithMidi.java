@@ -1,7 +1,5 @@
 package rzahoransky.gui.adjustmentGui;
 
-import java.util.HashMap;
-
 import javax.sound.midi.Instrument;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiSystem;
@@ -13,7 +11,6 @@ import javax.sound.midi.Synthesizer;
 import javax.swing.JOptionPane;
 
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
-import rzahoransky.dqpipeline.listener.DQSignalListener;
 import rzahoransky.dqpipeline.listener.DQSignalListenerAdapter;
 import rzahoransky.utils.TransmissionType;
 

@@ -6,21 +6,15 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Formatter;
 import java.util.Locale;
 
 import javax.swing.JOptionPane;
-import javax.swing.text.NumberFormatter;
 
-import calculation.CalculationAssignment;
 import presets.Wavelengths;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
-import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.gui.measureSetup.MeasureSetupEntry;
 import rzahoransky.utils.ArrayListUtils;
@@ -28,7 +22,6 @@ import rzahoransky.utils.DQtype;
 import rzahoransky.utils.ExtractedSignalType;
 import rzahoransky.utils.RawSignalType;
 import rzahoransky.utils.TransmissionType;
-import storage.dqMeas.read.DQReader;
 import storage.dqMeas.write.MieInfoWriter;
 
 public class OutputWriter extends AbstractDQPipelineElement {

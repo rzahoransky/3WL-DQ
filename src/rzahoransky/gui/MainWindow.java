@@ -9,8 +9,6 @@ import calculation.CalculationAssignment;
 import errors.WavelengthMismatchException;
 import gui.JMieCalcGuiGridBagLayout;
 import gui.OldMieCalculator;
-import presets.IMieParticlePreset;
-import presets.Wavelengths;
 import storage.dqMeas.read.DQReader;
 
 public class MainWindow extends JPanel{

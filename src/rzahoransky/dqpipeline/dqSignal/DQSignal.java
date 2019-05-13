@@ -1,20 +1,16 @@
 package rzahoransky.dqpipeline.dqSignal;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.OptionalDouble;
 
-import calculation.DistributionFactory;
-import javafx.scene.chart.PieChart.Data;
-import presets.Wavelengths;
 import rzahoransky.dqpipeline.dataExtraction.DiameterComperator;
 import rzahoransky.utils.ArrayListUtils;
 import rzahoransky.utils.DQtype;
 import rzahoransky.utils.ExtractedSignalType;
-import rzahoransky.utils.TransmissionType;
 import rzahoransky.utils.RawSignalType;
+import rzahoransky.utils.TransmissionType;
 
 /**
  * A DQMeasurement object holds the produced data from the Wizard-DQ Measurement
@@ -30,7 +26,7 @@ public class DQSignal {
 	private long timeStamp;
 
 	private HashMap<RawSignalType, ArrayList<Double>> values = new HashMap<>();
-	private ArrayList<Integer> periodMarker = new ArrayList<>();
+	private ArrayList<Integer> periodMarks = new ArrayList<>();
 	private ArrayList<DQSignalSinglePeriod> singlePeriods = new ArrayList<>();
 	private double wl1 = 0;
 	private double wl2 = 0;
@@ -65,16 +61,16 @@ public class DQSignal {
 	}
 
 	public ArrayList<Integer> getPeriodMarker() {
-		return periodMarker;
+		return periodMarks;
 	}
 	
 	public void addPeriodMark(int mark) {
 		
-		if (!periodMarker.isEmpty()) {
+		if (!periodMarks.isEmpty()) {
 			//create single period entries
-			singlePeriods.add(new DQSignalSinglePeriod(this, periodMarker.get(periodMarker.size()-1), mark));
+			singlePeriods.add(new DQSignalSinglePeriod(this, periodMarks.get(periodMarks.size()-1), mark));
 		}
-		periodMarker.add(mark);
+		periodMarks.add(mark);
 	}
 
 	public DQSignal() {
@@ -312,7 +308,7 @@ public class DQSignal {
 	}
 	
 	public void removeRawSignal() {
-		periodMarker = null;
+		periodMarks = null;
 		values = null;
 		singlePeriods = null;
 	}

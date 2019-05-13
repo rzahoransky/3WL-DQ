@@ -1,11 +1,7 @@
 package rzahoransky.dqpipeline.dataExtraction;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-
-import org.jfree.chart.util.RelativeDateFormat;
 
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.dqSignal.DQSignalSinglePeriod;

@@ -3,10 +3,6 @@ package rzahoransky.dqpipeline.analogueAdapter;
 import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
-import java.util.concurrent.BlockingQueue;
-
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 import com.sun.jna.Pointer;
 
@@ -18,7 +14,6 @@ import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.dqpipeline.interfaces.AdapterInterface;
 import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.gui.measureSetup.MeasureSetupEntry;
-import rzahoransky.gui.measureSetup.OldAdapterConfigPanel;
 
 public class FiveWLNIDaqAdapter extends AbstractDQPipelineElement implements AdapterInterface {
 
@@ -32,8 +27,17 @@ public class FiveWLNIDaqAdapter extends AbstractDQPipelineElement implements Ada
 	private boolean isInitialized = false;
 	private int samplesPerChannel = 6000; //6000
 	protected boolean errorMessageShown = false;
+	protected boolean doReset = true;
 	
 	//DEVICE WAVELENGTHS: 0.405, 0.532, 0.635, 0.635, 0.818, 1.313
+	//ACCORDING TO SHIPPING LIST: 405, 532, 670, 850, 1305
+	
+	public static void main (String args[]) throws NiDaqException {
+		String adCard = MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.NIADAPTER);
+		System.out.println("Creating NiDaq with device: "+adCard);
+		FiveWLNIDaqAdapter test = new FiveWLNIDaqAdapter();
+		DQSignal dqSample = test.getNextMeasurement();
+	}
 
 	public FiveWLNIDaqAdapter() {
 		daq = new NiDaq();
@@ -149,6 +153,8 @@ public class FiveWLNIDaqAdapter extends AbstractDQPipelineElement implements Ada
 	}
 	
 	public void reset() {
+		if (!doReset)
+			return;
 		try {
 			System.out.println("Resetting "+adCard);
 			daq.resetDevice(adCard);

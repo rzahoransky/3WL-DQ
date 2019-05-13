@@ -1,9 +1,7 @@
 package rzahoransky.dqpipeline.interfaces;
 
 import java.util.HashMap;
-import java.util.List;
 
-import rzahoransky.dqpipeline.dqSignal.DQSignalSinglePeriod;
 import rzahoransky.utils.ExtractedSignalType;
 
 public abstract class AbstractMeasurePoint implements IMeasurePoints {

@@ -1,12 +1,7 @@
 package rzahoransky.dqpipeline.dataExtraction;
 
-import java.awt.Point;
-import java.util.TreeMap;
-
 import calculation.MieList;
-import javafx.geometry.Point2D;
 import rzahoransky.dqpipeline.dataExtraction.KdTree.XYZPoint;
-import rzahoransky.utils.DQtype;
 
 public class SimpleDQLookup {
 

@@ -3,7 +3,6 @@ package rzahoransky.gui.measureGui;
 import java.awt.Font;
 import java.util.HashMap;
 
-import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import org.jfree.chart.JFreeChart;

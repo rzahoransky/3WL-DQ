@@ -1,13 +1,10 @@
 package rzahoransky.dqpipeline.dataExtraction;
 
-import java.util.HashMap;
-
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.dqSignal.DQSignalEntry;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
-import rzahoransky.utils.TransmissionType;
 import rzahoransky.utils.DQtype;
-import rzahoransky.utils.RawSignalType;
+import rzahoransky.utils.TransmissionType;
 
 public class DQExtractor extends AbstractDQPipelineElement {
 

@@ -1,9 +1,5 @@
 package rzahoransky.dqpipeline.visualization;
 
-import java.util.ArrayList;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-
 import javax.swing.JFrame;
 
 import org.jfree.chart.ChartPanel;
@@ -13,7 +9,6 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
-import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.utils.Charts;
 import rzahoransky.utils.RawSignalType;
 

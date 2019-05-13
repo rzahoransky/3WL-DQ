@@ -8,14 +8,12 @@ import java.util.HashMap;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-import presets.Wavelengths;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.dqSignal.DQSignalSinglePeriod;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
-import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.utils.ExtractedSignalType;
-import rzahoransky.utils.TransmissionType;
 import rzahoransky.utils.RawSignalType;
+import rzahoransky.utils.TransmissionType;
 
 public class TransmissionExtractor extends AbstractDQPipelineElement {
 

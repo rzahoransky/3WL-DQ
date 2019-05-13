@@ -9,16 +9,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.SourceDataLine;
-import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
-import javax.swing.DefaultButtonModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
 import rzahoransky.dqpipeline.DQPipeline;
@@ -27,11 +19,10 @@ import rzahoransky.dqpipeline.dataExtraction.FiveWLExtractor;
 import rzahoransky.dqpipeline.dataExtraction.FiveWLMeasurePoints;
 import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
-import rzahoransky.dqpipeline.interfaces.AdapterInterface;
+import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.dqpipeline.listener.DQSignalListener;
 import rzahoransky.dqpipeline.periodMarker.FiveWLMarker;
-import rzahoransky.dqpipeline.simulation.FiveWLOneHeadSimulator;
-import rzahoransky.dqpipeline.visualization.LaserVoltageVisualizer;
+import rzahoransky.dqpipeline.periodMarker.MarkerFactory;
 import rzahoransky.dqpipeline.visualization.TransmissionVisualizer;
 import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.gui.measureSetup.MeasureSetupEntry;
@@ -41,7 +32,7 @@ public class Adjustment extends JFrame implements DQSignalListener {
 	GridBagConstraints c;
 	DQPipeline pipeline;
 	FiveWLNIDaqAdapter adapter = new FiveWLNIDaqAdapter();
-	private FiveWLMarker triggerMarker;
+	private AbstractDQPipelineElement triggerMarker;
 	private FiveWLExtractor valueExtractor;
 	private TransmissionExtractor transmissionExtractor;
 	private int maxPitch = 10;
@@ -113,7 +104,7 @@ public class Adjustment extends JFrame implements DQSignalListener {
 		
 		//adapter = new FiveWLOneHeadSimulator();
 		//Look for triggers
-		triggerMarker = new FiveWLMarker();
+		triggerMarker = MarkerFactory.getPeriodMarker();
 		//extract single periods
 		valueExtractor = new FiveWLExtractor(new FiveWLMeasurePoints());
 		valueExtractor.useOffset(true);
@@ -128,7 +119,7 @@ public class Adjustment extends JFrame implements DQSignalListener {
 		pipeline.addPipelineElement(valueExtractor);
 		pipeline.addPipelineElement(transmissionExtractor);
 		pipeline.addPipelineElement(vis);
-		pipeline.addNewSignalListener(this);
+		pipeline.addNewSignalListener(this); //inform this class every new element
 		
 		pipeline.start();
 	}

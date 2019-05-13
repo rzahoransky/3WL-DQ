@@ -1,24 +1,13 @@
 package rzahoransky.gui.measureGui;
 
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GraphicsConfiguration;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.HeadlessException;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.io.File;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JToolBar;
-
-import org.jfree.chart.JFreeChart;
 
 import rzahoransky.dqpipeline.DQPipeline;
 import rzahoransky.gui.measureSetup.MeasureSetUp;

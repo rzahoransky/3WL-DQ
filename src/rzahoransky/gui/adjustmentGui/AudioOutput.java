@@ -1,6 +1,5 @@
 package rzahoransky.gui.adjustmentGui;
 
-import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.dqpipeline.listener.DQSignalListener;
 import rzahoransky.utils.TransmissionType;
 

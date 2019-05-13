@@ -36,9 +36,11 @@ import rzahoransky.dqpipeline.dataExtraction.SimpleDQLookupDiameterExtractor;
 import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
 import rzahoransky.dqpipeline.dataWriter.OutputWriter;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
+import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.dqpipeline.interfaces.AdapterInterface;
 import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.dqpipeline.periodMarker.FiveWLMarker;
+import rzahoransky.dqpipeline.periodMarker.MarkerFactory;
 import rzahoransky.dqpipeline.simulation.FiveWLOneHeadSimulator;
 import rzahoransky.dqpipeline.visualization.DQSinglePeriodMeasurementVisualizer;
 import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizerChart;
@@ -166,7 +168,7 @@ public class MeasureSetupGui extends JFrame {
 		adapter.setADCardOrConfigParameter(setup.getProperty(MeasureSetupEntry.NIADAPTER));
 		//adapter.setADCardOrConfigParameter(AdapterInformation.getAvailableDevices().get(0));
 
-		FiveWLMarker triggerMarker = new FiveWLMarker();
+		AbstractDQPipelineElement triggerMarker = MarkerFactory.getPeriodMarker();
 
 		FiveWLExtractor valueExtractor = new FiveWLExtractor(new FiveWLMeasurePoints());
 
@@ -233,7 +235,6 @@ public class MeasureSetupGui extends JFrame {
 	private void setupPipeline(MieList wl1, MieList wl2, MieList wl3) throws NiDaqException {
 		// NI Adapter
 		AdapterInterface adapter;
-		List<String> niStrings = NiDaq.getDeviceNames();
 		if (adapterSelectGUI.hasDevices()) {
 			adapter = new FiveWLNIDaqAdapter();
 			adapter.setADCardOrConfigParameter(adapterSelectGUI.getSelectedDevice());
@@ -248,7 +249,7 @@ public class MeasureSetupGui extends JFrame {
 		setup.setMieList(list);
 
 		// Look for triggers
-		FiveWLMarker triggerMarker = new FiveWLMarker();
+		AbstractDQPipelineElement triggerMarker = MarkerFactory.getPeriodMarker();
 		// extract single periods
 		FiveWLExtractor valueExtractor = new FiveWLExtractor(new FiveWLMeasurePoints());
 

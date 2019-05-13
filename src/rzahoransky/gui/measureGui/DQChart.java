@@ -1,31 +1,19 @@
 package rzahoransky.gui.measureGui;
 
-import java.awt.Graphics2D;
-import java.awt.geom.Rectangle2D;
-import java.io.File;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.LinkedList;
 
 import javax.swing.JPanel;
 
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
 import org.jfree.chart.annotations.XYAnnotation;
-import org.jfree.chart.annotations.XYDrawableAnnotation;
 import org.jfree.chart.annotations.XYTextAnnotation;
-import org.jfree.chart.axis.ValueAxis;
-import org.jfree.chart.event.AnnotationChangeListener;
-import org.jfree.chart.plot.PlotRenderingInfo;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.io.SerialUtilities;
-import org.jfree.ui.Drawable;
 
 import calculation.MieList;
 import charts.ChartType;
 import charts.Charts;
 import errors.WavelengthMismatchException;
-import storage.dqMeas.read.DQReader;
 
 @Deprecated
 public class DQChart extends JPanel{

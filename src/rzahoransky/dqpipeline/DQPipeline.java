@@ -21,6 +21,7 @@ import rzahoransky.dqpipeline.interfaces.AdapterInterface;
 import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.dqpipeline.listener.DQSignalListener;
 import rzahoransky.dqpipeline.periodMarker.FiveWLMarker;
+import rzahoransky.dqpipeline.periodMarker.MarkerFactory;
 import rzahoransky.dqpipeline.simulation.FiveWLOneHeadSimulator;
 import rzahoransky.dqpipeline.visualization.DQMeasurementVisualizer;
 import rzahoransky.dqpipeline.visualization.DQSinglePeriodMeasurementVisualizer;
@@ -62,7 +63,7 @@ public class DQPipeline {
 		
 		DQPipeline pipeline = new DQPipeline();
 		
-		DQPipelineElement triggerMarker = new FiveWLMarker();
+		DQPipelineElement triggerMarker = MarkerFactory.getPeriodMarker();
 		
 		DQPipelineElement valueExtractor = new FiveWLExtractor(new FiveWLMeasurePoints());
 		
@@ -110,6 +111,9 @@ public class DQPipeline {
 	}
 
 	
+	/**
+	 * Add all DQQueue elements into queue. Initialize queue and run it
+	 */
 	public void start() {
 		
 		queues.clear();
@@ -141,6 +145,9 @@ public class DQPipeline {
 		
 	}
 	
+	/**
+	 * Set queue to stop
+	 */
 	public void stop() {
 		run = false;
 //		for (Thread t: pipelineThreads)
@@ -200,10 +207,10 @@ public class DQPipeline {
 		public void run() {
 			while (run && !isInterrupted()) {
 				try {
-					if (in == null) { //NI Adapter
+					if (in == null) { //If there is no in-element this is a NI Adapter
 						DQSignal fromAdapter = element.processDQElement(null);
-						if (fromAdapter != null)
-							out.offer(fromAdapter, 1000, TimeUnit.MILLISECONDS);
+						if (fromAdapter != null) //if nothing from NI Adapter received: Skip and try again in next loop
+							out.offer(fromAdapter, 1000, TimeUnit.MILLISECONDS); 
 					} else { //normal DQPipelineElement
 						DQSignal fromPreviousElement = in.poll(1000, TimeUnit.MILLISECONDS);
 						if (fromPreviousElement != null)
@@ -213,8 +220,8 @@ public class DQPipeline {
 					// check if thread should terminate
 					if (!run || isInterrupted()) {
 						System.out.println("Thread " + element.description() + " ending...");
-						element.endProcessing();
-						return;
+						element.endProcessing(); //tell dqElement to end processing...
+						return; //step out of while loop
 					}
 				}
 			}
