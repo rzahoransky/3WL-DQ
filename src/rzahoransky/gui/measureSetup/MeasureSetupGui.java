@@ -30,10 +30,11 @@ import rzahoransky.dqpipeline.DQPipeline;
 import rzahoransky.dqpipeline.analogueAdapter.FiveWLNIDaqAdapter;
 import rzahoransky.dqpipeline.dataExtraction.ConcentrationExtractor;
 import rzahoransky.dqpipeline.dataExtraction.DQExtractor;
-import rzahoransky.dqpipeline.dataExtraction.FiveWLExtractor;
-import rzahoransky.dqpipeline.dataExtraction.FiveWLMeasurePoints;
 import rzahoransky.dqpipeline.dataExtraction.SimpleDQLookupDiameterExtractor;
 import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
+import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.FiveWLExtractor;
+import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.RawDataExtractorFactory;
+import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.ThreeWLMeasurePoints;
 import rzahoransky.dqpipeline.dataWriter.OutputWriter;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
@@ -170,9 +171,9 @@ public class MeasureSetupGui extends JFrame {
 
 		AbstractDQPipelineElement triggerMarker = MarkerFactory.getPeriodMarker();
 
-		FiveWLExtractor valueExtractor = new FiveWLExtractor(new FiveWLMeasurePoints());
+		AbstractDQPipelineElement rawValueExtractor = RawDataExtractorFactory.getRawDataExtractor();
 
-		DQSignal element = valueExtractor
+		DQSignal element = rawValueExtractor
 				.processDQElement(triggerMarker.processDQElement(adapter.processDQElement(null)));
 
 		if (element != null) {
@@ -251,7 +252,7 @@ public class MeasureSetupGui extends JFrame {
 		// Look for triggers
 		AbstractDQPipelineElement triggerMarker = MarkerFactory.getPeriodMarker();
 		// extract single periods
-		FiveWLExtractor valueExtractor = new FiveWLExtractor(new FiveWLMeasurePoints());
+		AbstractDQPipelineElement valueExtractor = RawDataExtractorFactory.getRawDataExtractor();
 
 		// extract transmissions
 		TransmissionExtractor transmissionExtractor = new TransmissionExtractor(false);

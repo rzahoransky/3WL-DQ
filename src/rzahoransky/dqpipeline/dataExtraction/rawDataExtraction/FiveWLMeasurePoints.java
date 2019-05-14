@@ -1,6 +1,5 @@
-package rzahoransky.dqpipeline.dataExtraction;
+package rzahoransky.dqpipeline.dataExtraction.rawDataExtraction;
 
-import rzahoransky.dqpipeline.interfaces.AbstractMeasurePoint;
 import rzahoransky.utils.ExtractedSignalType;
 
 public class FiveWLMeasurePoints extends AbstractMeasurePoint {

@@ -13,16 +13,20 @@ public class MarkerFactory {
 		case ThreeWlMarker:
 			return new ThreeWLMarker();
 		default:
-			break;
+			return new FiveWLMarker();
 		}
-		return null;
 	}
 	
 	public static AbstractDQPipelineElement getPeriodMarker() {
+		try {
 		String markerTypeString = MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.MARKER_TYPE);
 		MarkerType markerType = MarkerType.valueOf(markerTypeString);
 		System.out.println("Marker Type is: "+markerType);
 		return getPeriodMarker(markerType);
+		} catch (Exception e) {
+			System.out.println("Marker type fallback to FiveWLMarker");
+			return new FiveWLMarker();
+		}
 	}
 
 }

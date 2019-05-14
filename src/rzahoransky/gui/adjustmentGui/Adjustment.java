@@ -15,9 +15,10 @@ import javax.swing.JRadioButton;
 
 import rzahoransky.dqpipeline.DQPipeline;
 import rzahoransky.dqpipeline.analogueAdapter.FiveWLNIDaqAdapter;
-import rzahoransky.dqpipeline.dataExtraction.FiveWLExtractor;
-import rzahoransky.dqpipeline.dataExtraction.FiveWLMeasurePoints;
 import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
+import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.FiveWLExtractor;
+import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.RawDataExtractorFactory;
+import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.ThreeWLMeasurePoints;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.dqpipeline.listener.DQSignalListener;
@@ -33,7 +34,7 @@ public class Adjustment extends JFrame implements DQSignalListener {
 	DQPipeline pipeline;
 	FiveWLNIDaqAdapter adapter = new FiveWLNIDaqAdapter();
 	private AbstractDQPipelineElement triggerMarker;
-	private FiveWLExtractor valueExtractor;
+	private AbstractDQPipelineElement valueExtractor;
 	private TransmissionExtractor transmissionExtractor;
 	private int maxPitch = 10;
 	private TransmissionVisualizer vis;
@@ -106,8 +107,8 @@ public class Adjustment extends JFrame implements DQSignalListener {
 		//Look for triggers
 		triggerMarker = MarkerFactory.getPeriodMarker();
 		//extract single periods
-		valueExtractor = new FiveWLExtractor(new FiveWLMeasurePoints());
-		valueExtractor.useOffset(true);
+		valueExtractor = RawDataExtractorFactory.getRawDataExtractor();
+		//valueExtractor.useOffset(true);
 		//extract transmissions
 		transmissionExtractor = new TransmissionExtractor(false);
 		vis = new TransmissionVisualizer(false);

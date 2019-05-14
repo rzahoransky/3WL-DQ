@@ -2,17 +2,23 @@ package rzahoransky.dqpipeline.visualization;
 
 import java.awt.BasicStroke;
 import java.awt.Font;
+import java.util.LinkedList;
 
 import javax.swing.JFrame;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.annotations.XYAnnotation;
+import org.jfree.chart.annotations.XYBoxAnnotation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.RawDataExtractorFactory;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
+import rzahoransky.dqpipeline.interfaces.IMeasurePoints;
 import rzahoransky.utils.Charts;
+import rzahoransky.utils.ExtractedSignalType;
 import rzahoransky.utils.RawSignalType;
 import rzahoransky.utils.TimeCounter;
 
@@ -22,6 +28,7 @@ public class DQSinglePeriodMeasurementVisualizer extends AbstractDQPipelineEleme
 	JFrame frame;
 	RawSignalType[] signalTypes = {RawSignalType.ref, RawSignalType.meas, RawSignalType.mode, RawSignalType.trigger};
 	TimeCounter refresh = new TimeCounter(250);
+	protected static final IMeasurePoints measurePoints = RawDataExtractorFactory.getRawDataExtractor().getMeasurePoints();
 
 	public DQSinglePeriodMeasurementVisualizer(boolean showAsFrame) {
 		
@@ -51,6 +58,7 @@ public class DQSinglePeriodMeasurementVisualizer extends AbstractDQPipelineEleme
 	}
 	
 	public void visualizeDQMeasurement (DQSignal measurement) {
+		//chartPanel.getChart().getXYPlot().setNotify(false);
 		XYSeriesCollection collection = (XYSeriesCollection) chartPanel.getChart().getXYPlot().getDataset();
 		
 		for (RawSignalType type: signalTypes) {
@@ -59,13 +67,38 @@ public class DQSinglePeriodMeasurementVisualizer extends AbstractDQPipelineEleme
 					updateSeries(measurement, series);
 			}
 		}
+		
+//		chartPanel.getChart().getXYPlot().setNotify(false);
+//		for (Object annot: chartPanel.getChart().getXYPlot().getAnnotations()) 
+//			chartPanel.getChart().getXYPlot().removeAnnotation((XYAnnotation) annot);
+//		
+//		for (XYBoxAnnotation annotation: getMarkerAnnotations(measurement)) {
+//			chartPanel.getChart().getXYPlot().addAnnotation(annotation);
+//		}
+//		chartPanel.getChart().getXYPlot().setNotify(true);
 	}
+	
+//	private LinkedList<XYBoxAnnotation> getMarkerAnnotations(DQSignal measurement) {
+//		LinkedList<XYBoxAnnotation> result = new LinkedList<>();
+//		for (ExtractedSignalType type: ExtractedSignalType.values()) {
+//			double periodLength = measurement.getSinglePeriods().get(0).getPeriodLength();
+//			int arrayLength = measurePoints.getRelativeMeasurePoint(type).length;
+//			double start = measurePoints.getRelativeMeasurePoint(type)[0]*periodLength;
+//			double end = measurePoints.getRelativeMeasurePoint(type)[arrayLength-1]*periodLength;
+//			end = Math.max(end, start+1); //if there is only one marker
+//			double y0 = measurement.getReference().get((int)start)-1;
+//			double y1 = measurement.getReference().get((int)start)+1;
+//			XYBoxAnnotation annotation = new XYBoxAnnotation(start, y0, end, y1);
+//			result.add(annotation);
+//		}
+//		return result;
+//	}
 	
 	private void updateSeries(DQSignal measurement, XYSeries series) {
 		series.setNotify(false);
 
 		
-		if (measurement.getPeriodMarker().size() > 1) {
+		if (measurement.getPeriodMarker().size() > 1) { //enough markers are present
 			series.clear();
 			RawSignalType type = (RawSignalType) series.getKey();
 
@@ -76,7 +109,7 @@ public class DQSinglePeriodMeasurementVisualizer extends AbstractDQPipelineEleme
 				series.add(i - start, measurement.get(type).get(i));
 			}
 			
-		} else {
+		} else { //not enough markers present. Show signal from index 0 .. 80
 			try {
 				int start = 0;
 				int end = 80;
@@ -87,8 +120,12 @@ public class DQSinglePeriodMeasurementVisualizer extends AbstractDQPipelineEleme
 				}
 			} catch (Exception e) {}
 		}
+		
+		
 		series.setNotify(true);
 	}
+
+
 
 	@Override
 	public DQSignal processDQElement(DQSignal in) {

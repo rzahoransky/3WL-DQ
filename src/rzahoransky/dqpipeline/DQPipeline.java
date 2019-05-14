@@ -12,10 +12,11 @@ import kirkwood.nidaq.access.NiDaq;
 import kirkwood.nidaq.access.NiDaqException;
 import rzahoransky.dqpipeline.analogueAdapter.FiveWLNIDaqAdapter;
 import rzahoransky.dqpipeline.dataExtraction.DQExtractor;
-import rzahoransky.dqpipeline.dataExtraction.FiveWLExtractor;
-import rzahoransky.dqpipeline.dataExtraction.FiveWLMeasurePoints;
 import rzahoransky.dqpipeline.dataExtraction.ProbabilityBasedDiameterExtractor;
 import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
+import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.FiveWLExtractor;
+import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.RawDataExtractorFactory;
+import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.ThreeWLMeasurePoints;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AdapterInterface;
 import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
@@ -65,7 +66,7 @@ public class DQPipeline {
 		
 		DQPipelineElement triggerMarker = MarkerFactory.getPeriodMarker();
 		
-		DQPipelineElement valueExtractor = new FiveWLExtractor(new FiveWLMeasurePoints());
+		DQPipelineElement valueExtractor = RawDataExtractorFactory.getRawDataExtractor();
 		
 		DQPipelineElement extractedDataVis = new LaserVoltageVisualizer(false);
 		

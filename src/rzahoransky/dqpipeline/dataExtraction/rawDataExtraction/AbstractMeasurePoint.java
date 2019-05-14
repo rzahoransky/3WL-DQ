@@ -1,7 +1,8 @@
-package rzahoransky.dqpipeline.interfaces;
+package rzahoransky.dqpipeline.dataExtraction.rawDataExtraction;
 
 import java.util.HashMap;
 
+import rzahoransky.dqpipeline.interfaces.IMeasurePoints;
 import rzahoransky.utils.ExtractedSignalType;
 
 public abstract class AbstractMeasurePoint implements IMeasurePoints {
@@ -26,6 +27,11 @@ public abstract class AbstractMeasurePoint implements IMeasurePoints {
 		} else {
 			return map.get(measureType);
 		}
+	}
+	
+	@Override
+	public double[] getRelativeMeasurePoint(ExtractedSignalType measureType) {
+			return map.get(measureType);
 	}
 
 }

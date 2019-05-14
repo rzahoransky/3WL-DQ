@@ -108,6 +108,7 @@ public class TransmissionExtractor extends AbstractDQPipelineElement {
 			double refValue = element.getAveragedValues(RawSignalType.ref, wl);
 			double measValue = element.getAveragedValues(RawSignalType.meas, wl);
 			factors.put(wl, Math.abs(measValue / refValue));
+			System.out.println("Setting factors for "+wl+" to "+Math.abs(measValue / refValue));
 		}
 
 	}

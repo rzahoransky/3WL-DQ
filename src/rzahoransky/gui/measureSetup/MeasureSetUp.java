@@ -14,6 +14,7 @@ import calculation.MieList;
 import rzahoransky.dqpipeline.DQPipeline;
 import rzahoransky.dqpipeline.dataExtraction.ConcentrationExtractor;
 import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
+import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.RawDataExtractorType;
 import rzahoransky.dqpipeline.dataWriter.OutputWriter;
 import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.dqpipeline.periodMarker.MarkerType;
@@ -100,6 +101,8 @@ public class MeasureSetUp extends Properties{
 				return Integer.toString(6000);
 			case MARKER_TYPE:
 				return MarkerType.FiveWLMarker.toString();
+			case RAW_DATA_EXTRACTOR:
+				return RawDataExtractorType.FiveWlExtractor.toString();
 			default:
 				return Integer.toString(1);
 			}
