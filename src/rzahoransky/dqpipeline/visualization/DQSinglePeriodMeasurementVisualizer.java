@@ -13,10 +13,13 @@ import org.jfree.chart.annotations.XYBoxAnnotation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import rzahoransky.dqpipeline.DQPipeline;
 import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.RawDataExtractorFactory;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.dqpipeline.interfaces.IMeasurePoints;
+import rzahoransky.gui.measureGui.TriggerAnnotator;
+import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.utils.Charts;
 import rzahoransky.utils.ExtractedSignalType;
 import rzahoransky.utils.RawSignalType;
@@ -29,6 +32,7 @@ public class DQSinglePeriodMeasurementVisualizer extends AbstractDQPipelineEleme
 	RawSignalType[] signalTypes = {RawSignalType.ref, RawSignalType.meas, RawSignalType.mode, RawSignalType.trigger};
 	TimeCounter refresh = new TimeCounter(250);
 	protected static final IMeasurePoints measurePoints = RawDataExtractorFactory.getRawDataExtractor().getMeasurePoints();
+	boolean annotatorAdded = false;
 
 	public DQSinglePeriodMeasurementVisualizer(boolean showAsFrame) {
 		
@@ -95,6 +99,8 @@ public class DQSinglePeriodMeasurementVisualizer extends AbstractDQPipelineEleme
 //	}
 	
 	private void updateSeries(DQSignal measurement, XYSeries series) {
+		if(!annotatorAdded)
+			addAnnotator();
 		series.setNotify(false);
 
 		
@@ -126,6 +132,14 @@ public class DQSinglePeriodMeasurementVisualizer extends AbstractDQPipelineEleme
 	}
 
 
+
+	private void addAnnotator() {
+		TriggerAnnotator triggerAnnotator = new TriggerAnnotator();
+		MeasureSetUp.getInstance().getPipeline().addNewSignalListener(triggerAnnotator);
+		chartPanel.getChart().getXYPlot().addAnnotation(triggerAnnotator);
+		annotatorAdded = true;
+		
+	}
 
 	@Override
 	public DQSignal processDQElement(DQSignal in) {

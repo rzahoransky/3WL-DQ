@@ -10,10 +10,10 @@ import rzahoransky.utils.ExtractedSignalType;
 public class ThreeWLMeasurePoints extends AbstractMeasurePoint {
 	
 	public ThreeWLMeasurePoints() {
-		double[] offset = {52d/64d, 53d/64d, 54d/64d, 55d/64d, 56d/64d};
-		double[] wl1 = {5d/64d, 6d/64d, 7d/64d};
-		double[] wl2 = {20d/64d, 21d/64d, 22d/64d, 23d/64d};
-		double[] wl3 = {37d/64d, 38d/64d, 39d/64d};
+		double[] offset = {52d/64d, 53d/64d, 54d/64d, 55d/64d, 56d/64d, 56d/64d, 57d/64d};
+		double[] wl1 = {5d/64d, 6d/64d, 7d/64d, 8d/64d, 9d/64d};
+		double[] wl2 = {20d/64d, 21d/64d, 22d/64d, 23d/64d, 24d/64d, 25d/64d};
+		double[] wl3 = {37d/64d, 38d/64d, 39d/64d, 40d/64d, 41d/64d};
 		
 //		double[] wl1 = {35d/85d};
 //		double[] wl2 = {55d/85d};

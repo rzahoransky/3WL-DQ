@@ -28,12 +28,13 @@ import rzahoransky.dqpipeline.interfaces.IMeasurePoints;
 import rzahoransky.dqpipeline.listener.DQSignalListener;
 import rzahoransky.utils.DQtype;
 import rzahoransky.utils.ExtractedSignalType;
+import rzahoransky.utils.RawSignalType;
 import storage.dqMeas.read.DQReader;
 
 /** draws the currently used triggerpoints**/
 public class TriggerAnnotator extends AbstractXYAnnotation implements DQSignalListener {
 
-	private volatile LinkedList<Annotations> annotators = new LinkedList<>();
+	private volatile LinkedList<Coordinates> annotators = new LinkedList<>();
 	private int size = 15;
 	protected static final IMeasurePoints measurePoints = RawDataExtractorFactory.getRawDataExtractor().getMeasurePoints();
 
@@ -61,20 +62,6 @@ public class TriggerAnnotator extends AbstractXYAnnotation implements DQSignalLi
 		return new Color(r, g, b);
 	}
 
-	public void addDQ(double dq1, double dq2) {
-		Annotations annotator = new Annotations();
-		annotator.x = dq1;
-		annotator.y = dq2;
-		synchronized (annotators) {
-			annotators.add(annotator);
-			if (annotators.size() > size) {
-				annotators.removeFirst();
-			}
-		}
-		fireAnnotationChanged();
-
-	}
-
 	@Override
 	public void draw(Graphics2D g2, XYPlot plot, Rectangle2D dataArea, ValueAxis domainAxis, ValueAxis rangeAxis,
 			int rendererIndex, PlotRenderingInfo info) {
@@ -87,31 +74,34 @@ public class TriggerAnnotator extends AbstractXYAnnotation implements DQSignalLi
 
 		int color = 0;
 		synchronized (annotators) {
-			for (Annotations not : annotators) {
-				double x = domainAxis.valueToJava2D(not.x, dataArea, domainEdge);
-				double y = rangeAxis.valueToJava2D(not.y, dataArea, rangeEdge);
+			for (Coordinates triggerCoordinate : annotators) {
+				double x0 = domainAxis.valueToJava2D(triggerCoordinate.x0, dataArea, domainEdge);
+				double x1 = domainAxis.valueToJava2D(triggerCoordinate.x1, dataArea, domainEdge);
+				double y0 = rangeAxis.valueToJava2D(triggerCoordinate.y0, dataArea, rangeEdge);
+				double y1 = rangeAxis.valueToJava2D(triggerCoordinate.y1, dataArea, rangeEdge);
 
 				if (orientation == PlotOrientation.HORIZONTAL) {
-					double tempX = x;
-					x = y;
-					y = tempX;
+					double tempX0 = x0;
+					double tempX1 = x1;
+					x0 = y0;
+					x1 = y1;
+					y0 = tempX0;
+					y1= tempX1;
 				}
-				g2.setColor(getGreyColor((double) color / annotators.size()));
-				g2.drawOval((int) x - 3, (int) y - 3, 6, 6);
+				g2.setColor(Color.YELLOW);
+				//g2.drawOval((int) x - 3, (int) y - 3, 6, 6);
+				int height = 10;
+				g2.drawRoundRect((int)x0, (int)y0-height/2, (int) (x1-x0), height, 2, 2);
+				//g2.drawLine((int)x0, (int)y0, (int)x1, (int)y1);
 				color++;
 			}
 		}
 
 	}
 
-	class Annotations {
-		double x;
-		double y;
-	}
-
 	@Override
 	public void newSignal(DQSignal currentSignal) {
-		
+		annotators = getMarkerAnnotations(currentSignal);
 		fireAnnotationChanged();
 	}
 
@@ -123,19 +113,25 @@ public class TriggerAnnotator extends AbstractXYAnnotation implements DQSignalLi
 	
 	private LinkedList<Coordinates> getMarkerAnnotations(DQSignal measurement) {
 		LinkedList<Coordinates> result = new LinkedList<>();
-		for (ExtractedSignalType type: ExtractedSignalType.values()) {
-			Coordinates coordinates = new Coordinates();
+		RawSignalType[] refOrMeasArray = { RawSignalType.ref, RawSignalType.meas };
+		for (ExtractedSignalType type : ExtractedSignalType.values()) {
 			double periodLength = measurement.getSinglePeriods().get(0).getPeriodLength();
 			int arrayLength = measurePoints.getRelativeMeasurePoint(type).length;
-			double start = measurePoints.getRelativeMeasurePoint(type)[0]*periodLength;
-			double end = measurePoints.getRelativeMeasurePoint(type)[arrayLength-1]*periodLength;
-			end = Math.max(end, start+1); //if there is only one marker
-			double y0 = measurement.getReference().get((int)start)-1;
-			double y1 = measurement.getReference().get((int)start)+1;
-			coordinates.x0=start;
-			coordinates.x1=end;
+			double start = measurePoints.getRelativeMeasurePoint(type)[0] * periodLength;
+			double end = measurePoints.getRelativeMeasurePoint(type)[arrayLength - 1] * periodLength;
+			end = Math.max(end, start + 1); // if there is only one marker
+			for (RawSignalType refOrMeas : refOrMeasArray) { //add for Ref and Meas signal
+				Coordinates coordinates = new Coordinates();
+				double y0 = measurement.getSinglePeriods().get(0).getRawSignal(refOrMeas).get((int) Math.round(start));
+				// double y0 = measurement.getReference().get((int) Math.round(start));
+				double y1 = measurement.getSinglePeriods().get(0).getRawSignal(refOrMeas).get((int) Math.round(end));
+				coordinates.x0 = start;
+				coordinates.x1 = end;
+				coordinates.y0 = y0;
+				coordinates.y1 = y1;
 
-			result.add(coordinates);
+				result.add(coordinates);
+			}
 		}
 		return result;
 	}
@@ -143,5 +139,5 @@ public class TriggerAnnotator extends AbstractXYAnnotation implements DQSignalLi
 }
 
 class Coordinates {
-	double x0,x1;
+	double x0,x1,y0,y1;
 }

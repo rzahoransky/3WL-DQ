@@ -15,7 +15,7 @@ import rzahoransky.dqpipeline.interfaces.AdapterInterface;
 import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.gui.measureSetup.MeasureSetupEntry;
 
-public class FiveWLNIDaqAdapter extends AbstractDQPipelineElement implements AdapterInterface {
+public class GenericNIDaqAdapter extends AbstractDQPipelineElement implements AdapterInterface {
 
 	private String adCard = "Dev2";
 	private NiDaq daq;
@@ -28,6 +28,8 @@ public class FiveWLNIDaqAdapter extends AbstractDQPipelineElement implements Ada
 	private int samplesPerChannel = 6000; //6000
 	protected boolean errorMessageShown = false;
 	protected boolean doReset = true;
+	protected final double sampleRate = 150000.0;
+	protected final String channelString = "ai0:1";
 	
 	//DEVICE WAVELENGTHS: 0.405, 0.532, 0.635, 0.635, 0.818, 1.313
 	//ACCORDING TO SHIPPING LIST: 405, 532, 670, 850, 1305
@@ -35,11 +37,11 @@ public class FiveWLNIDaqAdapter extends AbstractDQPipelineElement implements Ada
 	public static void main (String args[]) throws NiDaqException {
 		String adCard = MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.NIADAPTER);
 		System.out.println("Creating NiDaq with device: "+adCard);
-		FiveWLNIDaqAdapter test = new FiveWLNIDaqAdapter();
+		GenericNIDaqAdapter test = new GenericNIDaqAdapter();
 		DQSignal dqSample = test.getNextMeasurement();
 	}
 
-	public FiveWLNIDaqAdapter() {
+	public GenericNIDaqAdapter() {
 		daq = new NiDaq();
 		adCard = MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.NIADAPTER);
 		try {
@@ -127,10 +129,10 @@ public class FiveWLNIDaqAdapter extends AbstractDQPipelineElement implements Ada
 			task = daq.createTask("");
 			sleep(30);
 
-			daq.createAIVoltageChannel(task, adCard + "/" + "ai0:3", "", Nicaiu.DAQmx_Val_Cfg_Default, minVoltage,
+			daq.createAIVoltageChannel(task, adCard + "/" + channelString, "", Nicaiu.DAQmx_Val_Cfg_Default, minVoltage,
 					maxVoltage, Nicaiu.DAQmx_Val_Volts, null);
 
-			daq.cfgSampClkTiming(task, "", 100000.0, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_ContSamps, samplesPerChannel);
+			daq.cfgSampClkTiming(task, "", sampleRate, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_ContSamps, samplesPerChannel);
 			
 			// init Buffer
 			db = DoubleBuffer.allocate(samplesPerChannel * 4);

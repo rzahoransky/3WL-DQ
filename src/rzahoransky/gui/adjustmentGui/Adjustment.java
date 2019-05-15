@@ -14,7 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JRadioButton;
 
 import rzahoransky.dqpipeline.DQPipeline;
-import rzahoransky.dqpipeline.analogueAdapter.FiveWLNIDaqAdapter;
+import rzahoransky.dqpipeline.analogueAdapter.GenericNIDaqAdapter;
 import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
 import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.FiveWLExtractor;
 import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.RawDataExtractorFactory;
@@ -32,7 +32,7 @@ import rzahoransky.utils.TransmissionType;
 public class Adjustment extends JFrame implements DQSignalListener {
 	GridBagConstraints c;
 	DQPipeline pipeline;
-	FiveWLNIDaqAdapter adapter = new FiveWLNIDaqAdapter();
+	GenericNIDaqAdapter adapter = new GenericNIDaqAdapter();
 	private AbstractDQPipelineElement triggerMarker;
 	private AbstractDQPipelineElement valueExtractor;
 	private TransmissionExtractor transmissionExtractor;
@@ -99,7 +99,7 @@ public class Adjustment extends JFrame implements DQSignalListener {
 	private void setupPipeline() {
 		pipeline = new DQPipeline();
 		
-		adapter = new FiveWLNIDaqAdapter();
+		adapter = new GenericNIDaqAdapter();
 		adapter.setSamplesPerChannel(samplesPerChannel);
 		adapter.setADCardOrConfigParameter(device);
 		

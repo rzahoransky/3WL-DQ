@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import kirkwood.nidaq.access.NiDaq;
 import kirkwood.nidaq.access.NiDaqException;
-import rzahoransky.dqpipeline.analogueAdapter.FiveWLNIDaqAdapter;
+import rzahoransky.dqpipeline.analogueAdapter.GenericNIDaqAdapter;
 import rzahoransky.dqpipeline.dataExtraction.DQExtractor;
 import rzahoransky.dqpipeline.dataExtraction.ProbabilityBasedDiameterExtractor;
 import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
@@ -48,7 +48,7 @@ public class DQPipeline {
 	private AdapterInterface adapter;
 	
 	public static void main (String args[]) throws InterruptedException, NiDaqException {
-		AdapterInterface adapter = new FiveWLNIDaqAdapter();
+		AdapterInterface adapter = new GenericNIDaqAdapter();
 		//adapter = new ThreeWLOneHeadSimulator();
 		//adapter = new DQreplay();
 		//adapter = new FiveWLDevicePlayback("testRGB.txt");
@@ -247,6 +247,7 @@ public class DQPipeline {
 			while (run) {
 			try {
 				setCurrentSignal(in.take());
+				//System.out.println("Latency: "+ (System.currentTimeMillis() - currentSignal.getTimeStamp()));
 				Thread.sleep(sleep);
 			} catch (InterruptedException e) {
 				//check if thread should terminate

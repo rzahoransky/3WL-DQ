@@ -10,7 +10,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import gui.FileGui;
 import kirkwood.nidaq.access.NiDaqException;
-import rzahoransky.dqpipeline.analogueAdapter.FiveWLNIDaqAdapter;
+import rzahoransky.dqpipeline.analogueAdapter.GenericNIDaqAdapter;
 import rzahoransky.dqpipeline.interfaces.AdapterInterface;
 import rzahoransky.dqpipeline.simulation.FiveWLDevicePlaybackWithStream;
 
@@ -19,7 +19,7 @@ public class OldAdapterConfigPanel extends JPanel {
 	private static final long serialVersionUID = 7606088489371310818L;
 	
 	public static void main(String[] args) {
-		FiveWLNIDaqAdapter adapter = new FiveWLNIDaqAdapter();
+		GenericNIDaqAdapter adapter = new GenericNIDaqAdapter();
 		OldAdapterConfigPanel panel = new OldAdapterConfigPanel(adapter);
 		JFrame test = new JFrame("Ad ACard Test");
 		test.add(panel);
@@ -29,7 +29,7 @@ public class OldAdapterConfigPanel extends JPanel {
 
 	public OldAdapterConfigPanel(AdapterInterface adapter) {
 		
-		if (adapter instanceof FiveWLNIDaqAdapter) 
+		if (adapter instanceof GenericNIDaqAdapter) 
 			add(NiDaqAdapterPanel(adapter));
 		else if (adapter instanceof FiveWLDevicePlaybackWithStream)
 			add(SimulationAdapterPanel((FiveWLDevicePlaybackWithStream)adapter));
@@ -71,7 +71,7 @@ public class OldAdapterConfigPanel extends JPanel {
 	
 	private boolean testDevice(String device) {
 		
-		FiveWLNIDaqAdapter adapter = new FiveWLNIDaqAdapter();
+		GenericNIDaqAdapter adapter = new GenericNIDaqAdapter();
 		adapter.setADCardOrConfigParameter(device);
 		try {
 			adapter.getNextMeasurement();

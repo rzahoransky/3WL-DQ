@@ -27,7 +27,7 @@ import kirkwood.nidaq.access.NiDaq;
 import kirkwood.nidaq.access.NiDaqException;
 import presets.Wavelengths;
 import rzahoransky.dqpipeline.DQPipeline;
-import rzahoransky.dqpipeline.analogueAdapter.FiveWLNIDaqAdapter;
+import rzahoransky.dqpipeline.analogueAdapter.GenericNIDaqAdapter;
 import rzahoransky.dqpipeline.dataExtraction.ConcentrationExtractor;
 import rzahoransky.dqpipeline.dataExtraction.DQExtractor;
 import rzahoransky.dqpipeline.dataExtraction.SimpleDQLookupDiameterExtractor;
@@ -165,7 +165,7 @@ public class MeasureSetupGui extends JFrame {
 	}
 
 	private void getWavelengths() throws NiDaqException {
-		FiveWLNIDaqAdapter adapter = new FiveWLNIDaqAdapter();
+		GenericNIDaqAdapter adapter = new GenericNIDaqAdapter();
 		adapter.setADCardOrConfigParameter(setup.getProperty(MeasureSetupEntry.NIADAPTER));
 		//adapter.setADCardOrConfigParameter(AdapterInformation.getAvailableDevices().get(0));
 
@@ -237,7 +237,7 @@ public class MeasureSetupGui extends JFrame {
 		// NI Adapter
 		AdapterInterface adapter;
 		if (adapterSelectGUI.hasDevices()) {
-			adapter = new FiveWLNIDaqAdapter();
+			adapter = new GenericNIDaqAdapter(); //TODO
 			adapter.setADCardOrConfigParameter(adapterSelectGUI.getSelectedDevice());
 			setup.setProperty(MeasureSetupEntry.NIADAPTER, adapterSelectGUI.getSelectedDevice());
 		} else {
