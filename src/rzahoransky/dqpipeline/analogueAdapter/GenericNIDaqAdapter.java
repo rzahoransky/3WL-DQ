@@ -25,7 +25,7 @@ public class GenericNIDaqAdapter extends AbstractDQPipelineElement implements Ad
 	private double minVoltage = -7.0;
 	private double maxVoltage = 7.1;
 	private boolean isInitialized = false;
-	private int samplesPerChannel = 6000; //6000
+	private int samplesPerChannel = 6000; //default 6000
 	protected boolean errorMessageShown = false;
 	protected boolean doReset = true;
 	protected final double sampleRate = 150000.0;
@@ -110,6 +110,7 @@ public class GenericNIDaqAdapter extends AbstractDQPipelineElement implements Ad
 	}
 
 	public void initDAQ() {
+		System.out.println("Init A/D");
 		
 //		sleep(60);
 //		

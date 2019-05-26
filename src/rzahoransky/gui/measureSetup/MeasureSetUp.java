@@ -19,6 +19,7 @@ import rzahoransky.dqpipeline.dataWriter.OutputWriter;
 import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.dqpipeline.periodMarker.MarkerType;
 import rzahoransky.dqpipeline.visualization.DQSinglePeriodMeasurementVisualizer;
+import rzahoransky.dqpipeline.visualization.DQTimer;
 import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizerChart;
 import rzahoransky.dqpipeline.visualization.TransmissionVisualizer;
 
@@ -36,6 +37,7 @@ public class MeasureSetUp extends Properties{
 	private DQPipeline pipeline;
 	private boolean deviceIsConnected = false;
 	private OutputWriter addOutputWriter;
+	private DQTimer timer;
 	
 
 	private MeasureSetUp() {
@@ -223,6 +225,14 @@ public class MeasureSetUp extends Properties{
 	public void setAverageOverTime(boolean averageOverTime) {
 		setProperty(MeasureSetupEntry.AVERAGE_OVER_TIME, Boolean.toString(averageOverTime));
 		
+	}
+
+	public void addTimer(DQTimer timer) {
+		this.timer = timer;
+	}
+	
+	public DQTimer getTimer() {
+		return this.timer;
 	}
 	
 

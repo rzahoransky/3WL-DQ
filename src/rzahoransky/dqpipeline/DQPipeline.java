@@ -246,7 +246,7 @@ public class DQPipeline {
 		public void run() {
 			while (run) {
 			try {
-				setCurrentSignal(in.take());
+				setCurrentSignal(in.take()); //will be run in this thread
 				//System.out.println("Latency: "+ (System.currentTimeMillis() - currentSignal.getTimeStamp()));
 				Thread.sleep(sleep);
 			} catch (InterruptedException e) {

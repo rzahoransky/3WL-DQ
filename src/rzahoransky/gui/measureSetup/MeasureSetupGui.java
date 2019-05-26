@@ -44,6 +44,7 @@ import rzahoransky.dqpipeline.periodMarker.FiveWLMarker;
 import rzahoransky.dqpipeline.periodMarker.MarkerFactory;
 import rzahoransky.dqpipeline.simulation.FiveWLOneHeadSimulator;
 import rzahoransky.dqpipeline.visualization.DQSinglePeriodMeasurementVisualizer;
+import rzahoransky.dqpipeline.visualization.DQTimer;
 import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizerChart;
 import rzahoransky.dqpipeline.visualization.TransmissionVisualizer;
 import rzahoransky.gui.adjustmentGui.Adjustment;
@@ -299,6 +300,7 @@ public class MeasureSetupGui extends JFrame {
 		pipeline.addPipelineElement(sizeExtractor);
 		pipeline.addPipelineElement(concentrationExtractor);
 		pipeline.addPipelineElement(sizeVisualizer);
+		
 
 		// pipeline.addPipelineElement(new SimpleDQEntryDiameterExtractor());
 		// pipeline.addPipelineElement(new DQVisualizer());
@@ -314,8 +316,14 @@ public class MeasureSetupGui extends JFrame {
 			pipeline.addPipelineElement(outWriter);
 			setup.setProperty(MeasureSetupEntry.OUTPUTFILE, measureFile.getChoosenFile().getAbsolutePath());
 		}
+		
+		//add Timer
+		DQTimer timer = new DQTimer(pipeline);
+		setup.addTimer(timer);
 
 		setup.setPipeline(pipeline);
+		
+
 	}
 
 	private JButton getStartBtn() {
