@@ -51,6 +51,8 @@ public class DQSignal {
 	public boolean isValid = true;
 
 	private long lastFactorUpdate = 0;
+
+	private long nanoSeconds;
 	
 	public ArrayList<DQSignalSinglePeriod> getSinglePeriods() {
 		return singlePeriods;
@@ -89,6 +91,7 @@ public class DQSignal {
 		values.put(RawSignalType.ref, reference);
 		values.put(RawSignalType.meas, measurement);
 		this.timeStamp = System.currentTimeMillis();
+		this.nanoSeconds = System.nanoTime();
 	}
 	
 	public DQSignal(ArrayList<Double> reference, ArrayList<Double> measurement, ArrayList<Double> mode, ArrayList<Double> trigger) {
@@ -365,9 +368,23 @@ public class DQSignal {
 		}
 	}
 	
+	public long getNanoSecondTimestamp() {
+		return nanoSeconds;
+	}	
+	
+	public void setNanoSecondTimestamp(long timeStampNanoSeconds) {
+		nanoSeconds = timeStampNanoSeconds;
+	}
+	
+	public boolean checkTransmission() {
+		return checkTransmission(0.02, 0.98);
+	}
+	
 	public boolean checkTransmission(double lower, double upper) {
 		return (getHighestTransmission()<upper) && (getLowestTransmission()>lower);
 	}
+
+
 }
 
 class SignalTypeHash {

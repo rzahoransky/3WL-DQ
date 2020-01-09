@@ -17,7 +17,7 @@ import rzahoransky.dqpipeline.dqSignal.DQSignalEntry;
 import rzahoransky.dqpipeline.listener.DQSignalListener;
 import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.utils.DQtype;
-import rzahoransky.utils.TimeCounter;
+import rzahoransky.utils.RefreshTimeCounter;
 
 public class SingleDQAnnotator extends AbstractXYAnnotation implements DQSignalListener{
 
@@ -25,7 +25,7 @@ public class SingleDQAnnotator extends AbstractXYAnnotation implements DQSignalL
 	private DQSignalEntry currentDQ;
 	private double maxDiameter = MeasureSetUp.getInstance().getMieList(0).getMaxDiameter();
 	private double minDiameter = MeasureSetUp.getInstance().getMieList(0).getMinDiameter();
-	protected final TimeCounter refresh = new TimeCounter(33);
+	protected final RefreshTimeCounter refresh = new RefreshTimeCounter(33);
 
 	public SingleDQAnnotator(DQtype dq) {
 		this.dq = dq;

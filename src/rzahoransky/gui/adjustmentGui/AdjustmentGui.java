@@ -29,7 +29,7 @@ import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.gui.measureSetup.MeasureSetupEntry;
 import rzahoransky.utils.TransmissionType;
 
-public class Adjustment extends JFrame implements DQSignalListener {
+public class AdjustmentGui extends JFrame implements DQSignalListener {
 	GridBagConstraints c;
 	DQPipeline pipeline;
 	GenericNIDaqAdapter adapter = new GenericNIDaqAdapter();
@@ -42,20 +42,20 @@ public class Adjustment extends JFrame implements DQSignalListener {
 	private AudioOutput sound = new PlayTheDQSoundWithMidi(type);
 	protected ButtonGroupGui btnGroup;
 	String device = "";
-	int samplesPerChannel = 600;
+	int samplesPerChannel = 300;
 
 
 	public static void main(String[] args) {
-		Adjustment test = new Adjustment();
+		AdjustmentGui test = new AdjustmentGui();
 		test.setVisible(true);
 	}
 
-	public Adjustment() {
+	public AdjustmentGui() {
 		device = MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.NIADAPTER);
 	}
 	
 	
-	public Adjustment(String selectedDevice) {
+	public AdjustmentGui(String selectedDevice) {
 		device = selectedDevice;
 	}
 

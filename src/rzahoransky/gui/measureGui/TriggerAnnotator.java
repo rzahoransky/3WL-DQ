@@ -2,17 +2,10 @@ package rzahoransky.gui.measureGui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Paint;
-import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
-import java.io.File;
-import java.io.IOException;
 import java.util.LinkedList;
 
-import javax.swing.JFrame;
-
 import org.jfree.chart.annotations.AbstractXYAnnotation;
-import org.jfree.chart.annotations.XYBoxAnnotation;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.Plot;
 import org.jfree.chart.plot.PlotOrientation;
@@ -20,20 +13,16 @@ import org.jfree.chart.plot.PlotRenderingInfo;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.ui.RectangleEdge;
 
-import charts.Charts;
-import errors.WavelengthMismatchException;
 import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.RawDataExtractorFactory;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.IMeasurePoints;
 import rzahoransky.dqpipeline.listener.DQSignalListener;
-import rzahoransky.utils.DQtype;
 import rzahoransky.utils.ExtractedSignalType;
 import rzahoransky.utils.RawSignalType;
-import storage.dqMeas.read.DQReader;
 
 /** draws the currently used triggerpoints**/
 public class TriggerAnnotator extends AbstractXYAnnotation implements DQSignalListener {
-
+	private static final long serialVersionUID = 1L;
 	private volatile LinkedList<Coordinates> annotators = new LinkedList<>();
 	private int size = 15;
 	protected static final IMeasurePoints measurePoints = RawDataExtractorFactory.getRawDataExtractor().getMeasurePoints();
@@ -69,10 +58,9 @@ public class TriggerAnnotator extends AbstractXYAnnotation implements DQSignalLi
 		PlotOrientation orientation = plot.getOrientation();
 		RectangleEdge domainEdge = Plot.resolveDomainAxisLocation(plot.getDomainAxisLocation(), orientation);
 		RectangleEdge rangeEdge = Plot.resolveRangeAxisLocation(plot.getRangeAxisLocation(), orientation);
-		double yMax = plot.getDomainAxis().getUpperBound();
-		double yMin = plot.getDomainAxis().getLowerBound();
+		//double yMax = plot.getDomainAxis().getUpperBound();
+		//double yMin = plot.getDomainAxis().getLowerBound();
 
-		int color = 0;
 		synchronized (annotators) {
 			for (Coordinates triggerCoordinate : annotators) {
 				double x0 = domainAxis.valueToJava2D(triggerCoordinate.x0, dataArea, domainEdge);
@@ -93,7 +81,6 @@ public class TriggerAnnotator extends AbstractXYAnnotation implements DQSignalLi
 				int height = 10;
 				g2.drawRoundRect((int)x0, (int)y0-height/2, (int) (x1-x0), height, 2, 2);
 				//g2.drawLine((int)x0, (int)y0, (int)x1, (int)y1);
-				color++;
 			}
 		}
 

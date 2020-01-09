@@ -15,14 +15,14 @@ import org.jfree.data.xy.XYSeriesCollection;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.utils.Charts;
-import rzahoransky.utils.TimeCounter;
+import rzahoransky.utils.RefreshTimeCounter;
 import rzahoransky.utils.TransmissionType;
 
 public class TransmissionVisualizer extends AbstractDQPipelineElement{
 	
 	ChartPanel chartPanel;
 	JFrame frame;
-	protected TimeCounter refresh = new TimeCounter(33);
+	protected RefreshTimeCounter refresh = new RefreshTimeCounter(33);
 	//ExtractedSignalType[] types = {ExtractedSignalType.wl1wOffset, ExtractedSignalType.wl2wOffset, ExtractedSignalType.wl3wOffset, ExtractedSignalType.offset};
 	//ExtractedSignalType[] typesRef = {ExtractedSignalType.wl1wOffset, ExtractedSignalType.wl2wOffset, ExtractedSignalType.wl3wOffset, ExtractedSignalType.offset};
 

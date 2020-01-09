@@ -11,7 +11,7 @@ public class ThreeWLOneHeadSimulator extends AbstractDQPipelineElement implement
 	
 	int step = 0;
 	int periodLength = 160;
-	int sampleSize = 500;
+	int sampleSize = 400;
 	Random r = new Random();
 
 	public ThreeWLOneHeadSimulator() {

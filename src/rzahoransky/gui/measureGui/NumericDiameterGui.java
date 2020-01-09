@@ -13,6 +13,7 @@ import javax.swing.SwingConstants;
 import rzahoransky.dqpipeline.DQPipeline;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.listener.DQSignalListener;
+import rzahoransky.utils.RefreshTimeCounter;
 
 public class NumericDiameterGui extends JPanel implements DQSignalListener{
 
@@ -28,6 +29,8 @@ public class NumericDiameterGui extends JPanel implements DQSignalListener{
 	DecimalFormat df = new DecimalFormat("0.000"); 
 	DecimalFormat scientific = new DecimalFormat("0.00E00");
 	String densityFormat = "%s p/m³";
+	
+	RefreshTimeCounter timer = new RefreshTimeCounter();
 	
 	
 	public NumericDiameterGui(DQPipeline pipeline) {
@@ -111,6 +114,10 @@ public class NumericDiameterGui extends JPanel implements DQSignalListener{
 
 	@Override
 	public void newSignal(DQSignal currentSignal) {
+		if (!timer.timeForUpdate())
+			return;
+		
+		
 		try {
 		diameter.setText(formatDouble(currentSignal.getGeometricalDiameter()));
 		sigma.setText(formatDouble(currentSignal.getSigma()));

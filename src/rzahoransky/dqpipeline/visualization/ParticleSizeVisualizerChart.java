@@ -27,7 +27,7 @@ import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.dqpipeline.interfaces.ParticleDiameterVisualizer;
 import rzahoransky.utils.Charts;
 import rzahoransky.utils.RingBuffer;
-import rzahoransky.utils.TimeCounter;
+import rzahoransky.utils.RefreshTimeCounter;
 
 public class ParticleSizeVisualizerChart extends AbstractDQPipelineElement implements ParticleDiameterVisualizer {
 
@@ -37,7 +37,7 @@ public class ParticleSizeVisualizerChart extends AbstractDQPipelineElement imple
 	JFrame frame;
 	private int maxAge = 300000; // in milliseconds
 	// private int maxAge = 10000;
-	protected TimeCounter refresh = new TimeCounter(66);
+	protected RefreshTimeCounter refresh = new RefreshTimeCounter(66);
 	protected RingBuffer<DQSignal> buffer = new RingBuffer<>(3);
 
 	public static void main(String[] args) {
@@ -168,10 +168,10 @@ public class ParticleSizeVisualizerChart extends AbstractDQPipelineElement imple
 
 	@Override
 	public DQSignal processDQElement(DQSignal in) {
-		if(in != null && in.isValid && in.checkTransmission(0.02, 0.98))
+		if(in != null && in.isValid && in.checkTransmission())
 			buffer.add(in);
 		
-		if (in != null && in.isValid && in.checkTransmission(0.02, 0.98) && refresh.timeForUpdate()) {
+		if (in != null && in.isValid && in.checkTransmission() && refresh.timeForUpdate()) {
 			try {
 				DQSignal element = buffer.getAverage();
 				visualizeDQMeasurement(element);

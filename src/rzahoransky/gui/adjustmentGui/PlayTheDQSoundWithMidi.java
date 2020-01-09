@@ -23,7 +23,7 @@ public class PlayTheDQSoundWithMidi extends DQSignalListenerAdapter implements A
 	protected Synthesizer synth;
 	public Soundbank soundbank;
 	protected Receiver synthRcvr;
-	protected int intrument = 78; //instrument 78
+	protected int intrument = 74; //instrument 78
 	//protected int intrument = 94; //instrument 78
 	protected ShortMessage msg;
 
@@ -31,7 +31,7 @@ public class PlayTheDQSoundWithMidi extends DQSignalListenerAdapter implements A
 		try {
 			setupAudio();
 			this.type = type;
-			msg = new ShortMessage(ShortMessage.NOTE_ON,1,0,100);
+			msg = new ShortMessage(ShortMessage.NOTE_ON,1,0,60);
 		} catch (MidiUnavailableException | InvalidMidiDataException e) {
 			JOptionPane.showMessageDialog(null, "Audio not available");
 		}
@@ -57,9 +57,10 @@ public class PlayTheDQSoundWithMidi extends DQSignalListenerAdapter implements A
 		
 		try {
 			transmission = currentSignal.getTransmission(type);
+			//disable old tone
 			msg.setMessage(ShortMessage.NOTE_OFF, msg.getChannel(), msg.getData1(), msg.getData2());
 			//synthRcvr.send(msg, -1);
-			double data1 = Math.max(0, Math.min(transmission*60,120));
+			double data1 = Math.max(0, Math.min(transmission*60,100));
 			msg.setMessage(ShortMessage.NOTE_ON, msg.getChannel(),(int) data1, msg.getData2());
 			synthRcvr.send(msg, -1);
 			//System.out.println("Playing...");

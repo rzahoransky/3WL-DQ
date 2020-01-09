@@ -19,7 +19,6 @@ public abstract class AbstractDQPipelineElement implements DQPipelineElement {
 	@Override
 	public DQSignal processDQElement(DQSignal in) {
 		if (in == null) {
-			System.out.println("taken null");
 			return null;
 		}
 		else

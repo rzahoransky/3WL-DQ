@@ -15,11 +15,13 @@ import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.utils.Charts;
 import rzahoransky.utils.DQtype;
+import rzahoransky.utils.RefreshTimeCounter;
 
 public class DQVisualizer extends AbstractDQPipelineElement{
 	
 	ChartPanel chartPanel;
 	JFrame frame;
+	RefreshTimeCounter timer = new RefreshTimeCounter();
 	//ExtractedSignalType[] types = {ExtractedSignalType.wl1wOffset, ExtractedSignalType.wl2wOffset, ExtractedSignalType.wl3wOffset, ExtractedSignalType.offset};
 	//ExtractedSignalType[] typesRef = {ExtractedSignalType.wl1wOffset, ExtractedSignalType.wl2wOffset, ExtractedSignalType.wl3wOffset, ExtractedSignalType.offset};
 
@@ -73,7 +75,7 @@ public class DQVisualizer extends AbstractDQPipelineElement{
 	@Override
 	public DQSignal processDQElement(DQSignal in) {
 		DQSignal element = in;
-		if (element!=null)
+		if (element!=null && timer.timeForUpdate())
 			visualizeDQMeasurement(element);
 		// out.put(element); for debug purpose
 		return element;

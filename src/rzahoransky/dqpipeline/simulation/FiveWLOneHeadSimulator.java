@@ -20,6 +20,7 @@ public class FiveWLOneHeadSimulator extends AbstractDQPipelineElement implements
 	int step = 0;
 	int periodLength = 80;
 	int sampleSize = 1200;
+	long sleep = 0;
 	Random r = new Random();
 	JSlider wl1 = new JSlider(JSlider.VERTICAL,-1000,1000,1000);
 	JSlider wl2 = new JSlider(JSlider.VERTICAL,-1000,1000,1000);
@@ -143,7 +144,7 @@ public class FiveWLOneHeadSimulator extends AbstractDQPipelineElement implements
 	@Override
 	public DQSignal processDQElement(DQSignal in) {
 		try {
-			Thread.sleep(10);
+			Thread.sleep(sleep);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 			return null;

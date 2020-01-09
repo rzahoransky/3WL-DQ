@@ -3,6 +3,7 @@ package rzahoransky.utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
+import java.util.OptionalLong;
 
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.dqSignal.DQSignalEntry;
@@ -29,9 +30,20 @@ public class ArrayListUtils {
 		return average.isPresent() ? average.getAsDouble() : 0; 
 	}
 	
+	public static long getAverageLong(List<Long> list) {
+		if (list == null || list.isEmpty())
+			return 0;
+		long sum = 0;
+		for (long l:list)
+			sum+=l;
+		return Math.floorDiv(sum, list.size());
+	}
+	
 	public static DQSignal getAverageDQSignal(List<DQSignal> list) {
 		DQSignal out = new DQSignal();
 		int size = list.size();
+		ArrayList<Long> nanoSeconds = new ArrayList<>(size);
+		ArrayList<Long> timestamp = new ArrayList<>(size);
 		ArrayList<Double> diameters = new ArrayList<>(size);
 		ArrayList<Double> sigmas = new ArrayList<>(size);
 		ArrayList<Double> numberConcentrations = new ArrayList<>(size);
@@ -55,6 +67,8 @@ public class ArrayListUtils {
 
 		
 		for (DQSignal in: list) {
+			nanoSeconds.add(in.getNanoSecondTimestamp());
+			timestamp.add(in.getTimeStamp());
 			diameters.add(in.getGeometricalDiameter());
 			sigmas.add(in.getSigma());
 			numberConcentrations.add(in.getNumberConcentration());
@@ -79,6 +93,8 @@ public class ArrayListUtils {
 		
 		DQSignal last = list.get(list.size()-1);
 		
+		out.setNanoSecondTimestamp(getAverageLong(nanoSeconds));
+		out.setTimestamp(getAverageLong(timestamp));
 		out.setGeometricalDiameter(getAverage(diameters));
 		out.setSigma(getAverage(sigmas));
 		out.setNumberConcentration(getAverage(numberConcentrations));

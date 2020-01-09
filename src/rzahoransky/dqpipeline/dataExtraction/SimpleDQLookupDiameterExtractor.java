@@ -7,6 +7,7 @@ import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.utils.DQtype;
+import rzahoransky.utils.RefreshTimeCounter;
 
 public class SimpleDQLookupDiameterExtractor extends AbstractDQPipelineElement {
 	
@@ -18,7 +19,6 @@ public class SimpleDQLookupDiameterExtractor extends AbstractDQPipelineElement {
 	private MieList wl3;
 
 	public SimpleDQLookupDiameterExtractor() {
-		// TODO Auto-generated constructor stub
 	}
 	
 	public SimpleDQLookupDiameterExtractor(MieList wl1, MieList wl2, MieList wl3) {
@@ -33,7 +33,6 @@ public class SimpleDQLookupDiameterExtractor extends AbstractDQPipelineElement {
 		if (!warningShown)
 			checkWavelengths(in);
 		try {
-			double now = System.currentTimeMillis();
 			double diameter = lookup.getDiameterFor(in.getDQ(DQtype.DQ1).getDqValue(), in.getDQ(DQtype.DQ2).getDqValue());
 			double sigma = lookup.getSigmaFor(in.getDQ(DQtype.DQ1).getDqValue(), in.getDQ(DQtype.DQ2).getDqValue());
 			//System.out.println("SimpleLookup: d: "+diameter+" sigma: "+sigma+" time: "+Double.toString(System.currentTimeMillis()-now));
@@ -48,7 +47,6 @@ public class SimpleDQLookupDiameterExtractor extends AbstractDQPipelineElement {
 
 	@Override
 	public String description() {
-		// TODO Auto-generated method stub
 		return "Calculated Diameter based on single 2-point DQ Entry";
 	}
 	

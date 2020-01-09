@@ -19,9 +19,9 @@ import rzahoransky.dqpipeline.dataWriter.OutputWriter;
 import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.dqpipeline.periodMarker.MarkerType;
 import rzahoransky.dqpipeline.visualization.DQSinglePeriodMeasurementVisualizer;
-import rzahoransky.dqpipeline.visualization.DQTimer;
 import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizerChart;
 import rzahoransky.dqpipeline.visualization.TransmissionVisualizer;
+import rzahoransky.utils.DQTimer;
 
 public class MeasureSetUp extends Properties{
 	
@@ -72,6 +72,14 @@ public class MeasureSetUp extends Properties{
 	public File getOutputFile() {
 		return new File(getProperty(MeasureSetupEntry.OUTPUTFILE.toString()));
 	}
+	
+	public long getRefreshTime() {
+		return Long.parseLong(getProperty(MeasureSetupEntry.OVERALL_REFRESH_RATE));
+	}
+	
+	public void setRefreshTime(long refreshTime) {
+		setProperty(MeasureSetupEntry.OVERALL_REFRESH_RATE, Long.toString(refreshTime));
+	}
 
 	public void setOutputFile(File outputFile) {
 		setProperty(MeasureSetupEntry.OUTPUTFILE, outputFile.getAbsolutePath());
@@ -105,6 +113,10 @@ public class MeasureSetUp extends Properties{
 				return MarkerType.FiveWLMarker.toString();
 			case RAW_DATA_EXTRACTOR:
 				return RawDataExtractorType.FiveWlExtractor.toString();
+			case NI_ADAPTER_CHANNEL:
+				return "ai0:3";
+			case OVERALL_REFRESH_RATE:
+				return "30";
 			default:
 				return Integer.toString(1);
 			}

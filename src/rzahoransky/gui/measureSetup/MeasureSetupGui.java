@@ -44,11 +44,11 @@ import rzahoransky.dqpipeline.periodMarker.FiveWLMarker;
 import rzahoransky.dqpipeline.periodMarker.MarkerFactory;
 import rzahoransky.dqpipeline.simulation.FiveWLOneHeadSimulator;
 import rzahoransky.dqpipeline.visualization.DQSinglePeriodMeasurementVisualizer;
-import rzahoransky.dqpipeline.visualization.DQTimer;
 import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizerChart;
 import rzahoransky.dqpipeline.visualization.TransmissionVisualizer;
-import rzahoransky.gui.adjustmentGui.Adjustment;
+import rzahoransky.gui.adjustmentGui.AdjustmentGui;
 import rzahoransky.gui.measureGui.MeasureGui;
+import rzahoransky.utils.DQTimer;
 import storage.dqMeas.read.DQReader;
 
 public class MeasureSetupGui extends JFrame {
@@ -137,7 +137,7 @@ public class MeasureSetupGui extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new Adjustment(adapterSelectGUI.getSelectedDevice()).setVisible(true);
+				new AdjustmentGui(adapterSelectGUI.getSelectedDevice()).setVisible(true);
 			}
 		});
 		add(adjust, c);
@@ -167,7 +167,7 @@ public class MeasureSetupGui extends JFrame {
 
 	private void getWavelengths() throws NiDaqException {
 		GenericNIDaqAdapter adapter = new GenericNIDaqAdapter();
-		adapter.setADCardOrConfigParameter(setup.getProperty(MeasureSetupEntry.NIADAPTER));
+		//adapter.setADCardOrConfigParameter(setup.getProperty(MeasureSetupEntry.NIADAPTER));
 		//adapter.setADCardOrConfigParameter(AdapterInformation.getAvailableDevices().get(0));
 
 		AbstractDQPipelineElement triggerMarker = MarkerFactory.getPeriodMarker();
@@ -262,11 +262,10 @@ public class MeasureSetupGui extends JFrame {
 		DQExtractor dqExtractor = new DQExtractor();
 
 		// Calculate particles from DQ
-		// DQPipelineElement sizeExtractor = new ProbabilityBasedDiameterExtractor(wl1,
-		// wl2, wl3);
+		// DQPipelineElement sizeExtractor = new ProbabilityBasedDiameterExtractor(wl1,wl2, wl3);
 		DQPipelineElement sizeExtractor = new SimpleDQLookupDiameterExtractor(wl1, wl2, wl3);
 
-		// Calulate particle concentration
+		// Calculate particle concentration
 		ConcentrationExtractor concentrationExtractor = new ConcentrationExtractor(wl1, wl2, wl3);
 
 		// Graphical Elements
@@ -305,7 +304,6 @@ public class MeasureSetupGui extends JFrame {
 		// pipeline.addPipelineElement(new SimpleDQEntryDiameterExtractor());
 		// pipeline.addPipelineElement(new DQVisualizer());
 		// pipeline.addPipelineElement(writer);
-		// pipeline.start();
 
 		// pipeline.addPipelineElement(laserVoltage);
 
@@ -318,8 +316,8 @@ public class MeasureSetupGui extends JFrame {
 		}
 		
 		//add Timer
-		DQTimer timer = new DQTimer(pipeline);
-		setup.addTimer(timer);
+		//DQTimer timer = new DQTimer(pipeline);
+		//setup.addTimer(timer);
 
 		setup.setPipeline(pipeline);
 		
@@ -338,6 +336,8 @@ public class MeasureSetupGui extends JFrame {
 					setup.setAverageOverTime(time.averageOverTime.isSelected());
 					setup.setProperty(MeasureSetupEntry.NIADAPTER, adapterSelectGUI.getSelectedDevice());
 					setupPipeline(mieReader.getWl1(), mieReader.getWl2(), mieReader.getWl3());
+					
+					@SuppressWarnings("unused")
 					MeasureGui gui = new MeasureGui(pipeline);
 					// pipeline.start();
 

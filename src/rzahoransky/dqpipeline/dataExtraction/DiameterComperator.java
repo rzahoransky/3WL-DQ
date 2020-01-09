@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import calculation.MieIntegratorThreat;
+import calculation.MieIntegratorThread;
 import dq.ReverseDQEntry;
 import jdistlib.LogNormal;
 import rzahoransky.gui.measureSetup.MeasureSetUp;
@@ -70,7 +70,7 @@ public class DiameterComperator implements Comparable<DiameterComperator> {
 		for (double x = start; x < end; x += step) {
 			double y1Min = Math.min(log.density(x, false), two.density(x, false));
 			double y2Min = Math.min(log.density(x + step, false), two.density(x + step, false));
-			area += MieIntegratorThreat.simpsonRule(x, x + step, y1Min, y2Min);
+			area += MieIntegratorThread.simpsonRule(x, x + step, y1Min, y2Min);
 		}
 		return area;
 	}

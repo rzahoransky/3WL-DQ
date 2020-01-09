@@ -24,6 +24,7 @@ import errors.WavelengthMismatchException;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.listener.DQSignalListener;
 import rzahoransky.utils.DQtype;
+import rzahoransky.utils.RefreshTimeCounter;
 import storage.dqMeas.read.DQReader;
 
 public class DQAnnotator extends AbstractXYAnnotation implements DQSignalListener {
@@ -32,6 +33,7 @@ public class DQAnnotator extends AbstractXYAnnotation implements DQSignalListene
 	private Stroke stroke;
 	private volatile LinkedList<Annotations> annotators = new LinkedList<>();
 	private int size = 15;
+	RefreshTimeCounter timer = new RefreshTimeCounter();
 
 	public static void main(String[] args) throws IOException, WavelengthMismatchException, InterruptedException {
 		JFrame test = new JFrame("DQ Annotator test");
@@ -123,7 +125,8 @@ public class DQAnnotator extends AbstractXYAnnotation implements DQSignalListene
 
 	@Override
 	public void newSignal(DQSignal currentSignal) {
-		addDQ(currentSignal.getDQ(DQtype.DQ1).getDqValue(), currentSignal.getDQ(DQtype.DQ2).getDqValue());
+		if (timer.timeForUpdate()) //check if it is time for an update
+			addDQ(currentSignal.getDQ(DQtype.DQ1).getDqValue(), currentSignal.getDQ(DQtype.DQ2).getDqValue());
 	}
 
 	@Override

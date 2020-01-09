@@ -134,7 +134,6 @@ public class MieGUI extends JPanel implements CalculationAssignmentListener {
 								repaint();
 								MeasureSetUp.getInstance().setMieFile(mieFile.getChoosenFile());
 							} catch (IOException | WavelengthMismatchException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
@@ -183,7 +182,7 @@ public class MieGUI extends JPanel implements CalculationAssignmentListener {
 	}
 
 	@Override
-	public void progress() {
+	public void progress(double fraction) {
 		// TODO Auto-generated method stub
 		
 	}

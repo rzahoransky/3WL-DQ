@@ -11,6 +11,7 @@ import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.utils.Charts;
 import rzahoransky.utils.RawSignalType;
+import rzahoransky.utils.RefreshTimeCounter;
 
 public class DQMeasurementVisualizer extends AbstractDQPipelineElement{
 	
@@ -19,6 +20,7 @@ public class DQMeasurementVisualizer extends AbstractDQPipelineElement{
 	RawSignalType[] signalTypes = {RawSignalType.ref, RawSignalType.meas, RawSignalType.mode, RawSignalType.trigger};
 
 	public DQMeasurementVisualizer() {
+		RefreshTimeCounter refresh = new RefreshTimeCounter();
 		frame = new JFrame("AD-Samples");
 		XYSeriesCollection dataset = Charts.getDataSet(signalTypes);
 		JFreeChart chart = Charts.getXYChart("Values", "Time", "Voltage", dataset);

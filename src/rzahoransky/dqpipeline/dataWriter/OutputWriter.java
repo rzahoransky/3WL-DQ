@@ -35,16 +35,19 @@ public class OutputWriter extends AbstractDQPipelineElement {
 	protected boolean headerWritten = false;
 	protected boolean integrateOverTime = false;
 	protected MeasureSetUp setup = MeasureSetUp.getInstance();
-	protected double storageInterval;
+	protected double storageInterval; //in seconds
 	protected NumberFormat formatter = NumberFormat.getInstance(Locale.US);
 	//protectes String scientificFormat = "";
 	protected ArrayList<DQSignal> signals = new ArrayList<>(100);
 	private long lastSaveTime;
-	private boolean errorMessageShown = false; 
+	private boolean errorMessageShown = false;
+	private long nanoTimeReference = 0; 
+	
 
 	
 	public OutputWriter(File file) {
 		lastSaveTime = System.currentTimeMillis();
+		nanoTimeReference = System.nanoTime(); //get nanosecond reference as it starts with arbitrary time
 		this.file = new File(file.getParentFile(), getFileNameSaveDateString() +" "+ file.getName());
 		// this.file = file;
 		storageInterval = Double.parseDouble(setup.getProperty(MeasureSetupEntry.STOREINTERVAL));
@@ -82,10 +85,10 @@ public class OutputWriter extends AbstractDQPipelineElement {
 
 	private String generateColumns() {
 		TabbedStringBuilder s = new TabbedStringBuilder("\t");
-		s.append("System Time in ms");
+		s.append("System Time in us");
 		s.append("Date");
 		s.append("Time");
-		s.append("Particle Diameter in μm");
+		s.append("Particle Diameter in um");
 		s.append("Sigma Log-Normal");
 		s.append("Particles per m³");
 		s.append("Particle Number Concentration");
@@ -169,8 +172,10 @@ public class OutputWriter extends AbstractDQPipelineElement {
 	}
 
 	private String getLineString(DQSignal in) {
+		
 		TabbedStringBuilder b = new TabbedStringBuilder("\t");
-		b.append(Long.toString(in.getTimeStamp()));
+		
+		b.append(Long.toString((in.getNanoSecondTimestamp()-nanoTimeReference)/1000));
 		b.append(getDateAsString(in.getTimeStamp()));
 		b.append(getCurrentTimeAsGermanString(in.getTimeStamp()));
 		b.append(getAsLocale(in.getGeometricalDiameter()));

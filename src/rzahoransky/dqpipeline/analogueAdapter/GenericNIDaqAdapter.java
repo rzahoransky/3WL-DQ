@@ -29,7 +29,7 @@ public class GenericNIDaqAdapter extends AbstractDQPipelineElement implements Ad
 	protected boolean errorMessageShown = false;
 	protected boolean doReset = true;
 	protected final double sampleRate = 150000.0;
-	protected final String channelString = "ai0:1";
+	protected String channelString = "ai0:3";
 	
 	//DEVICE WAVELENGTHS: 0.405, 0.532, 0.635, 0.635, 0.818, 1.313
 	//ACCORDING TO SHIPPING LIST: 405, 532, 670, 850, 1305
@@ -39,15 +39,18 @@ public class GenericNIDaqAdapter extends AbstractDQPipelineElement implements Ad
 		System.out.println("Creating NiDaq with device: "+adCard);
 		GenericNIDaqAdapter test = new GenericNIDaqAdapter();
 		DQSignal dqSample = test.getNextMeasurement();
+		System.out.println(dqSample);
 	}
 
 	public GenericNIDaqAdapter() {
 		daq = new NiDaq();
 		adCard = MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.NIADAPTER);
+		channelString = MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.NI_ADAPTER_CHANNEL);
+		System.out.println("Accessing NI A/D card "+adCard+" on channel "+channelString);
 		try {
 			samplesPerChannel = Integer.parseInt(MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.SAMPLES_PER_CHANNEL));
 		} catch (Exception e) {
-			samplesPerChannel = 6000;
+			samplesPerChannel = 2000;
 			MeasureSetUp.getInstance().setProperty(MeasureSetupEntry.SAMPLES_PER_CHANNEL, Integer.toString(samplesPerChannel));
 		}
 		System.out.println("Samples: "+samplesPerChannel);

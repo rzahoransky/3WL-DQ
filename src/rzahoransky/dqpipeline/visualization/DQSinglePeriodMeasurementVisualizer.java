@@ -2,18 +2,14 @@ package rzahoransky.dqpipeline.visualization;
 
 import java.awt.BasicStroke;
 import java.awt.Font;
-import java.util.LinkedList;
 
 import javax.swing.JFrame;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.annotations.XYAnnotation;
-import org.jfree.chart.annotations.XYBoxAnnotation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-import rzahoransky.dqpipeline.DQPipeline;
 import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.RawDataExtractorFactory;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
@@ -21,16 +17,15 @@ import rzahoransky.dqpipeline.interfaces.IMeasurePoints;
 import rzahoransky.gui.measureGui.TriggerAnnotator;
 import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.utils.Charts;
-import rzahoransky.utils.ExtractedSignalType;
 import rzahoransky.utils.RawSignalType;
-import rzahoransky.utils.TimeCounter;
+import rzahoransky.utils.RefreshTimeCounter;
 
 public class DQSinglePeriodMeasurementVisualizer extends AbstractDQPipelineElement{
 	
 	volatile ChartPanel chartPanel;
 	JFrame frame;
 	RawSignalType[] signalTypes = {RawSignalType.ref, RawSignalType.meas, RawSignalType.mode, RawSignalType.trigger};
-	TimeCounter refresh = new TimeCounter(250);
+	RefreshTimeCounter refresh = new RefreshTimeCounter(250);
 	protected static final IMeasurePoints measurePoints = RawDataExtractorFactory.getRawDataExtractor().getMeasurePoints();
 	boolean annotatorAdded = false;
 
@@ -58,7 +53,7 @@ public class DQSinglePeriodMeasurementVisualizer extends AbstractDQPipelineEleme
 	}
 	
 	public void setUpdateIntervallInMs(long ms) {
-		refresh = new TimeCounter(ms);
+		refresh = new RefreshTimeCounter(ms);
 	}
 	
 	public void visualizeDQMeasurement (DQSignal measurement) {

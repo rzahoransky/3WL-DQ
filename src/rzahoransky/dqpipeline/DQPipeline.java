@@ -49,13 +49,7 @@ public class DQPipeline {
 	
 	public static void main (String args[]) throws InterruptedException, NiDaqException {
 		AdapterInterface adapter = new GenericNIDaqAdapter();
-		//adapter = new ThreeWLOneHeadSimulator();
-		//adapter = new DQreplay();
-		//adapter = new FiveWLDevicePlayback("testRGB.txt");
-		//adapter = new FiveWLDevicePlaybackWithStream("testInfared.txt");
-		//adapter = new FiveWLDevicePlaybackWithStream("testRGB.txt");
 		adapter = new FiveWLOneHeadSimulator();
-		//adapter.setADCardOrConfigParameter("Dev1");
 		adapter.setADCardOrConfigParameter(NiDaq.getDeviceNames().get(0));
 		
 		DQPipelineElement vis = new DQMeasurementVisualizer();
@@ -151,8 +145,8 @@ public class DQPipeline {
 	 */
 	public void stop() {
 		run = false;
-//		for (Thread t: pipelineThreads)
-//			t.interrupt();
+		for (DQSignalListener listener: listeners)
+			listener.closing();
 	}
 	
 	protected void setCurrentSignal(DQSignal signal) {
@@ -178,6 +172,11 @@ public class DQPipeline {
 	
 
 	
+	/**
+	 * Encapsulated each {@link DQPipelineElement} so it becomes a thread. Binds in and out Queue to the {@link DQPipelineElement}
+	 * @author richard
+	 *
+	 */
 	class PipelineThread extends Thread {
 		
 		private DQPipelineElement element;
@@ -208,14 +207,14 @@ public class DQPipeline {
 		public void run() {
 			while (run && !isInterrupted()) {
 				try {
-					if (in == null) { //If there is no in-element this is a NI Adapter
+					if (in == null) { //If there is no in-element this is a NI Adapter (source)
 						DQSignal fromAdapter = element.processDQElement(null);
 						if (fromAdapter != null) //if nothing from NI Adapter received: Skip and try again in next loop
 							out.offer(fromAdapter, 1000, TimeUnit.MILLISECONDS); 
 					} else { //normal DQPipelineElement
-						DQSignal fromPreviousElement = in.poll(1000, TimeUnit.MILLISECONDS);
-						if (fromPreviousElement != null)
-							out.offer(element.processDQElement(fromPreviousElement), 1000, TimeUnit.MILLISECONDS);
+						DQSignal elementFrompPredecessor = in.poll(1000, TimeUnit.MILLISECONDS);
+						if (elementFrompPredecessor != null)
+							out.offer(element.processDQElement(elementFrompPredecessor), 1000, TimeUnit.MILLISECONDS);
 					}
 				} catch (InterruptedException e) {
 					// check if thread should terminate
@@ -234,36 +233,41 @@ public class DQPipeline {
 		
 	}
 	
+	/**
+	 * Thread at the end of the pipeline to terminate the last DQElement and make
+	 * space for new element. Additionally, notifies listeners.
+	 * 
+	 * @author richard
+	 *
+	 */
 	class NullThread extends Thread {
-		
+
 		private BlockingQueue<DQSignal> in;
 
 		public NullThread(BlockingQueue<DQSignal> lastQueueElement) {
-			this.in=lastQueueElement;
+			this.in = lastQueueElement;
 			setDaemon(true);
+			setName("Queue-Daemon");
 		}
-		
+
 		public void run() {
 			while (run) {
-			try {
-				setCurrentSignal(in.take()); //will be run in this thread
-				//System.out.println("Latency: "+ (System.currentTimeMillis() - currentSignal.getTimeStamp()));
-				Thread.sleep(sleep);
-			} catch (InterruptedException e) {
-				//check if thread should terminate
-				if (!run) {
-					return;
+				try {
+					setCurrentSignal(in.take()); // will be run in this thread
+					// System.out.println("Latency: "+ (System.currentTimeMillis() -
+					// currentSignal.getTimeStamp()));
+					Thread.sleep(sleep);
+				} catch (InterruptedException e) {
+					if (!run) {
+						return; // check if thread should terminate
+					}
+				} catch (Exception everythingElse) {
+					everythingElse.printStackTrace();
 				}
-			}
-			catch (Exception everythingElse) {
-				everythingElse.printStackTrace();
-			}
 			}
 			return;
 		}
 
-
-		
 	}
 
 }

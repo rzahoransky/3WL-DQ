@@ -117,11 +117,19 @@ protected JToolBar toolbar;
 		
 		
 
+		//statistics
+		c.gridy = 10;
+		c.gridx = 0;
+		c.weighty=0;
+		c.gridwidth=GridBagConstraints.REMAINDER;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		add(new StatisticsGui(pipeline),c);
 		
 
 		
 		//add I0 Btn
-		c.gridy=10;
+		c.gridy=20;
+		c.gridx=0;
 		c.weighty=0;
 		c.fill=GridBagConstraints.HORIZONTAL;
 		c.gridwidth=GridBagConstraints.REMAINDER;
