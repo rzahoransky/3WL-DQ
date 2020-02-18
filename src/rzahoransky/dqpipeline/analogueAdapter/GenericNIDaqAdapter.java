@@ -225,4 +225,5 @@ public class GenericNIDaqAdapter extends AbstractDQPipelineElement implements Ad
 		}
 		return null;
 	}
+
 }

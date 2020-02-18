@@ -376,6 +376,7 @@ public class DQSignal {
 		nanoSeconds = timeStampNanoSeconds;
 	}
 	
+	/** state if transmission allows for particle diameter detection **/
 	public boolean checkTransmission() {
 		return checkTransmission(0.02, 0.98);
 	}

@@ -264,6 +264,7 @@ public class DQPipeline {
 				} catch (Exception everythingElse) {
 					everythingElse.printStackTrace();
 				}
+				
 			}
 			return;
 		}

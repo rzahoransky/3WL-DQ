@@ -157,7 +157,7 @@ public class OutputWriter extends AbstractDQPipelineElement {
 			}
 		}
 		return in;
-	}	
+	}
 
 	private void write(DQSignal in) {	
 		try {
