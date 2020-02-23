@@ -15,8 +15,8 @@ import org.jfree.ui.RectangleEdge;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.dqSignal.DQSignalEntry;
 import rzahoransky.dqpipeline.listener.DQSignalListener;
-import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.utils.DQtype;
+import rzahoransky.utils.MeasureSetUp;
 import rzahoransky.utils.RefreshTimeCounter;
 
 public class SingleDQAnnotator extends AbstractXYAnnotation implements DQSignalListener{

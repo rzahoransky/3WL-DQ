@@ -7,7 +7,7 @@ import java.util.List;
 import calculation.MieIntegratorThread;
 import dq.ReverseDQEntry;
 import jdistlib.LogNormal;
-import rzahoransky.gui.measureSetup.MeasureSetUp;
+import rzahoransky.utils.MeasureSetUp;
 
 /**
  * Compare possible diameters according to their error range (max possible found

@@ -14,6 +14,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import rzahoransky.utils.MeasureSetUp;
+
 public class MeasureLengthGui extends JPanel implements ChangeListener{
 
 	private static final long serialVersionUID = -3666131497499433865L;

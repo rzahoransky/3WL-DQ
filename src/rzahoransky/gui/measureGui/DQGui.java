@@ -11,8 +11,8 @@ import org.jfree.chart.JFreeChart;
 
 import charts.MieChartPanels;
 import rzahoransky.dqpipeline.DQPipeline;
-import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.utils.Charts;
+import rzahoransky.utils.MeasureSetUp;
 
 public class DQGui extends JPanel{
 	

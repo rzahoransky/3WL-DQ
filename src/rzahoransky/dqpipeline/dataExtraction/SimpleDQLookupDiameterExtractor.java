@@ -5,8 +5,8 @@ import javax.swing.JOptionPane;
 import calculation.MieList;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
-import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.utils.DQtype;
+import rzahoransky.utils.MeasureSetUp;
 import rzahoransky.utils.RefreshTimeCounter;
 
 public class SimpleDQLookupDiameterExtractor extends AbstractDQPipelineElement {

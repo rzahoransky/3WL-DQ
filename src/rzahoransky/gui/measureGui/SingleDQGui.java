@@ -10,9 +10,9 @@ import org.jfree.chart.axis.LogarithmicAxis;
 
 import calculation.MieList;
 import charts.MieChartPanels;
-import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.utils.Charts;
 import rzahoransky.utils.DQtype;
+import rzahoransky.utils.MeasureSetUp;
 
 public class SingleDQGui extends JTabbedPane{
 	

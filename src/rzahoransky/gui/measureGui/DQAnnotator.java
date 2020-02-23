@@ -51,11 +51,9 @@ public class DQAnnotator extends AbstractXYAnnotation implements DQSignalListene
 		Thread.sleep(1000);
 		annotator.addDQ(1.8, 3.5);
 		Thread.sleep(1000);
-
 	}
 
 	public DQAnnotator() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public void setHistorySize(int size) {
@@ -131,8 +129,6 @@ public class DQAnnotator extends AbstractXYAnnotation implements DQSignalListene
 
 	@Override
 	public void closing() {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

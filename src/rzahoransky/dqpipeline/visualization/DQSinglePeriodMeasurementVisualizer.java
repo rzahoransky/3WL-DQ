@@ -15,8 +15,8 @@ import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.dqpipeline.interfaces.IMeasurePoints;
 import rzahoransky.gui.measureGui.TriggerAnnotator;
-import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.utils.Charts;
+import rzahoransky.utils.MeasureSetUp;
 import rzahoransky.utils.RawSignalType;
 import rzahoransky.utils.RefreshTimeCounter;
 

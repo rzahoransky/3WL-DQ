@@ -49,6 +49,7 @@ import rzahoransky.dqpipeline.visualization.TransmissionVisualizer;
 import rzahoransky.gui.adjustmentGui.AdjustmentGui;
 import rzahoransky.gui.measureGui.MeasureGui;
 import rzahoransky.utils.DQTimer;
+import rzahoransky.utils.MeasureSetUp;
 import storage.dqMeas.read.DQReader;
 
 public class MeasureSetupGui extends JFrame {

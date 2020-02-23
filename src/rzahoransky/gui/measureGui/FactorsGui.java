@@ -20,7 +20,7 @@ import javax.swing.event.ListSelectionListener;
 
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.listener.DQSignalListener;
-import rzahoransky.gui.measureSetup.MeasureSetUp;
+import rzahoransky.utils.MeasureSetUp;
 import rzahoransky.utils.TransmissionType;
 
 /**

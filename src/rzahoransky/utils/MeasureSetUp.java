@@ -1,4 +1,4 @@
-package rzahoransky.gui.measureSetup;
+package rzahoransky.utils;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -21,7 +21,7 @@ import rzahoransky.dqpipeline.periodMarker.MarkerType;
 import rzahoransky.dqpipeline.visualization.DQSinglePeriodMeasurementVisualizer;
 import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizerChart;
 import rzahoransky.dqpipeline.visualization.TransmissionVisualizer;
-import rzahoransky.utils.DQTimer;
+import rzahoransky.gui.measureSetup.MeasureSetupEntry;
 
 public class MeasureSetUp extends Properties{
 	

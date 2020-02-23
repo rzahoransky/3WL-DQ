@@ -45,7 +45,6 @@ public class DQPipeline {
 	private long sleep = 0;
 	
 	private volatile DQSignal currentSignal;
-	private AdapterInterface adapter;
 	
 	public static void main (String args[]) throws InterruptedException, NiDaqException {
 		AdapterInterface adapter = new GenericNIDaqAdapter();
@@ -84,25 +83,13 @@ public class DQPipeline {
 		pipeline.addPipelineElement(sizeExtractor);
 		//pipeline.addPipelineElement(writer);
 		pipeline.start();
-		//Thread.sleep(1000);
-		//System.out.println("Killing threads");
-		//pipeline.stop();
 	}
 	
 	public void addPipelineElement(DQPipelineElement element) {
-		if(run) throw new PipelineAlreadyRunningException("This pipeline is already in a running state and connot be altered");
+		if(run) 
+			throw new PipelineAlreadyRunningException("This pipeline is already in a running state and connot be altered");
 		
 		pipelineElements.add(element);
-		ArrayBlockingQueue<DQSignal> out = new ArrayBlockingQueue<>(capacity);
-		if (element instanceof AdapterInterface) {
-			this.adapter = (AdapterInterface) element;
-		}
-		
-//		if(!queues.isEmpty())
-//			element.setInQueue(queues.get(queues.size()-1)); //First element must be a producer
-//		
-//		element.setQoutQueue(out);
-//		queues.add(out);
 	}
 
 	
@@ -116,7 +103,7 @@ public class DQPipeline {
 		
 		for (DQPipelineElement element: pipelineElements) {
 			BlockingQueue<DQSignal> out = new ArrayBlockingQueue<>(capacity);
-			PipelineThread dqPipelineThread = new PipelineThread(element);
+			DQPipelineThread dqPipelineThread = new DQPipelineThread(element);
 			
 			if (!queues.isEmpty()) { //first thread is producer
 				dqPipelineThread.setInQueue(queues.get(queues.size()-1));
@@ -149,6 +136,7 @@ public class DQPipeline {
 			listener.closing();
 	}
 	
+	/** inform listener of new DQPipeline element**/
 	protected void setCurrentSignal(DQSignal signal) {
 		currentSignal = signal;
 		for (DQSignalListener listener: listeners)
@@ -173,18 +161,19 @@ public class DQPipeline {
 
 	
 	/**
-	 * Encapsulated each {@link DQPipelineElement} so it becomes a thread. Binds in and out Queue to the {@link DQPipelineElement}
+	 * Encapsulates each {@link DQPipelineElement} in a thread. 
+	 * Binds in and out Queue of a {@link BlockingQueue} to the {@link DQPipelineElement}
 	 * @author richard
 	 *
 	 */
-	class PipelineThread extends Thread {
+	class DQPipelineThread extends Thread {
 		
 		private DQPipelineElement element;
 		protected BlockingQueue<DQSignal> in;
 		protected BlockingQueue<DQSignal> out;
 
 
-		public PipelineThread(DQPipelineElement element) {
+		public DQPipelineThread(DQPipelineElement element) {
 			this.element = element;
 			setDaemon(true);
 			setName(element.description());
@@ -207,11 +196,13 @@ public class DQPipeline {
 		public void run() {
 			while (run && !isInterrupted()) {
 				try {
-					if (in == null) { //If there is no in-element this is a NI Adapter (source)
+					if (in == null) { 
+						//If there is no in-element: This is a NI Adapter (source)
 						DQSignal fromAdapter = element.processDQElement(null);
 						if (fromAdapter != null) //if nothing from NI Adapter received: Skip and try again in next loop
 							out.offer(fromAdapter, 1000, TimeUnit.MILLISECONDS); 
-					} else { //normal DQPipelineElement
+					} else { 
+						//normal DQPipelineElement: Get element from in-queue and offer the result of method processDQElement to the out queue
 						DQSignal elementFrompPredecessor = in.poll(1000, TimeUnit.MILLISECONDS);
 						if (elementFrompPredecessor != null)
 							out.offer(element.processDQElement(elementFrompPredecessor), 1000, TimeUnit.MILLISECONDS);
@@ -253,9 +244,7 @@ public class DQPipeline {
 		public void run() {
 			while (run) {
 				try {
-					setCurrentSignal(in.take()); // will be run in this thread
-					// System.out.println("Latency: "+ (System.currentTimeMillis() -
-					// currentSignal.getTimeStamp()));
+					setCurrentSignal(in.take()); //inform DQPipeline listener
 					Thread.sleep(sleep);
 				} catch (InterruptedException e) {
 					if (!run) {

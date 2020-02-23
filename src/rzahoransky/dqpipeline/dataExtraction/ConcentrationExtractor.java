@@ -7,9 +7,9 @@ import calculation.MieWrapper;
 import dq.ReverseDQ;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
-import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.gui.measureSetup.MeasureSetupEntry;
 import rzahoransky.utils.DQListUtils;
+import rzahoransky.utils.MeasureSetUp;
 import rzahoransky.utils.TransmissionType;
 
 public class ConcentrationExtractor extends AbstractDQPipelineElement {

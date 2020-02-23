@@ -25,8 +25,8 @@ import rzahoransky.dqpipeline.listener.DQSignalListener;
 import rzahoransky.dqpipeline.periodMarker.FiveWLMarker;
 import rzahoransky.dqpipeline.periodMarker.MarkerFactory;
 import rzahoransky.dqpipeline.visualization.TransmissionVisualizer;
-import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.gui.measureSetup.MeasureSetupEntry;
+import rzahoransky.utils.MeasureSetUp;
 import rzahoransky.utils.TransmissionType;
 
 public class AdjustmentGui extends JFrame implements DQSignalListener {

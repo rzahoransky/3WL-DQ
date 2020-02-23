@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 
 import kirkwood.nidaq.access.NiDaq;
 import kirkwood.nidaq.access.NiDaqException;
+import rzahoransky.utils.MeasureSetUp;
 
 public class AdapterSelectGui extends JPanel implements ActionListener {
 	

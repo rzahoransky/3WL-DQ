@@ -12,9 +12,9 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import rzahoransky.dqpipeline.DQPipeline;
-import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.utils.DQTimer;
 import rzahoransky.utils.DQTimerListener;
+import rzahoransky.utils.MeasureSetUp;
 import rzahoransky.utils.Measurement;
 
 public class StatisticsGui extends JPanel implements DQTimerListener {

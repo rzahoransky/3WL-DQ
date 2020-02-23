@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
-import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.utils.DQListUtils;
+import rzahoransky.utils.MeasureSetUp;
 
 public class ContextEnabledOutptWriter extends OutputWriter {
 	

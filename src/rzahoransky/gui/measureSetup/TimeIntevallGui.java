@@ -15,6 +15,8 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import rzahoransky.utils.MeasureSetUp;
+
 public class TimeIntevallGui extends JPanel{
 	
 	JSpinner intervalField;
