@@ -1,14 +1,16 @@
 package rzahoransky.utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.OptionalDouble;
 import java.util.OptionalLong;
 
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.dqSignal.DQSignalEntry;
+import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 
-public class ArrayListUtils {
+public class DQListUtils {
 	
 	public static void main(String[] args) {
 		ArrayList<Double> test = new ArrayList<>();
@@ -18,8 +20,70 @@ public class ArrayListUtils {
 		System.out.println(test + "Avg: "+getAverage(test));
 	}
 
-	public ArrayListUtils() {
+	public DQListUtils() {
 		// TODO Auto-generated constructor stub
+	}
+	
+	/**
+	 * returns if the given list contains fractional differences greater than the
+	 * limit. E.g. two measurements [100, 75] have a fractional difference of 0,33
+	 * 
+	 * @param measurements
+	 *            the given measurements
+	 * @param limit
+	 *            the limit as fractional proportion
+	 * @return true, if the given measurements contains differences so that
+	 *         (min(measurements)-max(measurement))/min(measurement) > limit.
+	 *         Diameter, concentration and variation are compared
+	 */
+	public static boolean containsDifferenceInMeasurement(List<DQSignal> measurements, double limit) {
+		ArrayList<Double> diameters = new ArrayList<>(measurements.size());
+		ArrayList<Double> concentration = new ArrayList<>(measurements.size());
+		ArrayList<Double> variation = new ArrayList<>(measurements.size());
+
+		for (DQSignal element : measurements) {
+			diameters.add(element.getGeometricalDiameter());
+			concentration.add(element.getVolumeConcentration());
+			variation.add(element.getSigma());
+		}
+		Collections.sort(diameters);
+		Collections.sort(concentration);
+		Collections.sort(variation);
+
+		if (getFractionalChange(diameters.get(0), diameters.get(diameters.size())) > limit)
+			return true;
+		if (getFractionalChange(concentration.get(0), concentration.get(concentration.size())) > limit)
+			return true;
+		if (getFractionalChange(variation.get(0), variation.get(variation.size())) > limit)
+			return true;
+		
+
+		return false;
+
+	}
+	
+	public static double getFractionalChange(double min, double max) {
+		return (max - min)/min;
+	}
+	
+	public double getMin(List<Double> list) {
+		double result = Double.MAX_VALUE;
+		for (Double d: list) {
+			if (d<result) {
+				result = d;
+			}
+		}
+		return result;
+	}
+	
+	public double getMax(List<Double> list) {
+		double result = Double.MIN_VALUE;
+		for (Double d: list) {
+			if (d>result) {
+				result = d;
+			}
+		}
+		return result;
 	}
 	
 	public static double getAverage(List<Double> list) {

@@ -32,7 +32,7 @@ public class RingBuffer <T extends DQSignal> {
 	}
 	
 	public DQSignal getAverage() {
-		return ArrayListUtils.getAverageDQSignal((List<DQSignal>) buffer);
+		return DQListUtils.getAverageDQSignal((List<DQSignal>) buffer);
 	}
 
 	public void clear() {

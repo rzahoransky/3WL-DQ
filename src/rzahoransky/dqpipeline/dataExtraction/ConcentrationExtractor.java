@@ -9,7 +9,7 @@ import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.gui.measureSetup.MeasureSetupEntry;
-import rzahoransky.utils.ArrayListUtils;
+import rzahoransky.utils.DQListUtils;
 import rzahoransky.utils.TransmissionType;
 
 public class ConcentrationExtractor extends AbstractDQPipelineElement {
@@ -51,7 +51,7 @@ public class ConcentrationExtractor extends AbstractDQPipelineElement {
 		numberConcentration.add(getParticleConcentration(transmissionWl3, in.getSigma(), wl3.getClosesElementForDiameter(in.getGeometricalDiameter())));
 		
 		
-		in.setNumberConcentration(ArrayListUtils.getAverage(numberConcentration));
+		in.setNumberConcentration(DQListUtils.getAverage(numberConcentration));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

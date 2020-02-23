@@ -38,6 +38,7 @@ public class MeasureSetUp extends Properties{
 	private boolean deviceIsConnected = false;
 	private OutputWriter addOutputWriter;
 	private DQTimer timer;
+	private boolean pauseSignalWriting = false;
 	
 
 	private MeasureSetUp() {
@@ -117,11 +118,26 @@ public class MeasureSetUp extends Properties{
 				return "ai0:3";
 			case OVERALL_REFRESH_RATE:
 				return "30";
+			case MEASUREMENT_DIFFERENCE_THRESHOLD:
+				return "0.1";
 			default:
 				return Integer.toString(1);
 			}
 		}
 		return property;
+	}
+	
+	public double getMeasurementDifferenceThreshold() {
+		String value = getProperty(MeasureSetupEntry.MEASUREMENT_DIFFERENCE_THRESHOLD);
+		try {
+			return Double.parseDouble(value);
+		} catch (Exception e) {
+			return 0.1;
+		}
+	}
+	
+	public void setMeasurementDifferenceThreshold(double threshold) {
+		setProperty(MeasureSetupEntry.MEASUREMENT_DIFFERENCE_THRESHOLD, Double.toString(threshold));
 	}
 	
 	
@@ -245,6 +261,15 @@ public class MeasureSetUp extends Properties{
 	
 	public DQTimer getTimer() {
 		return this.timer;
+	}
+
+	public boolean getPause() {
+		return pauseSignalWriting ;
+	}
+
+	public void setPause(boolean b) {
+		pauseSignalWriting = b;
+		
 	}
 	
 

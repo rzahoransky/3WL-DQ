@@ -1,10 +1,12 @@
 package rzahoransky.gui.measureGui;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.Action;
 import javax.swing.JButton;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
 import rzahoransky.dqpipeline.DQPipeline;
@@ -21,20 +23,30 @@ public class MeasureToolbar extends JToolBar {
 		add(getFactorsGuiBtn());
 	}
 	
-	private JButton getPauseBtn() {
-		JButton pauseBtn = new JButton("||");
+	private JToggleButton getPauseBtn() {
+		JToggleButton pauseBtn = new JToggleButton("||");
 		pauseBtn.createToolTip().setTipText("Pause processing");
-		
+		Color forgroundColor = pauseBtn.getBackground();
+
 		pauseBtn.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				MeasureSetUp.getInstance().getPipeline();
+				MeasureSetUp.getInstance().setPause(!MeasureSetUp.getInstance().getPause());
+				
+				if (MeasureSetUp.getInstance().getPause()) {
+					pauseBtn.setBackground(Color.RED);
+					pauseBtn.setSelected(true);
+				} else {
+					pauseBtn.setBackground(forgroundColor);
+					pauseBtn.setSelected(false);
+				}
+				
 				
 			}
 		});
-		
-		return null;
+
+		return pauseBtn;
 	}
 
 	protected JButton getFactorsGuiBtn() {

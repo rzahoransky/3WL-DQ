@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 import java.util.OptionalDouble;
 
 import rzahoransky.dqpipeline.dataExtraction.DiameterComperator;
-import rzahoransky.utils.ArrayListUtils;
+import rzahoransky.utils.DQListUtils;
 import rzahoransky.utils.DQtype;
 import rzahoransky.utils.ExtractedSignalType;
 import rzahoransky.utils.RawSignalType;
@@ -58,6 +58,7 @@ public class DQSignal {
 		return singlePeriods;
 	}
 	
+	/** get timestamp in milliseconds (granularity around 10ms) **/
 	public long getTimeStamp() {
 		return timeStamp;
 	}
@@ -166,6 +167,12 @@ public class DQSignal {
 		return values.get(RawSignalType.ref).size();
 	}
 	
+	/** get averaged primitve values from all containing periods of the raw signal
+	 * 
+	 * @param refMeas Reference or measurement?
+	 * @param type Offset, wl1, wl2 or wl3?
+	 * @return the averaged values of all containing signal periods
+	 */
 	public double getAveragedValues(RawSignalType refMeas, ExtractedSignalType type) {
 		SignalTypeHash hash = new SignalTypeHash(refMeas, type);
 		if (averagedValues.containsKey(hash)) {
@@ -288,7 +295,7 @@ public class DQSignal {
 	
 	public double getTransmission(TransmissionType type) {
 		try {
-		return ArrayListUtils.getAverage(measuredValues.get(type));
+		return DQListUtils.getAverage(measuredValues.get(type));
 		} catch (NullPointerException e) {
 			return 0d;
 		}
@@ -385,9 +392,127 @@ public class DQSignal {
 		return (getHighestTransmission()<upper) && (getLowestTransmission()>lower);
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((averagedValues == null) ? 0 : averagedValues.hashCode());
+		result = prime * result + ((dq == null) ? 0 : dq.hashCode());
+		result = prime * result + ((factors == null) ? 0 : factors.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(geometricalDiameter);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + (hasMinAndMaxDiameter ? 1231 : 1237);
+		result = prime * result + (isValid ? 1231 : 1237);
+		result = prime * result + (int) (lastFactorUpdate ^ (lastFactorUpdate >>> 32));
+		temp = Double.doubleToLongBits(length);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(maxFoundGeometricalDiameter);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((measuredValues == null) ? 0 : measuredValues.hashCode());
+		temp = Double.doubleToLongBits(minFoundGeometricalDiameter);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + (int) (nanoSeconds ^ (nanoSeconds >>> 32));
+		temp = Double.doubleToLongBits(numberConcentration);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((periodMarks == null) ? 0 : periodMarks.hashCode());
+		temp = Double.doubleToLongBits(sigma);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((singlePeriods == null) ? 0 : singlePeriods.hashCode());
+		result = prime * result + (int) (timeStamp ^ (timeStamp >>> 32));
+		result = prime * result + ((values == null) ? 0 : values.hashCode());
+		temp = Double.doubleToLongBits(wl1);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(wl2);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(wl3);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DQSignal other = (DQSignal) obj;
+		if (averagedValues == null) {
+			if (other.averagedValues != null)
+				return false;
+		} else if (!averagedValues.equals(other.averagedValues))
+			return false;
+		if (dq == null) {
+			if (other.dq != null)
+				return false;
+		} else if (!dq.equals(other.dq))
+			return false;
+		if (factors == null) {
+			if (other.factors != null)
+				return false;
+		} else if (!factors.equals(other.factors))
+			return false;
+		if (Double.doubleToLongBits(geometricalDiameter) != Double.doubleToLongBits(other.geometricalDiameter))
+			return false;
+		if (hasMinAndMaxDiameter != other.hasMinAndMaxDiameter)
+			return false;
+		if (isValid != other.isValid)
+			return false;
+		if (lastFactorUpdate != other.lastFactorUpdate)
+			return false;
+		if (Double.doubleToLongBits(length) != Double.doubleToLongBits(other.length))
+			return false;
+		if (Double.doubleToLongBits(maxFoundGeometricalDiameter) != Double
+				.doubleToLongBits(other.maxFoundGeometricalDiameter))
+			return false;
+		if (measuredValues == null) {
+			if (other.measuredValues != null)
+				return false;
+		} else if (!measuredValues.equals(other.measuredValues))
+			return false;
+		if (Double.doubleToLongBits(minFoundGeometricalDiameter) != Double
+				.doubleToLongBits(other.minFoundGeometricalDiameter))
+			return false;
+		if (nanoSeconds != other.nanoSeconds)
+			return false;
+		if (Double.doubleToLongBits(numberConcentration) != Double.doubleToLongBits(other.numberConcentration))
+			return false;
+		if (periodMarks == null) {
+			if (other.periodMarks != null)
+				return false;
+		} else if (!periodMarks.equals(other.periodMarks))
+			return false;
+		if (Double.doubleToLongBits(sigma) != Double.doubleToLongBits(other.sigma))
+			return false;
+		if (singlePeriods == null) {
+			if (other.singlePeriods != null)
+				return false;
+		} else if (!singlePeriods.equals(other.singlePeriods))
+			return false;
+		if (timeStamp != other.timeStamp)
+			return false;
+		if (values == null) {
+			if (other.values != null)
+				return false;
+		} else if (!values.equals(other.values))
+			return false;
+		if (Double.doubleToLongBits(wl1) != Double.doubleToLongBits(other.wl1))
+			return false;
+		if (Double.doubleToLongBits(wl2) != Double.doubleToLongBits(other.wl2))
+			return false;
+		if (Double.doubleToLongBits(wl3) != Double.doubleToLongBits(other.wl3))
+			return false;
+		return true;
+	}
+	
+	
+
 
 }
 
+/** class to determine measurement type**/
 class SignalTypeHash {
 	
 	private RawSignalType refOrMeas;
