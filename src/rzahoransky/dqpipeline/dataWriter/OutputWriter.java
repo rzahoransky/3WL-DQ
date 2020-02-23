@@ -9,6 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JOptionPane;
 
@@ -18,20 +20,21 @@ import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.gui.measureSetup.MeasureSetupEntry;
 import rzahoransky.utils.DQListUtils;
+import rzahoransky.utils.DQTimer;
 import rzahoransky.utils.DQtype;
 import rzahoransky.utils.ExtractedSignalType;
 import rzahoransky.utils.RawSignalType;
 import rzahoransky.utils.TransmissionType;
 import storage.dqMeas.write.MieInfoWriter;
 
-public class OutputWriter extends AbstractDQPipelineElement {
+public class OutputWriter extends AbstractDQPipelineElement implements Runnable{
 
 	public static void main(String[] args) {
 		System.out.println(getCurrentDateAsGermanString());
 	}
 
-	private File file;
-	private FileWriter fw;
+	protected File file;
+	protected FileWriter fw;
 	protected boolean headerWritten = false;
 	protected boolean integrateOverTime = false;
 	protected MeasureSetUp setup = MeasureSetUp.getInstance();
@@ -39,13 +42,16 @@ public class OutputWriter extends AbstractDQPipelineElement {
 	protected NumberFormat formatter = NumberFormat.getInstance(Locale.US);
 	//protectes String scientificFormat = "";
 	protected ArrayList<DQSignal> signals = new ArrayList<>(100);
-	private long lastSaveTime;
-	private boolean errorMessageShown = false;
-	private long nanoTimeReference = 0; 
+	protected long lastWriteTime;
+	protected long lastSaveTime;
+	protected long saveIntervallTime = 5000;
+	protected boolean errorMessageShown = false;
+	protected long nanoTimeReference = 0; 
 	
 
 	
 	public OutputWriter(File file) {
+		lastWriteTime = System.currentTimeMillis();
 		lastSaveTime = System.currentTimeMillis();
 		nanoTimeReference = System.nanoTime(); //get nanosecond reference as it starts with arbitrary time
 		this.file = new File(file.getParentFile(), getFileNameSaveDateString() +" "+ file.getName());
@@ -61,7 +67,7 @@ public class OutputWriter extends AbstractDQPipelineElement {
 		}
 	}
 
-	private FileWriter openFile(File file2) throws IOException {
+	protected FileWriter openFile(File file2) throws IOException {
 		formatter.setGroupingUsed(false);
 		FileWriter fw = new FileWriter(file2);
 		fw.write(generateHeader());
@@ -71,7 +77,7 @@ public class OutputWriter extends AbstractDQPipelineElement {
 		return fw;
 	}
 
-	private String generateHeader() {
+	protected String generateHeader() {
 		String header = "# File Generated: " + getCurrentDateAsString();
 		String mieFile = "# MIE-File: " + MeasureSetUp.getInstance().getMieFile().getAbsolutePath();
 		String mieInfo = "# Mie-Info: " + MieInfoWriter.getOneLineInfoString(MeasureSetUp.getInstance().getMieList(0),
@@ -83,7 +89,7 @@ public class OutputWriter extends AbstractDQPipelineElement {
 		return header + "\r\n" + mieFile + "\r\n"+mieInfo +"\r\n" + length + "\r\n" + deviceWL;
 	}
 
-	private String generateColumns() {
+	protected String generateColumns() {
 		TabbedStringBuilder s = new TabbedStringBuilder("\t");
 		s.append("System Time in us");
 		s.append("Date");
@@ -145,7 +151,7 @@ public class OutputWriter extends AbstractDQPipelineElement {
 		if (storageInterval == 0) {
 			write(in);
 		} else if (!integrateOverTime) {
-			if (in.getTimeStamp()-lastSaveTime>=storageInterval*1000) {
+			if (in.getTimeStamp()-lastWriteTime>=storageInterval*1000) {
 				write(in);
 			}
 		}
@@ -159,10 +165,19 @@ public class OutputWriter extends AbstractDQPipelineElement {
 		return in;
 	}
 
-	private void write(DQSignal in) {	
+	protected void write(DQSignal in) {
+		if (MeasureSetUp.getInstance().getPause())
+			return; //do not save is paused is pressed
 		try {
 			fw.write(getLineString(in));
-			lastSaveTime = System.currentTimeMillis();
+			lastWriteTime = System.currentTimeMillis();
+			
+			if(System.currentTimeMillis() - lastSaveTime > saveIntervallTime) {
+				//flush file writer
+				fw.flush();
+				lastSaveTime = System.currentTimeMillis();
+			}
+			
 		} catch (IOException e) {
 			if(!errorMessageShown)
 				JOptionPane.showMessageDialog(null, e.getMessage(), "Cannot write to disk", JOptionPane.ERROR_MESSAGE);
@@ -171,7 +186,7 @@ public class OutputWriter extends AbstractDQPipelineElement {
 		}
 	}
 
-	private String getLineString(DQSignal in) {
+	protected String getLineString(DQSignal in) {
 		
 		TabbedStringBuilder b = new TabbedStringBuilder("\t");
 		
@@ -224,8 +239,19 @@ public class OutputWriter extends AbstractDQPipelineElement {
 		return "Stores Measurement Data";
 	}
 	
-	private String getAsLocale(double d) {
+	protected String getAsLocale(double d) {
 		return formatter.format(d);
+	}
+
+	@Override
+	public void run() {
+		if (fw!=null)
+			try {
+				fw.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		
 	}
 
 }
