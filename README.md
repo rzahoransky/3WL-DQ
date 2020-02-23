@@ -9,3 +9,6 @@ User interface for the WIAZRD-DQ three wavelength extinction particle diameter m
 * Output in csv file
 * User settable measurement period faster than 1 kHz
 * Temporal resolution better than 1 ms!
+
+# Requirements
+* Depends on [JMieCalc](https://github.com/rzahoransky/JMieCalc)
