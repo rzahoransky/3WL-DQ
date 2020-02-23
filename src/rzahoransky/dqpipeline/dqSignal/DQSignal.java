@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 import java.util.OptionalDouble;
 
 import rzahoransky.dqpipeline.dataExtraction.DiameterComperator;
-import rzahoransky.utils.ArrayListUtils;
+import rzahoransky.utils.DQListUtils;
 import rzahoransky.utils.DQtype;
 import rzahoransky.utils.ExtractedSignalType;
 import rzahoransky.utils.RawSignalType;
@@ -58,6 +58,7 @@ public class DQSignal {
 		return singlePeriods;
 	}
 	
+	/** get timestamp in milliseconds (granularity around 10ms) **/
 	public long getTimeStamp() {
 		return timeStamp;
 	}
@@ -288,7 +289,7 @@ public class DQSignal {
 	
 	public double getTransmission(TransmissionType type) {
 		try {
-		return ArrayListUtils.getAverage(measuredValues.get(type));
+		return DQListUtils.getAverage(measuredValues.get(type));
 		} catch (NullPointerException e) {
 			return 0d;
 		}

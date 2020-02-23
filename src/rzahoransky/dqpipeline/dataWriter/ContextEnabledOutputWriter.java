@@ -24,7 +24,7 @@ import rzahoransky.utils.RawSignalType;
 import rzahoransky.utils.TransmissionType;
 import storage.dqMeas.write.MieInfoWriter;
 
-public class OutputWriter extends AbstractDQPipelineElement {
+public class ContextEnabledOutputWriter extends AbstractDQPipelineElement {
 
 	public static void main(String[] args) {
 		System.out.println(getCurrentDateAsGermanString());
@@ -37,7 +37,6 @@ public class OutputWriter extends AbstractDQPipelineElement {
 	protected MeasureSetUp setup = MeasureSetUp.getInstance();
 	protected double storageInterval; //in seconds
 	protected NumberFormat formatter = NumberFormat.getInstance(Locale.US);
-	//protectes String scientificFormat = "";
 	protected ArrayList<DQSignal> signals = new ArrayList<>(100);
 	private long lastSaveTime;
 	private boolean errorMessageShown = false;
@@ -45,7 +44,7 @@ public class OutputWriter extends AbstractDQPipelineElement {
 	
 
 	
-	public OutputWriter(File file) {
+	public ContextEnabledOutputWriter(File file) {
 		lastSaveTime = System.currentTimeMillis();
 		nanoTimeReference = System.nanoTime(); //get nanosecond reference as it starts with arbitrary time
 		this.file = new File(file.getParentFile(), getFileNameSaveDateString() +" "+ file.getName());
@@ -142,24 +141,25 @@ public class OutputWriter extends AbstractDQPipelineElement {
 
 	@Override
 	public DQSignal processDQElement(DQSignal in) {
-		if (storageInterval == 0) {
-			write(in);
-		} else if (!integrateOverTime) {
-			if (in.getTimeStamp()-lastSaveTime>=storageInterval*1000) {
-				write(in);
-			}
+		
+		// cache one second
+		signals.add(in);
+		if (in.getTimeStamp() - signals.get(0).getTimeStamp() > 1000) {
+			write(DQListUtils.getAverageDQSignal(signals));
+			signals.clear();
 		}
-		else { //integrate over time
-			signals.add(in);
-			if(in.getTimeStamp()-signals.get(0).getTimeStamp()>storageInterval*1000) {
-				write(DQListUtils.getAverageDQSignal(signals));
-				signals.clear();
-			}
-		}
+
 		return in;
 	}
 
-	private void write(DQSignal in) {	
+	private void write(DQSignal in) {
+		
+		//evaluate if there is a rapid change in measurements. 
+		
+		//if (has high entropy) save all
+		//else save average
+		
+		
 		try {
 			fw.write(getLineString(in));
 			lastSaveTime = System.currentTimeMillis();
@@ -226,40 +226,6 @@ public class OutputWriter extends AbstractDQPipelineElement {
 	
 	private String getAsLocale(double d) {
 		return formatter.format(d);
-	}
-
-}
-
-class TabbedStringBuilder {
-
-	private StringBuilder builder = new StringBuilder();
-	private String sep = "\t";
-	boolean first = true;
-
-	public TabbedStringBuilder(String string) {
-		sep = string;
-	}
-	
-	public TabbedStringBuilder() {
-		
-	}
-
-	public void setAppendCharacter(String s) {
-		this.sep = s;
-	}
-
-	public void append(Object s) {
-		if (first) {
-			first = false;
-			builder.append(s);
-		} else {
-			builder.append(sep);
-			builder.append(s);
-		}
-	}
-
-	public String toString() {
-		return builder.toString();
 	}
 
 }
