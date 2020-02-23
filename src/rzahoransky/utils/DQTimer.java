@@ -10,7 +10,7 @@ import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.listener.DQSignalListener;
 
 /**
- * Counts measurements per second
+ * Counts measurements per second. Registers as listener with DQPipeline to count measurements.
  * @author richard
  *
  */
@@ -42,10 +42,7 @@ public class DQTimer extends TimerTask implements DQSignalListener {
 		measurementsPerTimeUnit = numberOfMeasurements;
 		numberOfMeasurements = 0;
 		//System.out.println("Number of Measurements per Second: "+measurementsPerTimeUnit +"(each "+1000d/measurementsPerTimeUnit+"ms)");
-		
-
-				informListeners();
-
+		informListeners();
 	}
 
 	private void informListeners() {
