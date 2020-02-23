@@ -15,11 +15,13 @@ import javax.swing.JOptionPane;
 import presets.Wavelengths;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
+import rzahoransky.dqpipeline.visualization.DQSinglePeriodMeasurementVisualizer;
 import rzahoransky.gui.measureSetup.MeasureSetUp;
 import rzahoransky.gui.measureSetup.MeasureSetupEntry;
 import rzahoransky.utils.DQListUtils;
 import rzahoransky.utils.DQtype;
 import rzahoransky.utils.ExtractedSignalType;
+import rzahoransky.utils.Measurement;
 import rzahoransky.utils.RawSignalType;
 import rzahoransky.utils.TransmissionType;
 import storage.dqMeas.write.MieInfoWriter;
@@ -41,6 +43,7 @@ public class ContextEnabledOutputWriter extends AbstractDQPipelineElement {
 	private long lastSaveTime;
 	private boolean errorMessageShown = false;
 	private long nanoTimeReference = 0; 
+	protected DQSignal lastWrittenDQMeasurement = null;
 	
 
 	
@@ -145,28 +148,43 @@ public class ContextEnabledOutputWriter extends AbstractDQPipelineElement {
 		// cache one second
 		signals.add(in);
 		if (in.getTimeStamp() - signals.get(0).getTimeStamp() > 1000) {
-			write(DQListUtils.getAverageDQSignal(signals));
+			evaluateAndWriteMeasurements(signals);
 			signals.clear();
 		}
 
 		return in;
 	}
 
-	private void write(DQSignal in) {
+	private void evaluateAndWriteMeasurements(ArrayList<DQSignal> measurements) {
 		
-		//evaluate if there is a rapid change in measurements. 
+		//get last saved element to not miss any change in measurements
+		if (lastWrittenDQMeasurement == null)
+			measurements.add(lastWrittenDQMeasurement);
+
 		
-		//if (has high entropy) save all
-		//else save average
-		
-		
+		// evaluate if there is a rapid change in measurements.
+		if (DQListUtils.containsDifferenceInMeasurement(measurements, 0.2)) {
+			// write individual measurements
+			measurements.remove(lastWrittenDQMeasurement);
+			for (DQSignal signal : measurements) {
+				write(signal);
+			}
+		} else {
+			measurements.remove(lastWrittenDQMeasurement);
+			write(DQListUtils.getAverageDQSignal(measurements));
+		}
+		lastWrittenDQMeasurement = measurements.get(measurements.size());
+	}
+	
+	private void write(DQSignal signal) {
 		try {
-			fw.write(getLineString(in));
+			fw.write(getLineString(signal));
 			lastSaveTime = System.currentTimeMillis();
 		} catch (IOException e) {
-			if(!errorMessageShown)
-				JOptionPane.showMessageDialog(null, e.getMessage(), "Cannot write to disk", JOptionPane.ERROR_MESSAGE);
-			errorMessageShown=true;
+			if (!errorMessageShown)
+				JOptionPane.showMessageDialog(null, e.getMessage(), "Cannot write to disk",
+						JOptionPane.ERROR_MESSAGE);
+			errorMessageShown = true;
 			e.printStackTrace();
 		}
 	}
