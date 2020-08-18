@@ -88,14 +88,16 @@ public class TriggerAnnotator extends AbstractXYAnnotation implements DQSignalLi
 
 	@Override
 	public void newSignal(DQSignal currentSignal) {
-		annotators = getMarkerAnnotations(currentSignal);
-		fireAnnotationChanged();
+		try {
+			annotators = getMarkerAnnotations(currentSignal);
+			fireAnnotationChanged();
+		} catch (IndexOutOfBoundsException e) {
+		} //this is thrown if no trigger was found. Ignore it and do not fire an annotation change event
 	}
 
 	@Override
 	public void closing() {
-		// TODO Auto-generated method stub
-		
+		// nothing else to do
 	}
 	
 	private LinkedList<Coordinates> getMarkerAnnotations(DQSignal measurement) {

@@ -33,7 +33,7 @@ public class DQListUtils {
 	 * @param limit
 	 *            the limit as fractional proportion
 	 * @return true, if the given measurements contains differences so that
-	 *         (min(measurements)-max(measurement))/min(measurement) > limit.
+	 *         (max(measurements)-min(measurement))/min(measurement) > limit.
 	 *         Diameter, concentration and variation are compared
 	 */
 	public static boolean containsDifferenceInMeasurement(List<DQSignal> measurements, double limit) {
@@ -50,11 +50,11 @@ public class DQListUtils {
 		Collections.sort(concentration);
 		Collections.sort(variation);
 
-		if (getFractionalChange(diameters.get(0), diameters.get(diameters.size())) > limit)
+		if (Math.abs(getFractionalChange(diameters.get(0), diameters.get(diameters.size()))) > limit)
 			return true;
-		if (getFractionalChange(concentration.get(0), concentration.get(concentration.size())) > limit)
+		if (Math.abs(getFractionalChange(concentration.get(0), concentration.get(concentration.size()))) > limit)
 			return true;
-		if (getFractionalChange(variation.get(0), variation.get(variation.size())) > limit)
+		if (Math.abs(getFractionalChange(variation.get(0), variation.get(variation.size()))) > limit)
 			return true;
 		
 

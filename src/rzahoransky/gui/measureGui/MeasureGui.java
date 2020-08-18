@@ -30,7 +30,7 @@ protected JToolBar toolbar;
 	}
 
 	private void setupFrame() {
-		setSize(new Dimension(600, 500));
+		setSize(new Dimension(700, 600));
 		setTitle("3WL DQ Particle Size Measurement");
 		setLayout(new GridBagLayout());
 		addWindowListener(new WindowAdapter() {
