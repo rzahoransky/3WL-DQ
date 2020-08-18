@@ -120,6 +120,8 @@ public class MeasureSetUp extends Properties{
 				return "30";
 			case MEASUREMENT_DIFFERENCE_THRESHOLD:
 				return "0.1";
+			case USE_ADAPTIVE_OUTPUT_WRITER:
+				return "false";
 			default:
 				return Integer.toString(1);
 			}

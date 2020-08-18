@@ -31,7 +31,7 @@ public class DQListUtils {
 	 * @param measurements
 	 *            the given measurements
 	 * @param limit
-	 *            the limit as fractional proportion
+	 *            the limit as fractional proportion (0.1 is 10%)
 	 * @return true, if the given measurements contains differences so that
 	 *         (max(measurements)-min(measurement))/min(measurement) > limit.
 	 *         Diameter, concentration and variation are compared
@@ -50,11 +50,11 @@ public class DQListUtils {
 		Collections.sort(concentration);
 		Collections.sort(variation);
 
-		if (Math.abs(getFractionalChange(diameters.get(0), diameters.get(diameters.size()))) > limit)
+		if (Math.abs(getFractionalChange(diameters.get(0), diameters.get(diameters.size()-1))) > limit)
 			return true;
-		if (Math.abs(getFractionalChange(concentration.get(0), concentration.get(concentration.size()))) > limit)
+		if (Math.abs(getFractionalChange(concentration.get(0), concentration.get(concentration.size()-1))) > limit)
 			return true;
-		if (Math.abs(getFractionalChange(variation.get(0), variation.get(variation.size()))) > limit)
+		if (Math.abs(getFractionalChange(variation.get(0), variation.get(variation.size()-1))) > limit)
 			return true;
 		
 
@@ -184,6 +184,21 @@ public class DQListUtils {
 
 		
 		return out;
+	}
+
+	public static boolean measurementsAreValid(ArrayList<DQSignal> measurements) {
+		long validReadings = 0;
+		long invalidReadings = 0;
+		for (DQSignal signal: measurements) {
+			if (signal.isValid && signal.checkTransmission())
+				validReadings++;
+			else
+				invalidReadings++;
+		}
+		if (validReadings > invalidReadings)
+			return true;
+		else
+			return false;
 	}
 
 }

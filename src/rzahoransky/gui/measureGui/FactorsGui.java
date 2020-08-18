@@ -89,7 +89,6 @@ public class FactorsGui extends JFrame implements DQSignalListener, ListSelectio
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		int code=arg0.getKeyCode();
-		System.out.println("Pressed");
 		if(code==KeyEvent.VK_DELETE) {
 			FactorHash current = factorList.getSelectedValue();
 			factorList.removeListSelectionListener(this);

@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.TextEvent;
 import java.awt.event.TextListener;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -35,6 +36,7 @@ import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
 import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.FiveWLExtractor;
 import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.RawDataExtractorFactory;
 import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.ThreeWLMeasurePoints;
+import rzahoransky.dqpipeline.dataWriter.AdaptiveOutptWriter;
 import rzahoransky.dqpipeline.dataWriter.OutputWriter;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
@@ -310,7 +312,12 @@ public class MeasureSetupGui extends JFrame {
 
 		// store measurement
 		if (measureFile.hasChoosenFile()) {
-			OutputWriter outWriter = new OutputWriter(measureFile.getChoosenFile());
+			OutputWriter outWriter;
+			boolean adaptiveOutputWriter = time.getSmartMode();
+			if (adaptiveOutputWriter) 
+				outWriter = new AdaptiveOutptWriter(measureFile.getChoosenFile());
+			else
+				outWriter = new OutputWriter(measureFile.getChoosenFile());
 			setup.addOutputWriter(outWriter);
 			pipeline.addPipelineElement(outWriter);
 			setup.setProperty(MeasureSetupEntry.OUTPUTFILE, measureFile.getChoosenFile().getAbsolutePath());
@@ -333,7 +340,7 @@ public class MeasureSetupGui extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					DQReader mieReader = new DQReader(mieGUI.getChoosenFile());
-					setup.setStorageIntervall(time.getValue());
+					setup.setStorageIntervall(time.getTimeIntervall());
 					setup.setAverageOverTime(time.averageOverTime.isSelected());
 					setup.setProperty(MeasureSetupEntry.NIADAPTER, adapterSelectGUI.getSelectedDevice());
 					setupPipeline(mieReader.getWl1(), mieReader.getWl2(), mieReader.getWl3());

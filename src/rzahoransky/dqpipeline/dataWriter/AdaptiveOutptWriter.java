@@ -24,11 +24,12 @@ public class AdaptiveOutptWriter extends OutputWriter {
 
 	public AdaptiveOutptWriter(File file) {
 		super(file);
+		System.out.println("Enabled smart mode file writer");
 	}
 	
 	@Override
 	public DQSignal processDQElement(DQSignal in) {
-		if (storageInterval == 0) {
+		if (storageInterval == 0) { //smart mode is enabled. However, no time intervall is set
 			write(in);
 		} 
 		else { //integrate over time and react to sudden changes in measurement
@@ -50,7 +51,10 @@ public class AdaptiveOutptWriter extends OutputWriter {
 
 		
 		// evaluate if there is a rapid change in measurements.
-		if (DQListUtils.containsDifferenceInMeasurement(measurements, threshold)) {
+		boolean measurementIsValid = DQListUtils.measurementsAreValid(measurements);
+		boolean containsDifference = DQListUtils.containsDifferenceInMeasurement(measurements, threshold);
+		boolean factorIsSet = MeasureSetUp.getInstance().getTransmissionExtractor().getFactorIsSet();
+		if (factorIsSet && measurementIsValid && containsDifference) {
 			// write individual measurements. Remove appended measurement
 			measurements.remove(lastWrittenDQMeasurement);
 			for (DQSignal signal : measurements) {
@@ -61,7 +65,7 @@ public class AdaptiveOutptWriter extends OutputWriter {
 			measurements.remove(lastWrittenDQMeasurement);
 			write(DQListUtils.getAverageDQSignal(measurements));
 		}
-		lastWrittenDQMeasurement = measurements.get(measurements.size());
+		lastWrittenDQMeasurement = measurements.get(measurements.size()-1);
 	}
 
 }

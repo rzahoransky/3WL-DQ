@@ -21,6 +21,7 @@ public class TimeIntevallGui extends JPanel{
 	
 	JSpinner intervalField;
 	JCheckBox averageOverTime;
+	JCheckBox autoIntervall;
 	MeasureSetUp setup = MeasureSetUp.getInstance();
 	
 	public static void main(String[] args) {
@@ -87,10 +88,34 @@ public class TimeIntevallGui extends JPanel{
 		
 		c.gridy++;
 		add(averageOverTime,c);
+		
+		c.gridy++;
+		add(getSmartModeCheckBox(),c);
 	}
 	
-	public double getValue() {
+	public JCheckBox getSmartModeCheckBox() {
+		autoIntervall = new JCheckBox("Smart Timing");
+		autoIntervall.setToolTipText("<html>If checked, the system will store intermediate values if concentration<br> or particle diameter change (high temporal resolution mode).<br> Time intervall needs to be greater than 0.</html>");
+		
+		boolean isEnabled = Boolean.parseBoolean(setup.getProperty(MeasureSetupEntry.USE_ADAPTIVE_OUTPUT_WRITER));
+		autoIntervall.setSelected(isEnabled);
+		autoIntervall.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				setup.setProperty(MeasureSetupEntry.USE_ADAPTIVE_OUTPUT_WRITER, Boolean.toString(autoIntervall.isSelected()));
+				
+			}
+		});
+		return autoIntervall;
+	}
+	
+	public double getTimeIntervall() {
 		return Double.parseDouble(intervalField.getValue().toString());
+	}
+	
+	public boolean getSmartMode() {
+		return autoIntervall.isSelected();
 	}
 
 }

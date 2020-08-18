@@ -18,10 +18,11 @@ import rzahoransky.utils.TransmissionType;
 public class TransmissionExtractor extends AbstractDQPipelineElement {
 
 	private boolean setI0 = true;
-	private HashMap<ExtractedSignalType, Double> factors = new HashMap<>();
+	private HashMap<ExtractedSignalType, Double> factors = new HashMap<>(); //factors for wl1, wl2, wl3
 	private ExtractedSignalType[] wlSignals = { ExtractedSignalType.wl1wOffset, ExtractedSignalType.wl2wOffset,
 			ExtractedSignalType.wl3wOffset };
 	private boolean useOffset;
+	private boolean factorIsSet = false;
 
 	public TransmissionExtractor(boolean showAsFrame) {
 		if (showAsFrame)
@@ -48,8 +49,9 @@ public class TransmissionExtractor extends AbstractDQPipelineElement {
 	public DQSignal processDQElement(DQSignal in) {
 
 		if (setI0) {
-			setFactors(in);
+			setFactors(in); //new factor set request
 			setI0 = false;
+			factorIsSet  = true;
 		}
 
 		for (DQSignalSinglePeriod period : in.getSinglePeriods()) {
@@ -140,6 +142,10 @@ public class TransmissionExtractor extends AbstractDQPipelineElement {
 		io.setSize(200, 200);
 		io.add(getI0Btn());
 		io.setVisible(true);
+	}
+	
+	public boolean getFactorIsSet() {
+		return factorIsSet;
 	}
 
 }
