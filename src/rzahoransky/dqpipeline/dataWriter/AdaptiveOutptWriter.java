@@ -17,12 +17,12 @@ import rzahoransky.utils.MeasureSetUp;
  * @author richard
  *
  */
-public class ContextEnabledOutptWriter extends OutputWriter {
+public class AdaptiveOutptWriter extends OutputWriter {
 	
 	protected DQSignal lastWrittenDQMeasurement = null;
 	protected double threshold = MeasureSetUp.getInstance().getMeasurementDifferenceThreshold();
 
-	public ContextEnabledOutptWriter(File file) {
+	public AdaptiveOutptWriter(File file) {
 		super(file);
 	}
 	
