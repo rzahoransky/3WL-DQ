@@ -24,7 +24,7 @@ public class AdaptiveOutptWriter extends OutputWriter {
 
 	public AdaptiveOutptWriter(File file) {
 		super(file);
-		System.out.println("Enabled smart mode file writer");
+		System.out.println("Enabled smart mode file writer with "+threshold+" threshold");
 	}
 	
 	@Override
