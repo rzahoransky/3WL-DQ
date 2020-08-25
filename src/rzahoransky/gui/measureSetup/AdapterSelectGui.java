@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import kirkwood.nidaq.access.NiDaq;
@@ -38,12 +39,24 @@ public class AdapterSelectGui extends JPanel implements ActionListener {
 		combo = new JComboBox<>();
 		combo.setMinimumSize(new Dimension(100, 30));
 		combo.setMaximumSize(new Dimension(100, 30));
-		addDevivces();
+		try {
+			addDevivces();
+		} catch (UnsatisfiedLinkError e) {
+			showNoDriverMessage();
+		}
 		combo.addActionListener(this);
 		c.anchor=GridBagConstraints.LAST_LINE_START;
 		add(combo,c);
 	}
 	
+	private void showNoDriverMessage() {
+		JOptionPane.showMessageDialog(this,"NI driver not found. Please download from National Instrument Website (NI-DAQmx)\r\n"
+				+ "www.ni.com",
+			    "Driver not found", JOptionPane.ERROR_MESSAGE);
+		System.exit(-1);
+		
+	}
+
 	public String getSelectedDevice() {
 		return (String) combo.getSelectedItem();
 	}
@@ -52,7 +65,7 @@ public class AdapterSelectGui extends JPanel implements ActionListener {
 		return ((String)combo.getSelectedItem()).toUpperCase().contains("DEV") || ((String)combo.getSelectedItem()).toUpperCase().contains("DAQ");
 	}
 	
-	private void addDevivces() {
+	private void addDevivces() throws UnsatisfiedLinkError {
 		try {
 			List<String> devices = NiDaq.getDeviceNames();
 
