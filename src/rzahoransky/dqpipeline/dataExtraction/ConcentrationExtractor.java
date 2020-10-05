@@ -46,9 +46,9 @@ public class ConcentrationExtractor extends AbstractDQPipelineElement {
 		
 		ArrayList<Double> numberConcentration = new ArrayList<>();
 		
-		numberConcentration.add(getParticleConcentration(transmissionWl1, in.getSigma(), wl1.getClosesElementForDiameter(in.getGeometricalDiameter())));
-		numberConcentration.add(getParticleConcentration(transmissionWl2, in.getSigma(), wl2.getClosesElementForDiameter(in.getGeometricalDiameter())));
-		numberConcentration.add(getParticleConcentration(transmissionWl3, in.getSigma(), wl3.getClosesElementForDiameter(in.getGeometricalDiameter())));
+		numberConcentration.add(getParticleConcentration(transmissionWl1, in.getSigma(), wl1.getClosestElementForDiameter(in.getGeometricalDiameter())));
+		numberConcentration.add(getParticleConcentration(transmissionWl2, in.getSigma(), wl2.getClosestElementForDiameter(in.getGeometricalDiameter())));
+		numberConcentration.add(getParticleConcentration(transmissionWl3, in.getSigma(), wl3.getClosestElementForDiameter(in.getGeometricalDiameter())));
 		
 		
 		in.setNumberConcentration(DQListUtils.getAverage(numberConcentration));
@@ -63,7 +63,9 @@ public class ConcentrationExtractor extends AbstractDQPipelineElement {
 
 	/** concentration for m³. All to convert to micrometer **/
 	private double getParticleConcentration(double transmission, double sigma, MieWrapper element) {
-		double n = (-1d) * Math.log(transmission) / ((length*10000)*(Math.PI/4)*element.getIntegratedQext().get(sigma));
+		//element.getIntegratedQext contains r²*Qext already!
+		double n = (-1d) * Math.log(transmission) / ((length*10000)*(Math.PI)*element.getIntegratedQext().get(sigma));
+		//old: the term included (Math.PI/4) to compensate for diameter instead of radius
 		return n*Math.pow(10, 18);
 	}
 

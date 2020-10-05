@@ -269,8 +269,12 @@ public class DQSignal {
 		// System.out.println("Got diameter: "+diameter);
 	}
 	
-	public void setGeometricalDiameter (double d) {
-		this.geometricalDiameter = d;
+	/**
+	 * Set the <b>diameter</b> that this measurement represents
+	 * @param diameter the Diameter that is calculated for this signal
+	 */
+	public void setGeometricalDiameter (double diameter) {
+		this.geometricalDiameter = diameter;
 	}
 
 

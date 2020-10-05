@@ -12,6 +12,7 @@ import rzahoransky.utils.RefreshTimeCounter;
 public class SimpleDQLookupDiameterExtractor extends AbstractDQPipelineElement {
 	
 	MeasureSetUp setup = MeasureSetUp.getInstance();
+	//Simple DQ-Lookup correctly uses diameter so that no conversion is needed to print out the result
 	SimpleDQLookup lookup = new SimpleDQLookup(setup.getMieList(0), setup.getMieList(1), setup.getMieList(2));
 	boolean warningShown = false;
 	private MieList wl1;
