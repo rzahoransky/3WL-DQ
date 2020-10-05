@@ -14,7 +14,10 @@ public class SimpleDQLookup {
 				double dq1 = wl1.get(i).getIntegratedQext().get(sigma) / wl2.get(i).getIntegratedQext().get(sigma);
 				double dq2 = wl2.get(i).getIntegratedQext().get(sigma) / wl3.get(i).getIntegratedQext().get(sigma);
 				XYZPoint p = new XYZPoint(dq1, dq2);
-				p.diameter=wl1.get(i).getRadius()*2;
+				//use diameter as lookup key here instead of radius. 
+				//Diameter is used to display results. 
+				//This makes printing the result straight forward
+				p.diameter=wl1.get(i).getRadius()*2; 
 				p.sigma=sigma;
 				tree.add(p);
 			}
