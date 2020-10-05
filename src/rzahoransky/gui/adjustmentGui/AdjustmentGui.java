@@ -17,7 +17,7 @@ import rzahoransky.dqpipeline.DQPipeline;
 import rzahoransky.dqpipeline.analogueAdapter.GenericNIDaqAdapter;
 import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
 import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.FiveWLExtractor;
-import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.RawDataExtractorFactory;
+import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.RawVoltageExtractorFactory;
 import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.ThreeWLMeasurePoints;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
@@ -107,7 +107,7 @@ public class AdjustmentGui extends JFrame implements DQSignalListener {
 		//Look for triggers
 		triggerMarker = MarkerFactory.getPeriodMarker();
 		//extract single periods
-		valueExtractor = RawDataExtractorFactory.getRawDataExtractor();
+		valueExtractor = RawVoltageExtractorFactory.getRawDataExtractor();
 		//valueExtractor.useOffset(true);
 		//extract transmissions
 		transmissionExtractor = new TransmissionExtractor(false);

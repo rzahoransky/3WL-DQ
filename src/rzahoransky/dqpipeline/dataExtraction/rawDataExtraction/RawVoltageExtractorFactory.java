@@ -4,7 +4,7 @@ import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.gui.measureSetup.MeasureSetupEntry;
 import rzahoransky.utils.MeasureSetUp;
 
-public class RawDataExtractorFactory {
+public class RawVoltageExtractorFactory {
 	
 	public static AbstractRawDataExtractor getRawDataExtractor(RawDataExtractorType type) {
 		switch (type) {

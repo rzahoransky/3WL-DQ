@@ -34,7 +34,7 @@ import rzahoransky.dqpipeline.dataExtraction.DQExtractor;
 import rzahoransky.dqpipeline.dataExtraction.SimpleDQLookupDiameterExtractor;
 import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
 import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.FiveWLExtractor;
-import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.RawDataExtractorFactory;
+import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.RawVoltageExtractorFactory;
 import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.ThreeWLMeasurePoints;
 import rzahoransky.dqpipeline.dataWriter.AdaptiveOutptWriter;
 import rzahoransky.dqpipeline.dataWriter.OutputWriter;
@@ -175,7 +175,7 @@ public class MeasureSetupGui extends JFrame {
 
 		AbstractDQPipelineElement triggerMarker = MarkerFactory.getPeriodMarker();
 
-		AbstractDQPipelineElement rawValueExtractor = RawDataExtractorFactory.getRawDataExtractor();
+		AbstractDQPipelineElement rawValueExtractor = RawVoltageExtractorFactory.getRawDataExtractor();
 
 		DQSignal element = rawValueExtractor
 				.processDQElement(triggerMarker.processDQElement(adapter.processDQElement(null)));
@@ -256,7 +256,7 @@ public class MeasureSetupGui extends JFrame {
 		// Look for triggers
 		AbstractDQPipelineElement triggerMarker = MarkerFactory.getPeriodMarker();
 		// extract single periods
-		AbstractDQPipelineElement valueExtractor = RawDataExtractorFactory.getRawDataExtractor();
+		AbstractDQPipelineElement valueExtractor = RawVoltageExtractorFactory.getRawDataExtractor();
 
 		// extract transmissions
 		TransmissionExtractor transmissionExtractor = new TransmissionExtractor(false);

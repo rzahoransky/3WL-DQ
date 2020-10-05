@@ -26,6 +26,7 @@ public class LaserVoltageVisualizer extends AbstractDQPipelineElement{
 	
 	ChartPanel chartPanel;
 	JFrame frame;
+	//enums for measurement and reference
 	ExtractedSignalType[] types = {ExtractedSignalType.wl1wOffset, ExtractedSignalType.wl2wOffset, ExtractedSignalType.wl3wOffset, ExtractedSignalType.offset};
 	ExtractedSignalType[] typesRef = {ExtractedSignalType.wl1wOffset, ExtractedSignalType.wl2wOffset, ExtractedSignalType.wl3wOffset, ExtractedSignalType.offset};
 
@@ -60,7 +61,7 @@ public class LaserVoltageVisualizer extends AbstractDQPipelineElement{
 	
 	public void visualizeDQMeasurement (DQSignal measurement) {
 		TimeSeriesCollection collection = (TimeSeriesCollection) chartPanel.getChart().getXYPlot().getDataset();
-		ExtractedSignalType[] typesToShow = {ExtractedSignalType.wl1wOffset, ExtractedSignalType.wl2wOffset, ExtractedSignalType.wl3wOffset};
+		ExtractedSignalType[] typesToShow = {ExtractedSignalType.wl1wOffset, ExtractedSignalType.wl2wOffset, ExtractedSignalType.wl3wOffset, ExtractedSignalType.offset};
 		for (ExtractedSignalType type: typesToShow) {
 			TimeSeries series = collection.getSeries(type);
 				updateSeries(measurement, series);

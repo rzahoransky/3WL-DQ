@@ -13,7 +13,7 @@ import org.jfree.chart.plot.PlotRenderingInfo;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.ui.RectangleEdge;
 
-import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.RawDataExtractorFactory;
+import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.RawVoltageExtractorFactory;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.IMeasurePoints;
 import rzahoransky.dqpipeline.listener.DQSignalListener;
@@ -25,7 +25,7 @@ public class TriggerAnnotator extends AbstractXYAnnotation implements DQSignalLi
 	private static final long serialVersionUID = 1L;
 	private volatile LinkedList<Coordinates> annotators = new LinkedList<>();
 	private int size = 15;
-	protected static final IMeasurePoints measurePoints = RawDataExtractorFactory.getRawDataExtractor().getMeasurePoints();
+	protected static final IMeasurePoints measurePoints = RawVoltageExtractorFactory.getRawDataExtractor().getMeasurePoints();
 
 
 	public TriggerAnnotator() {

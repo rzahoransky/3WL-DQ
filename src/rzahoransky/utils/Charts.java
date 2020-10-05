@@ -114,6 +114,12 @@ public class Charts {
 		return collection;
 	}
 	
+	/**
+	 * Shortcut to create {@link TimeSeriesCollection} with given {@link ExtractedSignalType} 
+	 * (simply converted to converted to String) as name
+	 * @param names
+	 * @return
+	 */
 	public static TimeSeriesCollection getDataSet(ExtractedSignalType... names) {
 		TimeSeriesCollection collection = new TimeSeriesCollection();
 		for (ExtractedSignalType s: names) {

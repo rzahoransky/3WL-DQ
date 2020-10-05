@@ -10,7 +10,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.RawDataExtractorFactory;
+import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.RawVoltageExtractorFactory;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.dqpipeline.interfaces.IMeasurePoints;
@@ -26,7 +26,7 @@ public class DQSinglePeriodMeasurementVisualizer extends AbstractDQPipelineEleme
 	JFrame frame;
 	RawSignalType[] signalTypes = {RawSignalType.ref, RawSignalType.meas, RawSignalType.mode, RawSignalType.trigger};
 	RefreshTimeCounter refresh = new RefreshTimeCounter(250);
-	protected static final IMeasurePoints measurePoints = RawDataExtractorFactory.getRawDataExtractor().getMeasurePoints();
+	protected static final IMeasurePoints measurePoints = RawVoltageExtractorFactory.getRawDataExtractor().getMeasurePoints();
 	boolean annotatorAdded = false;
 
 	public DQSinglePeriodMeasurementVisualizer(boolean showAsFrame) {

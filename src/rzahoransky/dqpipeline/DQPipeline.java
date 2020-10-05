@@ -15,7 +15,7 @@ import rzahoransky.dqpipeline.dataExtraction.DQExtractor;
 import rzahoransky.dqpipeline.dataExtraction.ProbabilityBasedDiameterExtractor;
 import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
 import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.FiveWLExtractor;
-import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.RawDataExtractorFactory;
+import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.RawVoltageExtractorFactory;
 import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.ThreeWLMeasurePoints;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AdapterInterface;
@@ -59,7 +59,7 @@ public class DQPipeline {
 		
 		DQPipelineElement triggerMarker = MarkerFactory.getPeriodMarker();
 		
-		DQPipelineElement valueExtractor = RawDataExtractorFactory.getRawDataExtractor();
+		DQPipelineElement valueExtractor = RawVoltageExtractorFactory.getRawDataExtractor();
 		
 		DQPipelineElement extractedDataVis = new LaserVoltageVisualizer(false);
 		

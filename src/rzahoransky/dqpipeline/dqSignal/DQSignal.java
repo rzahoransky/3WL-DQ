@@ -167,7 +167,7 @@ public class DQSignal {
 		return values.get(RawSignalType.ref).size();
 	}
 	
-	/** get averaged primitve values from all containing periods of the raw signal
+	/** get averaged primitive values from all containing periods of the raw signal
 	 * 
 	 * @param refMeas Reference or measurement?
 	 * @param type Offset, wl1, wl2 or wl3?
@@ -512,7 +512,7 @@ public class DQSignal {
 
 }
 
-/** class to determine measurement type**/
+/** class to determine measurement type. Determines Measurement or Reference as well as type of signal**/
 class SignalTypeHash {
 	
 	private RawSignalType refOrMeas;
