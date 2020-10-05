@@ -6,7 +6,7 @@ import rzahoransky.utils.MeasureSetUp;
 
 public class RawVoltageExtractorFactory {
 	
-	public static AbstractRawDataExtractor getRawDataExtractor(RawDataExtractorType type) {
+	public static AbstractRawVoltageExtractor getRawDataExtractor(RawDataExtractorType type) {
 		switch (type) {
 		case FiveWlExtractor:
 			return new FiveWLExtractor(new FiveWLMeasurePoints());
@@ -17,7 +17,7 @@ public class RawVoltageExtractorFactory {
 		}
 	}
 	
-	public static AbstractRawDataExtractor getRawVoltageExtractor() {
+	public static AbstractRawVoltageExtractor getRawVoltageExtractor() {
 		try {
 		String extractorType = MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.RAW_DATA_EXTRACTOR);
 		RawDataExtractorType rawExtractorToUse = RawDataExtractorType.valueOf(extractorType);

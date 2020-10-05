@@ -12,7 +12,7 @@ import rzahoransky.utils.ExtractedSignalType;
 import rzahoransky.utils.MeasureSetUp;
 import rzahoransky.utils.RawSignalType;
 
-public class ThreeWLExtracor extends AbstractRawDataExtractor {
+public class ThreeWLExtracor extends AbstractRawVoltageExtractor {
 	
 	protected boolean useOffset = true;
 	static final double wl1 = Double.parseDouble(MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.DEVICEWL1));

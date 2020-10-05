@@ -10,7 +10,7 @@ import rzahoransky.dqpipeline.interfaces.IMeasurePoints;
 import rzahoransky.utils.ExtractedSignalType;
 import rzahoransky.utils.RawSignalType;
 
-public class FiveWLExtractor extends AbstractRawDataExtractor {
+public class FiveWLExtractor extends AbstractRawVoltageExtractor {
 
 	
 	RawSignalType[] refMeas = { RawSignalType.ref, RawSignalType.meas };
