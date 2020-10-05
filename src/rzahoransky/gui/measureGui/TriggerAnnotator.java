@@ -25,7 +25,7 @@ public class TriggerAnnotator extends AbstractXYAnnotation implements DQSignalLi
 	private static final long serialVersionUID = 1L;
 	private volatile LinkedList<Coordinates> annotators = new LinkedList<>();
 	private int size = 15;
-	protected static final IMeasurePoints measurePoints = RawVoltageExtractorFactory.getRawDataExtractor().getMeasurePoints();
+	protected static final IMeasurePoints measurePoints = RawVoltageExtractorFactory.getRawVoltageExtractor().getMeasurePoints();
 
 
 	public TriggerAnnotator() {

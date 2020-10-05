@@ -175,7 +175,7 @@ public class MeasureSetupGui extends JFrame {
 
 		AbstractDQPipelineElement triggerMarker = MarkerFactory.getPeriodMarker();
 
-		AbstractDQPipelineElement rawValueExtractor = RawVoltageExtractorFactory.getRawDataExtractor();
+		AbstractDQPipelineElement rawValueExtractor = RawVoltageExtractorFactory.getRawVoltageExtractor();
 
 		DQSignal element = rawValueExtractor
 				.processDQElement(triggerMarker.processDQElement(adapter.processDQElement(null)));
@@ -256,7 +256,7 @@ public class MeasureSetupGui extends JFrame {
 		// Look for triggers
 		AbstractDQPipelineElement triggerMarker = MarkerFactory.getPeriodMarker();
 		// extract single periods
-		AbstractDQPipelineElement valueExtractor = RawVoltageExtractorFactory.getRawDataExtractor();
+		AbstractDQPipelineElement valueExtractor = RawVoltageExtractorFactory.getRawVoltageExtractor();
 
 		// extract transmissions
 		TransmissionExtractor transmissionExtractor = new TransmissionExtractor(false);

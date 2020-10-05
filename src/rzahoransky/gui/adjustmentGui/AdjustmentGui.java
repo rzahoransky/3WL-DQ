@@ -107,7 +107,7 @@ public class AdjustmentGui extends JFrame implements DQSignalListener {
 		//Look for triggers
 		triggerMarker = MarkerFactory.getPeriodMarker();
 		//extract single periods
-		valueExtractor = RawVoltageExtractorFactory.getRawDataExtractor();
+		valueExtractor = RawVoltageExtractorFactory.getRawVoltageExtractor();
 		//valueExtractor.useOffset(true);
 		//extract transmissions
 		transmissionExtractor = new TransmissionExtractor(false);

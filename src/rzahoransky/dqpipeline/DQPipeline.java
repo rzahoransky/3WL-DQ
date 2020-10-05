@@ -59,7 +59,7 @@ public class DQPipeline {
 		
 		DQPipelineElement triggerMarker = MarkerFactory.getPeriodMarker();
 		
-		DQPipelineElement valueExtractor = RawVoltageExtractorFactory.getRawDataExtractor();
+		DQPipelineElement valueExtractor = RawVoltageExtractorFactory.getRawVoltageExtractor();
 		
 		DQPipelineElement extractedDataVis = new LaserVoltageVisualizer(false);
 		

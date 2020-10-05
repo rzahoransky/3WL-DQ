@@ -26,7 +26,7 @@ public class DQSinglePeriodMeasurementVisualizer extends AbstractDQPipelineEleme
 	JFrame frame;
 	RawSignalType[] signalTypes = {RawSignalType.ref, RawSignalType.meas, RawSignalType.mode, RawSignalType.trigger};
 	RefreshTimeCounter refresh = new RefreshTimeCounter(250);
-	protected static final IMeasurePoints measurePoints = RawVoltageExtractorFactory.getRawDataExtractor().getMeasurePoints();
+	protected static final IMeasurePoints measurePoints = RawVoltageExtractorFactory.getRawVoltageExtractor().getMeasurePoints();
 	boolean annotatorAdded = false;
 
 	public DQSinglePeriodMeasurementVisualizer(boolean showAsFrame) {

@@ -17,7 +17,7 @@ public class RawVoltageExtractorFactory {
 		}
 	}
 	
-	public static AbstractRawDataExtractor getRawDataExtractor() {
+	public static AbstractRawDataExtractor getRawVoltageExtractor() {
 		try {
 		String extractorType = MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.RAW_DATA_EXTRACTOR);
 		RawDataExtractorType rawExtractorToUse = RawDataExtractorType.valueOf(extractorType);
