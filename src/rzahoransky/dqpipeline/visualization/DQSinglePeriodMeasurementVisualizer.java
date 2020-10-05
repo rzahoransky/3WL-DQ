@@ -25,7 +25,7 @@ public class DQSinglePeriodMeasurementVisualizer extends AbstractDQPipelineEleme
 	volatile ChartPanel chartPanel;
 	JFrame frame;
 	RawSignalType[] signalTypes = {RawSignalType.ref, RawSignalType.meas, RawSignalType.mode, RawSignalType.trigger};
-	RefreshTimeCounter refresh = new RefreshTimeCounter(250);
+	RefreshTimeCounter refresh = new RefreshTimeCounter(100);
 	protected static final IMeasurePoints measurePoints = RawVoltageExtractorFactory.getRawVoltageExtractor().getMeasurePoints();
 	boolean annotatorAdded = false;
 
@@ -50,10 +50,6 @@ public class DQSinglePeriodMeasurementVisualizer extends AbstractDQPipelineEleme
 
 	public ChartPanel getChartPanel() {
 		return chartPanel;
-	}
-	
-	public void setUpdateIntervallInMs(long ms) {
-		refresh = new RefreshTimeCounter(ms);
 	}
 	
 	public void visualizeDQMeasurement (DQSignal measurement) {
@@ -128,11 +124,12 @@ public class DQSinglePeriodMeasurementVisualizer extends AbstractDQPipelineEleme
 
 
 
-	private void addAnnotator() {
+	//TODO: instead of having TriggerAnnotator listen to DQPipeline: process it within this class
+	private void addAnnotator() { 
 		TriggerAnnotator triggerAnnotator = new TriggerAnnotator();
 		MeasureSetUp.getInstance().getPipeline().addNewSignalListener(triggerAnnotator);
 		chartPanel.getChart().getXYPlot().addAnnotation(triggerAnnotator);
-		annotatorAdded = true;
+		annotatorAdded = true; //so that no more annotators are added
 		
 	}
 

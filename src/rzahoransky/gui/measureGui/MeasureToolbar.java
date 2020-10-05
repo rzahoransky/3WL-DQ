@@ -18,9 +18,10 @@ public class MeasureToolbar extends JToolBar {
 	
 	public MeasureToolbar() {
 		setFloatable(false);
-		add(getPauseBtn());
+		//add(getPauseBtn());
 		add(getIoBtn());
 		add(getFactorsGuiBtn());
+		add(getShowVoltageVisualizerBtn());
 	}
 	
 	private JToggleButton getPauseBtn() {
@@ -65,6 +66,18 @@ public class MeasureToolbar extends JToolBar {
 	
 	protected JButton getIoBtn() {
 		return MeasureSetUp.getInstance().getTransmissionExtractor().getI0Btn();
+	}
+	
+	protected JButton getShowVoltageVisualizerBtn() {
+		JButton voltageBtn = new JButton("Show detector voltage");
+		voltageBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				MeasureSetUp.getInstance().getLaserVoltageVisualizer().getFrame().setVisible(true);
+			}
+		});
+		return voltageBtn;
 	}
 
 }

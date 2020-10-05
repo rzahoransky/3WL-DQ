@@ -46,6 +46,7 @@ import rzahoransky.dqpipeline.periodMarker.FiveWLMarker;
 import rzahoransky.dqpipeline.periodMarker.MarkerFactory;
 import rzahoransky.dqpipeline.simulation.FiveWLOneHeadSimulator;
 import rzahoransky.dqpipeline.visualization.DQSinglePeriodMeasurementVisualizer;
+import rzahoransky.dqpipeline.visualization.LaserVoltageVisualizer;
 import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizerChart;
 import rzahoransky.dqpipeline.visualization.TransmissionVisualizer;
 import rzahoransky.gui.adjustmentGui.AdjustmentGui;
@@ -274,16 +275,19 @@ public class MeasureSetupGui extends JFrame {
 		// Graphical Elements
 		DQSinglePeriodMeasurementVisualizer singelPeriodVisualizer = new DQSinglePeriodMeasurementVisualizer(false);
 		TransmissionVisualizer transmissionVisualizer = new TransmissionVisualizer(false);
-		// LaserVoltageVisualizer laserVoltage = new LaserVoltageVisualizer(true);
+		LaserVoltageVisualizer laserVoltage = new LaserVoltageVisualizer(false);
 		ParticleSizeVisualizerChart sizeVisualizer = new ParticleSizeVisualizerChart(false);
-
-		// create Pipeline
-		pipeline = new DQPipeline();
 
 		setup.addTransmissionVisualizer(transmissionVisualizer);
 		setup.addSinglePeriodVisualizer(singelPeriodVisualizer);
 		setup.addParticleVisualizer(sizeVisualizer);
 		setup.addTransmissionExtractor(transmissionExtractor);
+		setup.addLaserVoltageVisualizer(laserVoltage);
+		
+		// create Pipeline
+		pipeline = new DQPipeline();
+
+
 
 		// DQPipelineElement concenentrationExtractor = new
 		// ConcentrationExtractor(measureLengthInCm, wl1, wl2, wl3)
@@ -294,7 +298,7 @@ public class MeasureSetupGui extends JFrame {
 		pipeline.addPipelineElement(triggerMarker);
 		pipeline.addPipelineElement(singelPeriodVisualizer);
 		pipeline.addPipelineElement(valueExtractor);
-		// pipeline.addPipelineElement(laserVoltage);
+		pipeline.addPipelineElement(laserVoltage);
 		pipeline.addPipelineElement(transmissionExtractor);
 		pipeline.addPipelineElement(transmissionVisualizer);
 		pipeline.addPipelineElement(dqExtractor);

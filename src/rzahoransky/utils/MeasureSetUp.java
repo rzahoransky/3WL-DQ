@@ -19,6 +19,7 @@ import rzahoransky.dqpipeline.dataWriter.OutputWriter;
 import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.dqpipeline.periodMarker.MarkerType;
 import rzahoransky.dqpipeline.visualization.DQSinglePeriodMeasurementVisualizer;
+import rzahoransky.dqpipeline.visualization.LaserVoltageVisualizer;
 import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizerChart;
 import rzahoransky.dqpipeline.visualization.TransmissionVisualizer;
 import rzahoransky.gui.measureSetup.MeasureSetupEntry;
@@ -39,6 +40,7 @@ public class MeasureSetUp extends Properties{
 	private OutputWriter addOutputWriter;
 	private DQTimer timer;
 	private boolean pauseSignalWriting = false;
+	private LaserVoltageVisualizer laserVoltageVisualizer;
 	
 
 	private MeasureSetUp() {
@@ -272,6 +274,14 @@ public class MeasureSetUp extends Properties{
 	public void setPause(boolean b) {
 		pauseSignalWriting = b;
 		
+	}
+
+	public void addLaserVoltageVisualizer(LaserVoltageVisualizer laserVoltage) {
+		this.laserVoltageVisualizer = laserVoltage;
+	}
+	
+	public LaserVoltageVisualizer getLaserVoltageVisualizer() {
+		return this.laserVoltageVisualizer;
 	}
 	
 

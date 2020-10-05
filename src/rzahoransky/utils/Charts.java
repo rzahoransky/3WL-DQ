@@ -83,6 +83,17 @@ public class Charts {
 		return collection;
 	}
 	
+	public static TimeSeriesCollection getTimeSeries(TransmissionType[] names, long maxItemAge) {
+		TimeSeriesCollection collection = new TimeSeriesCollection();
+		for (TransmissionType s: names) {
+			TimeSeries series = new TimeSeries(s);
+			series.setMaximumItemAge(maxItemAge);
+			collection.addSeries(series);
+		}
+		
+		return collection;
+	}
+	
 	public static XYSeriesCollection getDataSet(TransmissionType[] names, int maxItemCount) {
 		XYSeriesCollection collection = new XYSeriesCollection();
 		for (TransmissionType s: names) {
@@ -124,6 +135,23 @@ public class Charts {
 		TimeSeriesCollection collection = new TimeSeriesCollection();
 		for (ExtractedSignalType s: names) {
 			collection.addSeries(new TimeSeries(s));
+		}
+		
+		return collection;
+	}
+	
+	/**
+	 * Shortcut to create {@link TimeSeriesCollection} with given {@link ExtractedSignalType} 
+	 * (simply converted to converted to String) as name
+	 * @param names
+	 * @return
+	 */
+	public static TimeSeriesCollection getDataSet(ExtractedSignalType[] names, int maxItems) {
+		TimeSeriesCollection collection = new TimeSeriesCollection();
+		for (ExtractedSignalType s: names) {
+			TimeSeries series = new TimeSeries(s);
+			series.setMaximumItemCount(maxItems);
+			collection.addSeries(series);
 		}
 		
 		return collection;

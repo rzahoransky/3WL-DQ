@@ -61,7 +61,7 @@ public class DQPipeline {
 		
 		DQPipelineElement valueExtractor = RawVoltageExtractorFactory.getRawVoltageExtractor();
 		
-		DQPipelineElement extractedDataVis = new LaserVoltageVisualizer(false);
+		DQPipelineElement extractedDataVis = new LaserVoltageVisualizer(true);
 		
 		DQPipelineElement transmissionExtractor = new TransmissionExtractor(true);
 		DQPipelineElement dqExtractor = new DQExtractor();

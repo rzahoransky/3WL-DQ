@@ -15,31 +15,21 @@ import org.jfree.ui.RectangleEdge;
 
 import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.RawVoltageExtractorFactory;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
+import rzahoransky.dqpipeline.dqSignal.DQSignalSinglePeriod;
 import rzahoransky.dqpipeline.interfaces.IMeasurePoints;
 import rzahoransky.dqpipeline.listener.DQSignalListener;
 import rzahoransky.utils.ExtractedSignalType;
 import rzahoransky.utils.RawSignalType;
+import rzahoransky.utils.RefreshTimeCounter;
 
 /** draws the currently used triggerpoints**/
 public class TriggerAnnotator extends AbstractXYAnnotation implements DQSignalListener {
 	private static final long serialVersionUID = 1L;
+	RefreshTimeCounter refresh = new RefreshTimeCounter(100);
 	private volatile LinkedList<Coordinates> annotators = new LinkedList<>();
-	private int size = 15;
 	protected static final IMeasurePoints measurePoints = RawVoltageExtractorFactory.getRawVoltageExtractor().getMeasurePoints();
 
-
-	public TriggerAnnotator() {
-		// TODO Auto-generated constructor stub
-	}
-
-	public void setHistorySize(int size) {
-		this.size = size;
-	}
-
-	public int getHistorySize() {
-		return size;
-	}
-
+	
 	public Color getGreyColor(double fractionOfGrey) {
 		fractionOfGrey = 1 - fractionOfGrey;
 		if (fractionOfGrey == 0) {
@@ -88,11 +78,16 @@ public class TriggerAnnotator extends AbstractXYAnnotation implements DQSignalLi
 
 	@Override
 	public void newSignal(DQSignal currentSignal) {
-		try {
-			annotators = getMarkerAnnotations(currentSignal);
-			fireAnnotationChanged();
-		} catch (IndexOutOfBoundsException e) {
-		} //this is thrown if no trigger was found. Ignore it and do not fire an annotation change event
+		if (refresh.timeForUpdate()) {
+			try {
+				// one yellow box (annotator) for each trigger
+				annotators = getMarkerAnnotations(currentSignal);
+				fireAnnotationChanged();
+			} catch (IndexOutOfBoundsException e) {
+				// this is thrown if no trigger was found. Ignore it and do not fire an
+				// annotation change event
+			}
+		} 
 	}
 
 	@Override
@@ -102,18 +97,21 @@ public class TriggerAnnotator extends AbstractXYAnnotation implements DQSignalLi
 	
 	private LinkedList<Coordinates> getMarkerAnnotations(DQSignal measurement) {
 		LinkedList<Coordinates> result = new LinkedList<>();
-		RawSignalType[] refOrMeasArray = { RawSignalType.ref, RawSignalType.meas };
-		for (ExtractedSignalType type : ExtractedSignalType.values()) {
-			double periodLength = measurement.getSinglePeriods().get(0).getPeriodLength();
-			int arrayLength = measurePoints.getRelativeMeasurePoint(type).length;
-			double start = measurePoints.getRelativeMeasurePoint(type)[0] * periodLength;
-			double end = measurePoints.getRelativeMeasurePoint(type)[arrayLength - 1] * periodLength;
+		DQSignalSinglePeriod period = measurement.getSinglePeriods().get(0);
+		RawSignalType[] refAndMeas = { RawSignalType.ref, RawSignalType.meas };
+		for (ExtractedSignalType type : ExtractedSignalType.values()) { //for all wavelengths
+			int periodLength = period.getPeriodLength();
+			int numberOfMeasurementPoints = measurePoints.getRelativeMeasurePoint(type).length;
+			//calculate from relative marker position to absolute position
+			//this shows only first and last marker position. It works only if marker positions are sorted
+			double start = measurePoints.getRelativeMeasurePoint(type)[0] * periodLength; 
+			double end = measurePoints.getRelativeMeasurePoint(type)[numberOfMeasurementPoints - 1] * periodLength;
 			end = Math.max(end, start + 1); // if there is only one marker
-			for (RawSignalType refOrMeas : refOrMeasArray) { //add for Ref and Meas signal
+			for (RawSignalType refOrMeas : refAndMeas) { //for reference and measurement
 				Coordinates coordinates = new Coordinates();
-				double y0 = measurement.getSinglePeriods().get(0).getRawSignal(refOrMeas).get((int) Math.round(start));
+				double y0 = period.getRawSignal(refOrMeas).get((int) Math.round(start));
 				// double y0 = measurement.getReference().get((int) Math.round(start));
-				double y1 = measurement.getSinglePeriods().get(0).getRawSignal(refOrMeas).get((int) Math.round(end));
+				double y1 = period.getRawSignal(refOrMeas).get((int) Math.round(end));
 				coordinates.x0 = start;
 				coordinates.x1 = end;
 				coordinates.y0 = y0;

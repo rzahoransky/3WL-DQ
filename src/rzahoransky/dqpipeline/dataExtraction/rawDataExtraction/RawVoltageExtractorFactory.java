@@ -4,6 +4,12 @@ import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.gui.measureSetup.MeasureSetupEntry;
 import rzahoransky.utils.MeasureSetUp;
 
+/**
+ * Factory to apply raw voltage extractor for three and five wavelength devices
+ * depending on property settings
+ * @author richard
+ *
+ */
 public class RawVoltageExtractorFactory {
 	
 	public static AbstractRawVoltageExtractor getRawDataExtractor(RawDataExtractorType type) {
@@ -17,11 +23,15 @@ public class RawVoltageExtractorFactory {
 		}
 	}
 	
+	/**
+	 * Returns correct RawVoltageExtractor based on property setting
+	 * @return
+	 */
 	public static AbstractRawVoltageExtractor getRawVoltageExtractor() {
 		try {
 		String extractorType = MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.RAW_DATA_EXTRACTOR);
 		RawDataExtractorType rawExtractorToUse = RawDataExtractorType.valueOf(extractorType);
-		System.out.println("Raw extractor type is: "+rawExtractorToUse.toString());
+		System.out.println("Raw voltage extractor type is: "+rawExtractorToUse.toString());
 		return getRawDataExtractor(rawExtractorToUse);
 		} catch (Exception e) {
 			System.out.println("Raw extractor FALLBACK to "+RawDataExtractorType.FiveWlExtractor.toString());

@@ -38,6 +38,7 @@ public class ThreeWLExtracor extends AbstractRawVoltageExtractor {
 		if (!in.isValid)
 			return in;
 
+		//get single periods within DQSignal
 		for (DQSignalSinglePeriod singlePeriod : in.getSinglePeriods()) {
 			extractValues(singlePeriod);
 		}
@@ -46,14 +47,18 @@ public class ThreeWLExtracor extends AbstractRawVoltageExtractor {
 
 	}
 	
+	/**
+	 * Extract raw voltage values for this single period
+	 * @param singlePeriod
+	 */
 	private void extractValues(DQSignalSinglePeriod singlePeriod) {
 		
 		for (RawSignalType refOrMeas: RawSignalType.values()) {
-			switch (refOrMeas) {
+			switch (refOrMeas) { //extract from same sample for ref and meas. therefor: no break
 			case ref: //no break
 			case meas:
 				for (ExtractedSignalType wavelength: ExtractedSignalType.values()) {
-					switch (wavelength) {
+					switch (wavelength) { //for all wavelengths:
 					case wl1wOffset:
 					case wl2wOffset:
 					case wl3wOffset:
@@ -79,7 +84,7 @@ public class ThreeWLExtracor extends AbstractRawVoltageExtractor {
 		ArrayList<Double> result = new ArrayList<>();
 		double offset = getOffset(singlePeriod, refOrMeas);
 		for (double measurePoint: measurePoints.getRelativeMeasurePoint(wavelength)) {
-			List<Double> rawSignal = singlePeriod.getRawSignal(refOrMeas);
+			List<Double> rawSignal = singlePeriod.getRawSignal(refOrMeas);//raw values from A/D card
 			int signalPeriodLength = singlePeriod.getPeriodLength();
 			double signalValue = rawSignal.get((int) (measurePoint * signalPeriodLength)); //signal value without offset
 			result.add(signalValue - offset); //signal value WITH OFFSET
