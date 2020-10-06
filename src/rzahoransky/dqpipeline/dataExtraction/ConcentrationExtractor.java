@@ -30,6 +30,10 @@ public class ConcentrationExtractor extends AbstractDQPipelineElement {
 		this.dq2 = new ReverseDQ(wl2, wl3);
 	}
 	
+	public void setMeasureLengthInCentimeters(double centimeters) {
+		length = centimeters;
+	}
+	
 	@Override
 	public DQSignal processDQElement(DQSignal in) {
 		
@@ -50,6 +54,7 @@ public class ConcentrationExtractor extends AbstractDQPipelineElement {
 		numberConcentration.add(getParticleConcentration(transmissionWl2, in.getSigma(), wl2.getClosestElementForDiameter(in.getGeometricalDiameter())));
 		numberConcentration.add(getParticleConcentration(transmissionWl3, in.getSigma(), wl3.getClosestElementForDiameter(in.getGeometricalDiameter())));
 		
+		//System.out.println("Qext for wl1: "+wl1.getClosestElementForDiameter(in.getGeometricalDiameter()).getIntegratedQext();
 		
 		in.setNumberConcentration(DQListUtils.getAverage(numberConcentration));
 		} catch (Exception e) {
@@ -64,6 +69,8 @@ public class ConcentrationExtractor extends AbstractDQPipelineElement {
 	/** concentration for m³. All to convert to micrometer **/
 	private double getParticleConcentration(double transmission, double sigma, MieWrapper element) {
 		//element.getIntegratedQext contains r²*Qext already!
+		//1cm = 10000 micrometer
+		//System.out.println("Qext for "+element.getWavelength()+": "+element.getIntegratedQext().get(sigma)+"Radius: "+element.getRadius());
 		double n = (-1d) * Math.log(transmission) / ((length*10000)*(Math.PI)*element.getIntegratedQext().get(sigma));
 		//old: the term included (Math.PI/4) to compensate for diameter instead of radius
 		return n*Math.pow(10, 18);
