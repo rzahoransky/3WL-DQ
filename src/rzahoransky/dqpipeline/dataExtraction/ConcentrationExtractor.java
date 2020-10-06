@@ -14,7 +14,7 @@ import rzahoransky.utils.TransmissionType;
 
 public class ConcentrationExtractor extends AbstractDQPipelineElement {
 	
-	double length;
+	double lengthInCm;
 	private MieList wl1;
 	private MieList wl2;
 	private MieList wl3;
@@ -22,7 +22,7 @@ public class ConcentrationExtractor extends AbstractDQPipelineElement {
 	private ReverseDQ dq2;
 
 	public ConcentrationExtractor(MieList wl1, MieList wl2, MieList wl3) {
-		length = Double.parseDouble(MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.MEASURELENGTH_IN_CM));
+		lengthInCm = Double.parseDouble(MeasureSetUp.getInstance().getProperty(MeasureSetupEntry.MEASURELENGTH_IN_CM));
 		this.wl1 = wl1;
 		this.wl2 = wl2;
 		this.wl3 = wl3;
@@ -31,7 +31,7 @@ public class ConcentrationExtractor extends AbstractDQPipelineElement {
 	}
 	
 	public void setMeasureLengthInCentimeters(double centimeters) {
-		length = centimeters;
+		lengthInCm = centimeters;
 	}
 	
 	@Override
@@ -42,7 +42,7 @@ public class ConcentrationExtractor extends AbstractDQPipelineElement {
 		}
 		
 		try {
-		in.setMeasureLength(length);
+		in.setMeasureLength(lengthInCm);
 		
 		double transmissionWl1 = in.getTransmission(TransmissionType.TRANSMISSIONWL1);
 		double transmissionWl2 = in.getTransmission(TransmissionType.TRANSMISSIONWL2);
@@ -71,9 +71,9 @@ public class ConcentrationExtractor extends AbstractDQPipelineElement {
 		//element.getIntegratedQext contains r²*Qext already!
 		//1cm = 10000 micrometer
 		//System.out.println("Qext for "+element.getWavelength()+": "+element.getIntegratedQext().get(sigma)+"Radius: "+element.getRadius());
-		double n = (-1d) * Math.log(transmission) / ((length*10000)*(Math.PI)*element.getIntegratedQext().get(sigma));
+		double n = (-1d) * Math.log(transmission) / ((lengthInCm*10000)*(Math.PI)*element.getIntegratedQext().get(sigma));
 		//old: the term included (Math.PI/4) to compensate for diameter instead of radius
-		return n*Math.pow(10, 18);
+		return n*Math.pow(10, 18); //um³ to m³ conversion
 	}
 
 	@Override

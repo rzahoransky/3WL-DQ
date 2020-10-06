@@ -50,9 +50,10 @@ class EndToEndTest {
 	double refractiveIndexMedium = 1.33;
 	double refractiveIndexRealSphere = 1.59;
 	double refractiveIndexImagSphere = 0;
-	static double diameter = 0.750;
-	static double concentration = 5*Math.pow(10, 14); //particles per m³
+	static double diameterMicrometer = 0.750;
+	static double concentration = 1*Math.pow(10, 14); //particles per m³
 	static double length = 0.01; //length in m
+	static double sigma = 0.003; //almost monodisperse
 	DQSignal signal;
 	static File tempfile;
 
@@ -61,7 +62,7 @@ class EndToEndTest {
 		System.out.println("Preapring test...");
 		tempfile = File.createTempFile("testMieFile", "miezip");
 		// File tempFile = File.createTempFile("MyAppName-", ".tmp");
-		// tempfile.deleteOnExit();
+		 tempfile.deleteOnExit();
 
 		System.out.println(tempfile.getAbsolutePath());
 
@@ -87,7 +88,7 @@ class EndToEndTest {
 	void getDiameter() throws IOException, WavelengthMismatchException {
 		simulateDQPipeline(tempfile);
 		System.out.println("Calculated Diameter: " + signal.getGeometricalDiameter());
-		assertEquals(diameter, signal.getGeometricalDiameter(), 0.1);
+		assertEquals(diameterMicrometer, signal.getGeometricalDiameter(), 0.1);
 	}
 	
 	@Test
@@ -95,11 +96,11 @@ class EndToEndTest {
 		simulateDQPipeline(tempfile);
 		System.out.println("Calculated concentration: " + signal.getNumberConcentration());
 		System.out.println("Expected concentration: "+concentration);
-		assertEquals(concentration, signal.getNumberConcentration(), -Math.pow(10, 10));
+		assertEquals(concentration, signal.getNumberConcentration(), concentration*0.1);
 	}
 
 	void simulateDQPipeline(File mieField) throws IOException, WavelengthMismatchException {
-		signal = generateDQSignalFor(diameter);
+		signal = generateDQSignalFor(diameterMicrometer);
 		DQReader reader = getDQReader(mieField);
 
 		MieList[] list = { reader.getWl1(), reader.getWl2(), reader.getWl3() };
@@ -113,21 +114,21 @@ class EndToEndTest {
 		concentrationExtractor.processDQElement(signal);
 	}
 
-	DQSignal generateDQSignalFor(double diameter) {
+	DQSignal generateDQSignalFor(double diameterInMicrometer) {
 		DQSignal signal = new DQSignal();
 		// Take Mie as ground truth
 		Mie wl1 = new Mie();
-		wl1.setRadiusWavelength(diameter / 2, wavelength1);
+		wl1.setRadiusWavelength(diameterInMicrometer / 2, wavelength1);
 		wl1.setHostRefractiveIndex(refractiveIndexMedium);
 		wl1.setRefractiveIndex(refractiveIndexRealSphere, refractiveIndexImagSphere);
 
 		Mie wl2 = new Mie();
-		wl2.setRadiusWavelength(diameter / 2, wavelength2);
+		wl2.setRadiusWavelength(diameterInMicrometer / 2, wavelength2);
 		wl2.setHostRefractiveIndex(refractiveIndexMedium);
 		wl2.setRefractiveIndex(refractiveIndexRealSphere, refractiveIndexImagSphere);
 
 		Mie wl3 = new Mie();
-		wl3.setRadiusWavelength(diameter / 2, wavelength3);
+		wl3.setRadiusWavelength(diameterInMicrometer / 2, wavelength3);
 		wl3.setHostRefractiveIndex(refractiveIndexMedium);
 		wl3.setRefractiveIndex(refractiveIndexRealSphere, refractiveIndexImagSphere);
 
@@ -139,11 +140,11 @@ class EndToEndTest {
 		double qext2 = wl2.qext();
 		double qext3 = wl3.qext();
 
-		System.out.println("Qext r=" + diameter / 2 + ",wl=" + wavelength1 + "n=" + refractiveIndexMedium + "/("
+		System.out.println("Qext r=" + diameterInMicrometer / 2 + ",wl=" + wavelength1 + "n=" + refractiveIndexMedium + "/("
 				+ refractiveIndexRealSphere + "-" + refractiveIndexImagSphere + "i=" + qext1);
-		System.out.println("Qext r=" + diameter / 2 + ",wl=" + wavelength2 + "n=" + refractiveIndexMedium + "/("
+		System.out.println("Qext r=" + diameterInMicrometer / 2 + ",wl=" + wavelength2 + "n=" + refractiveIndexMedium + "/("
 				+ refractiveIndexRealSphere + "-" + refractiveIndexImagSphere + "i=" + qext2);
-		System.out.println("Qext r=" + diameter / 2 + ",wl=" + wavelength3 + "n=" + refractiveIndexMedium + "/("
+		System.out.println("Qext r=" + diameterInMicrometer / 2 + ",wl=" + wavelength3 + "n=" + refractiveIndexMedium + "/("
 				+ refractiveIndexRealSphere + "-" + refractiveIndexImagSphere + "i=" + qext3);
 		System.out.println("DQ 1 is: " + wl1.qext() / wl2.qext() + ", DQ 2 is: " + wl2.qext() / wl3.qext());
 	
@@ -156,10 +157,12 @@ class EndToEndTest {
 		signal.setWL3(wavelength3);
 		
 		//append transmission
-		double radiusInMeter = (diameter/1000000d)/2d;
-		double transmissionWL1 = Math.exp(-1d * concentration * length * Math.PI * Math.pow(radiusInMeter/2d, 2) * qext1);
-		double transmissionWL2 = Math.exp(-1d * concentration * length * Math.PI * Math.pow(radiusInMeter/2d, 2) * qext2);
-		double transmissionWL3 = Math.exp(-1d * concentration * length * Math.PI * Math.pow(radiusInMeter/2d, 2) * qext3);
+		double radiusInMeter = (diameterInMicrometer/1000000d)/2d;
+		double concentrationInCubicMicrometer = concentration / Math.pow(10, 18);
+		double lengthInMicrometer = length * Math.pow(10, 6);
+		double transmissionWL1 = Math.exp(-1d * concentrationInCubicMicrometer * lengthInMicrometer * Math.PI * Math.pow(diameterInMicrometer/2, 2) * qext1);
+		double transmissionWL2 = Math.exp(-1d * concentrationInCubicMicrometer * lengthInMicrometer * Math.PI * Math.pow(diameterInMicrometer/2, 2) * qext2);
+		double transmissionWL3 = Math.exp(-1d * concentrationInCubicMicrometer * lengthInMicrometer * Math.PI * Math.pow(diameterInMicrometer/2, 2) * qext3);
 		
 		System.out.println("Transmission WL1: "+transmissionWL1+", WL2: "+transmissionWL2+", WL3: "+transmissionWL3);
 		
@@ -182,7 +185,7 @@ class EndToEndTest {
 		mieCalc.setParticles(new LatexInWaterPreset());
 
 		// set sigma to a low value
-		mieCalc.setSigmas(new FixedSigmaParameter(0.001));
+		mieCalc.setSigmas(new FixedSigmaParameter(sigma));
 
 		mieCalc.setOutputFile(tempfile);
 
