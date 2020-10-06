@@ -15,6 +15,7 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -145,6 +146,9 @@ public class MeasureSetupGui extends JFrame {
 			}
 		});
 		add(adjust, c);
+		
+		c.gridx++;
+		add(getAboutBtn(),c);
 
 		// START Button
 
@@ -376,6 +380,26 @@ public class MeasureSetupGui extends JFrame {
 		});
 		// startBtn.setBorder(BorderFactory.createEtchedBorder());
 		return startBtn;
+	}
+	
+	private JButton getAboutBtn() {
+		JButton abtbtn = new JButton("about...");
+		JFrame about = new JFrame("About");
+		about.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		JLabel text = new JLabel("<html>3WL-DQ 2020-10<b> by Richard Markus Zahoransky <br> r.zahoransky@gmx.de </b> for Wizard DQ "
+				+ "<br><br> this software contains the apache commons libraries and the JFreeChart library"
+				+ "</html>");
+		about.setSize(300, 200);
+		about.add(text);
+		
+		abtbtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				about.setVisible(true);
+			}
+		});
+		return abtbtn;
 	}
 
 }
