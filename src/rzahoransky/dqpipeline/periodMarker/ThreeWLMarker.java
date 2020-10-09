@@ -18,12 +18,14 @@ public class ThreeWLMarker extends AbstractDQPipelineElement {
 	public DQSignal processDQElement(DQSignal in) {
 		DQSignal element = in;
 		
-		//search for 6V mark in reference signal
+		//search for 3.5V mark in reference signal
+		double threshold = 3.5;
+		
 		for (int i = 1;i<element.get(RawSignalType.ref).size();i++) {
 			double first = element.get(RawSignalType.ref).get(i-1);
 			double second = element.get(RawSignalType.ref).get(i);
 			
-			if (second>6 && first<6) {
+			if (second>threshold && first<threshold) {
 				element.addPeriodMark(i);
 			}
 		}
