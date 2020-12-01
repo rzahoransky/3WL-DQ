@@ -30,9 +30,9 @@ import rzahoransky.utils.TransmissionType;
  */
 public class FactorsGui extends JFrame implements DQSignalListener, ListSelectionListener, KeyListener {
 	
-	protected static HashSet<FactorHash> factors = new HashSet<>();
-	protected static JList<FactorHash> factorList;
-	protected static DefaultListModel<FactorHash> model = new DefaultListModel<>();
+	protected static HashSet<FactorElement> factors = new HashSet<>();
+	protected static JList<FactorElement> factorList;
+	protected static DefaultListModel<FactorElement> model = new DefaultListModel<>();
 	JScrollPane scroll;
 	
 	public FactorsGui() {
@@ -63,11 +63,14 @@ public class FactorsGui extends JFrame implements DQSignalListener, ListSelectio
 		
 	}
 
-	/** since factors are set elsewhere: Test if this factor is already in the list**/
+	/** since factors are set elsewhere: Test if this factor is already in the list.
+	 * If not: populate the list accordingly**/
 	@Override
 	public void newSignal(DQSignal currentSignal) {
-		FactorHash hash = new FactorHash(currentSignal);
-		if (!factors.contains(hash)) {
+		//TODO: this could be made more efficient by including a boolean into the DQSignal
+		//from TransmissionExtractor telling if a new factor was set
+		FactorElement hash = new FactorElement(currentSignal); //extract factors from this element
+		if (!factors.contains(hash)) { //if it is not yet in the GUI: add it
 			model.addElement(hash);
 			factorList.setSelectedValue(hash, true);
 			factors.add(hash);
@@ -79,7 +82,7 @@ public class FactorsGui extends JFrame implements DQSignalListener, ListSelectio
 	@Override
 	public void valueChanged(ListSelectionEvent arg0) {
 		if (!arg0.getValueIsAdjusting()) {
-			FactorHash factor = factorList.getSelectedValue();
+			FactorElement factor = factorList.getSelectedValue();
 			for (TransmissionType type: TransmissionType.values()) {
 				MeasureSetUp.getInstance().getTransmissionExtractor().setFactor(type, factor.getFactor(type));
 			}
@@ -91,7 +94,7 @@ public class FactorsGui extends JFrame implements DQSignalListener, ListSelectio
 	public void keyPressed(KeyEvent arg0) {
 		int code=arg0.getKeyCode();
 		if(code==KeyEvent.VK_DELETE) {
-			FactorHash current = factorList.getSelectedValue();
+			FactorElement current = factorList.getSelectedValue();
 			factorList.removeListSelectionListener(this);
 			model.removeElement(current);
 			factors.remove(current);
@@ -120,8 +123,9 @@ public class FactorsGui extends JFrame implements DQSignalListener, ListSelectio
 
 }
 
-class FactorHash {
+class FactorElement {
 	
+	//list of factors for this object
 	double factorWL1 = 0;
 	double factorWL2 = 0;
 	double factorWL3 = 0;
@@ -129,7 +133,7 @@ class FactorHash {
 	NumberFormat nformat = new DecimalFormat("0.000");
 	SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
 	
-	public FactorHash(DQSignal in) {
+	public FactorElement(DQSignal in) {
 		setFactor(in, true);
 	}
 	
@@ -168,8 +172,8 @@ class FactorHash {
 		if (setTimeStamp)
 			time = in.getTimeStamp();
 		
-		for (TransmissionType factor: TransmissionType.values()) {
-			setFactor(factor, in.getFactor(factor), false); //no need to re-set timestamp here
+		for (TransmissionType wavelength: TransmissionType.values()) {
+			setFactor(wavelength, in.getFactor(wavelength), false); //no need to re-set timestamp here
 		}
 	}
 	
@@ -200,7 +204,7 @@ class FactorHash {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		FactorHash other = (FactorHash) obj;
+		FactorElement other = (FactorElement) obj;
 		if (Double.doubleToLongBits(factorWL1) != Double.doubleToLongBits(other.factorWL1))
 			return false;
 		if (Double.doubleToLongBits(factorWL2) != Double.doubleToLongBits(other.factorWL2))

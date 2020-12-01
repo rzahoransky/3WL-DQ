@@ -31,6 +31,8 @@ public class ThreeWLExtracor extends AbstractRawVoltageExtractor {
 	@Override
 	public DQSignal processDQElement(DQSignal in) {
 		
+		//define which wavelengths are used in this signal
+		//this is required for 5WL-Device which can switch between different wavelength configurations
 		in.setWL1(wl1);
 		in.setWL2(wl2);
 		in.setWL3(wl3);
@@ -40,7 +42,7 @@ public class ThreeWLExtracor extends AbstractRawVoltageExtractor {
 
 		//get single periods within DQSignal
 		for (DQSignalSinglePeriod singlePeriod : in.getSinglePeriods()) {
-			extractValues(singlePeriod);
+			extractValues(singlePeriod); //process each single signal period
 		}
 		
 		return in;
@@ -82,7 +84,7 @@ public class ThreeWLExtracor extends AbstractRawVoltageExtractor {
 	
 	private List<Double> extractValue(DQSignalSinglePeriod singlePeriod, RawSignalType refOrMeas, ExtractedSignalType wavelength) {
 		ArrayList<Double> result = new ArrayList<>();
-		double offset = getOffset(singlePeriod, refOrMeas);
+		double offset = getOffset(singlePeriod, refOrMeas); //get the offset
 		for (double measurePoint: measurePoints.getRelativeMeasurePoint(wavelength)) {
 			List<Double> rawSignal = singlePeriod.getRawSignal(refOrMeas);//raw values from A/D card
 			int signalPeriodLength = singlePeriod.getPeriodLength();
