@@ -63,6 +63,7 @@ public class FactorsGui extends JFrame implements DQSignalListener, ListSelectio
 		
 	}
 
+	/** since factors are set elsewhere: Test if this factor is already in the list**/
 	@Override
 	public void newSignal(DQSignal currentSignal) {
 		FactorHash hash = new FactorHash(currentSignal);
@@ -168,7 +169,7 @@ class FactorHash {
 			time = in.getTimeStamp();
 		
 		for (TransmissionType factor: TransmissionType.values()) {
-			setFactor(factor, in.getFactor(factor), false);
+			setFactor(factor, in.getFactor(factor), false); //no need to re-set timestamp here
 		}
 	}
 	

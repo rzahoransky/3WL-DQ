@@ -29,6 +29,11 @@ public class TransmissionExtractor extends AbstractDQPipelineElement {
 			showI0Button();
 	}
 	
+	/**
+	 * Change the factor from external (e.g. the factor GUI to jump back to a previous factor
+	 * @param type which wavelength
+	 * @param factor what is the factor for this wavelength
+	 */
 	public void setFactor(TransmissionType type, double factor) {
 		switch (type) {
 		case TRANSMISSIONWL1:
@@ -45,6 +50,7 @@ public class TransmissionExtractor extends AbstractDQPipelineElement {
 		}
 	}
 
+	//Factors are to be set from the next measurement
 	@Override
 	public DQSignal processDQElement(DQSignal in) {
 
@@ -58,6 +64,7 @@ public class TransmissionExtractor extends AbstractDQPipelineElement {
 			getTransmission(period, in);
 		}
 		
+		//save the factor into the measurement element
 		in.setFactor(TransmissionType.TRANSMISSIONWL1, factors.get(ExtractedSignalType.wl1wOffset));
 		in.setFactor(TransmissionType.TRANSMISSIONWL2, factors.get(ExtractedSignalType.wl2wOffset));
 		in.setFactor(TransmissionType.TRANSMISSIONWL3, factors.get(ExtractedSignalType.wl3wOffset));
@@ -104,6 +111,10 @@ public class TransmissionExtractor extends AbstractDQPipelineElement {
 		
 	}
 
+	/**
+	 * Extract the factor or the absolute transmission from the given element
+	 * @param element the current measurement including reference and measurement
+	 */
 	private void setFactors(DQSignal element) {
 
 		for (ExtractedSignalType wl : wlSignals) {

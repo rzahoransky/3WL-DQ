@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.Properties;
 
 import calculation.MieList;
+import presets.Wavelengths;
 import rzahoransky.dqpipeline.DQPipeline;
 import rzahoransky.dqpipeline.dataExtraction.ConcentrationExtractor;
 import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
@@ -88,6 +89,42 @@ public class MeasureSetUp extends Properties{
 		setProperty(MeasureSetupEntry.OUTPUTFILE, outputFile.getAbsolutePath());
 	}
 	
+	public void setUseReference(Wavelengths wl, boolean useReference) {
+		String useReferenceString = Boolean.toString(useReference);
+		switch (wl) {
+		case WL1:
+			setProperty(MeasureSetupEntry.USE_REFERENCE_WL1, useReferenceString);
+			break;
+		case WL2:
+			setProperty(MeasureSetupEntry.USE_REFERENCE_WL2, useReferenceString);
+			break;
+		case WL3:
+			setProperty(MeasureSetupEntry.USE_REFERENCE_WL3, useReferenceString);
+			break;
+		default:
+			break;
+		}
+	}
+	
+	public boolean getUseReference(Wavelengths wl) {
+		switch (wl) {
+		case WL1:
+			return Boolean.parseBoolean(getProperty(MeasureSetupEntry.USE_REFERENCE_WL1));
+		case WL2:
+			return Boolean.parseBoolean(getProperty(MeasureSetupEntry.USE_REFERENCE_WL2));
+		case WL3:
+			return Boolean.parseBoolean(getProperty(MeasureSetupEntry.USE_REFERENCE_WL3));
+		default:
+			return true;
+		}
+	}
+	
+	/**
+	 * Wrapper to get properties directly from {@link MeasureSetUp} enum. 
+	 * Includes fallback if no property is set
+	 * @param entry the property to get
+	 * @return the property or the default value if the property is not set
+	 */
 	public String getProperty(MeasureSetupEntry entry) {
 		String property = getProperty(entry.toString());
 		if (property == null) { //fallback if no property file found
@@ -124,6 +161,12 @@ public class MeasureSetUp extends Properties{
 				return "0.1";
 			case USE_ADAPTIVE_OUTPUT_WRITER:
 				return "false";
+			case USE_REFERENCE_WL1:
+				return "true";
+			case USE_REFERENCE_WL2:
+				return "true";
+			case USE_REFERENCE_WL3:
+				return "true";
 			default:
 				return Integer.toString(1);
 			}
