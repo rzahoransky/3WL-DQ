@@ -37,8 +37,8 @@ import storage.dqMeas.read.DQReader;
 
 /**
  * Test Diameter and concentration within DQPipeline. Values are for latex
- * particle in water, 1cm measure length with a concentration of 6 * 10^6
- * particles/m³.
+ * particle in water. Density, particle size, wavelength and refractive index
+ * set by variables
  * 
  * @author richard
  *
