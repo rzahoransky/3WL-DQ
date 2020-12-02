@@ -104,6 +104,7 @@ public class MeasureSetupGui extends JFrame {
 
 		// choose interval
 		c.anchor = GridBagConstraints.NORTH;
+		//c.gridwidth = 1;
 		// c.weighty=1;
 		c.fill = GridBagConstraints.BOTH;
 		c.gridx += 2;
@@ -111,6 +112,14 @@ public class MeasureSetupGui extends JFrame {
 		c.weightx = 1;
 		time.setBorder(test);
 		getContentPane().add(time, c);
+		
+		//add reference usage checkboxes
+		c.gridy++;
+		c.gridx=0;
+		c.weightx=1;
+		c.fill = c.HORIZONTAL;
+		c.gridwidth = c.REMAINDER;
+		add(new UseRefGui(),c);
 
 		// choose and set up mie File
 		c.gridx = 0;
