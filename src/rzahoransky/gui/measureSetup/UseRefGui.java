@@ -1,6 +1,8 @@
 package rzahoransky.gui.measureSetup;
 
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -23,8 +25,17 @@ public class UseRefGui extends JPanel{
 	}
 	
 	public UseRefGui() {
+		setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridy=0;
+		c.gridx=0;
+		c.weightx=1;
+		c.weighty=1;
+		c.fill=c.NONE;
+		c.gridwidth=1;
 		for (Wavelengths wl: Wavelengths.values()) {
-			add(new RefCheckBox(wl));
+			add(new RefCheckBox(wl),c);
+			c.gridx++;
 		}
 	}
 	

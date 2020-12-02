@@ -106,20 +106,24 @@ public class MeasureSetupGui extends JFrame {
 		c.anchor = GridBagConstraints.NORTH;
 		//c.gridwidth = 1;
 		// c.weighty=1;
-		c.fill = GridBagConstraints.BOTH;
+		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx += 2;
-		c.insets = new Insets(0, 30, 0, 0);
+		c.insets = new Insets(0, 20, 0, 0);
 		c.weightx = 1;
 		time.setBorder(test);
 		getContentPane().add(time, c);
 		
 		//add reference usage checkboxes
+		c.insets = new Insets(0, 0, 0, 0);
 		c.gridy++;
 		c.gridx=0;
-		c.weightx=1;
-		c.fill = c.HORIZONTAL;
-		c.gridwidth = c.REMAINDER;
-		add(new UseRefGui(),c);
+		c.weightx=0;
+		c.anchor = GridBagConstraints.BASELINE;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridwidth=GridBagConstraints.REMAINDER;
+		UseRefGui refGui = new UseRefGui();
+		refGui.setBorder(test);
+		getContentPane().add(refGui,c);
 
 		// choose and set up mie File
 		c.gridx = 0;
@@ -235,7 +239,7 @@ public class MeasureSetupGui extends JFrame {
 	}
 
 	private void setupFrame() {
-		setSize(600, 650);
+		setSize(600, 750);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationByPlatform(true);
 		// setLayout(new GridBagLayout());
