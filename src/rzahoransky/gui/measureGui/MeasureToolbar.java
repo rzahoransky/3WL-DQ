@@ -21,6 +21,7 @@ public class MeasureToolbar extends JToolBar {
 		//add(getPauseBtn());
 		add(getIoBtn());
 		add(getFactorsGuiBtn());
+		add(new SmartModeModifier());
 		add(getShowVoltageVisualizerBtn());
 	}
 	
