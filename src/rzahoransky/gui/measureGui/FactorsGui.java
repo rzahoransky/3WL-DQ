@@ -49,19 +49,8 @@ public class FactorsGui extends JFrame implements DQSignalListener, ListSelectio
 		
 		factorList.addListSelectionListener(this);
 		factorList.addKeyListener(this);
-		
-		addCloseListener(this);
 	}
 	
-	private void addCloseListener(FactorsGui factorsGui) {
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent evt) {
-				MeasureSetUp.getInstance().getPipeline().removeListener(factorsGui);
-			}
-		});
-		
-	}
 
 	/** since factors are set elsewhere: Test if this factor is already in the list.
 	 * If not: populate the list accordingly**/
