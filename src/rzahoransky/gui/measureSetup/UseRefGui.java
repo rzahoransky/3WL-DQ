@@ -11,7 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import presets.Wavelengths;
-import rzahoransky.utils.MeasureSetUp;
+import rzahoransky.utils.properties.MeasureSetUp;
 
 public class UseRefGui extends JPanel{
 

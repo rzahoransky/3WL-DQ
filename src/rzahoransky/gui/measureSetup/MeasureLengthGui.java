@@ -14,7 +14,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import rzahoransky.utils.MeasureSetUp;
+import rzahoransky.utils.properties.MeasureSetUp;
+import rzahoransky.utils.properties.MeasureSetupEntry;
 
 public class MeasureLengthGui extends JPanel implements ChangeListener{
 

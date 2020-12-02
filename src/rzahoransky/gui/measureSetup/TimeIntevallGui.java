@@ -15,7 +15,8 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import rzahoransky.utils.MeasureSetUp;
+import rzahoransky.utils.properties.MeasureSetUp;
+import rzahoransky.utils.properties.MeasureSetupEntry;
 
 public class TimeIntevallGui extends JPanel{
 	

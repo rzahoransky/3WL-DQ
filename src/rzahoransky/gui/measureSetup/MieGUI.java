@@ -26,7 +26,8 @@ import gui.FileGui;
 import gui.JMieCalcGuiGridBagLayout;
 import gui.MieParameterGui;
 import presets.Wavelengths;
-import rzahoransky.utils.MeasureSetUp;
+import rzahoransky.utils.properties.MeasureSetUp;
+import rzahoransky.utils.properties.MeasureSetupEntry;
 import storage.dqMeas.read.DQReader;
 import storage.dqMeas.read.RefIndexReader;
 

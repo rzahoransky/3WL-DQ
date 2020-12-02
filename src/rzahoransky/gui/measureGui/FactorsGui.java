@@ -20,8 +20,8 @@ import javax.swing.event.ListSelectionListener;
 
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.listener.DQSignalListener;
-import rzahoransky.utils.MeasureSetUp;
 import rzahoransky.utils.TransmissionType;
+import rzahoransky.utils.properties.MeasureSetUp;
 
 /**
  * Stores a list of previous factors

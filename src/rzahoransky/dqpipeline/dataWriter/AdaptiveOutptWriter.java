@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
 
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.utils.DQListUtils;
-import rzahoransky.utils.MeasureSetUp;
+import rzahoransky.utils.properties.MeasureSetUp;
 
 /**
  * Extends {@link OutputWriter}. This writer behaves the same except that it will

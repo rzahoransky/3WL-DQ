@@ -31,8 +31,8 @@ import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.dqSignal.DQSignalEntry;
 import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.utils.DQtype;
-import rzahoransky.utils.MeasureSetUp;
 import rzahoransky.utils.TransmissionType;
+import rzahoransky.utils.properties.MeasureSetUp;
 import storage.dqMeas.read.DQReader;
 
 /**

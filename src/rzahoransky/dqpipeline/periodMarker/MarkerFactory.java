@@ -1,8 +1,8 @@
 package rzahoransky.dqpipeline.periodMarker;
 
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
-import rzahoransky.gui.measureSetup.MeasureSetupEntry;
-import rzahoransky.utils.MeasureSetUp;
+import rzahoransky.utils.properties.MeasureSetUp;
+import rzahoransky.utils.properties.MeasureSetupEntry;
 
 public class MarkerFactory {
 	

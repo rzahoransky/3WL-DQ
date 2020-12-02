@@ -7,7 +7,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 
 import rzahoransky.dqpipeline.DQPipeline;
-import rzahoransky.utils.MeasureSetUp;
+import rzahoransky.utils.properties.MeasureSetUp;
 
 public class JDQMeas extends JFrame{
 	DQPipeline pipeline;

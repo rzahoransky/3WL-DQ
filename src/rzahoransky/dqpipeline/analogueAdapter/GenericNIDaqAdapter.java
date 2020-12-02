@@ -12,8 +12,8 @@ import kirkwood.nidaq.jna.Nicaiu;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.dqpipeline.interfaces.AdapterInterface;
-import rzahoransky.gui.measureSetup.MeasureSetupEntry;
-import rzahoransky.utils.MeasureSetUp;
+import rzahoransky.utils.properties.MeasureSetUp;
+import rzahoransky.utils.properties.MeasureSetupEntry;
 
 public class GenericNIDaqAdapter extends AbstractDQPipelineElement implements AdapterInterface {
 

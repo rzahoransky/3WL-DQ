@@ -13,9 +13,9 @@ import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.dqSignal.DQSignalSinglePeriod;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.utils.ExtractedSignalType;
-import rzahoransky.utils.MeasureSetUp;
 import rzahoransky.utils.RawSignalType;
 import rzahoransky.utils.TransmissionType;
+import rzahoransky.utils.properties.MeasureSetUp;
 
 public class TransmissionExtractor extends AbstractDQPipelineElement {
 

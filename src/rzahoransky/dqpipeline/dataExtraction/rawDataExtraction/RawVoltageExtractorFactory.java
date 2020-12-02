@@ -1,8 +1,8 @@
 package rzahoransky.dqpipeline.dataExtraction.rawDataExtraction;
 
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
-import rzahoransky.gui.measureSetup.MeasureSetupEntry;
-import rzahoransky.utils.MeasureSetUp;
+import rzahoransky.utils.properties.MeasureSetUp;
+import rzahoransky.utils.properties.MeasureSetupEntry;
 
 /**
  * Factory to apply raw voltage extractor for three and five wavelength devices

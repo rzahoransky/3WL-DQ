@@ -7,10 +7,10 @@ import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.dqSignal.DQSignalSinglePeriod;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.dqpipeline.interfaces.IMeasurePoints;
-import rzahoransky.gui.measureSetup.MeasureSetupEntry;
 import rzahoransky.utils.ExtractedSignalType;
-import rzahoransky.utils.MeasureSetUp;
 import rzahoransky.utils.RawSignalType;
+import rzahoransky.utils.properties.MeasureSetUp;
+import rzahoransky.utils.properties.MeasureSetupEntry;
 
 public class ThreeWLExtracor extends AbstractRawVoltageExtractor {
 	

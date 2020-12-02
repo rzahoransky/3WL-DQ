@@ -16,9 +16,9 @@ import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.dqpipeline.interfaces.IMeasurePoints;
 import rzahoransky.gui.measureGui.TriggerAnnotator;
 import rzahoransky.utils.Charts;
-import rzahoransky.utils.MeasureSetUp;
 import rzahoransky.utils.RawSignalType;
 import rzahoransky.utils.RefreshTimeCounter;
+import rzahoransky.utils.properties.MeasureSetUp;
 
 public class DQSinglePeriodMeasurementVisualizer extends AbstractDQPipelineElement{
 	

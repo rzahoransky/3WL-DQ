@@ -16,7 +16,7 @@ import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import gui.FileGui;
-import rzahoransky.utils.MeasureSetUp;
+import rzahoransky.utils.properties.MeasureSetUp;
 
 public class MeasureSetupGuiBackup extends JFrame{
 	

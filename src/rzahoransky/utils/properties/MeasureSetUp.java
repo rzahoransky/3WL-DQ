@@ -1,4 +1,4 @@
-package rzahoransky.utils;
+package rzahoransky.utils.properties;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -23,7 +23,7 @@ import rzahoransky.dqpipeline.visualization.DQSinglePeriodMeasurementVisualizer;
 import rzahoransky.dqpipeline.visualization.LaserVoltageVisualizer;
 import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizerChart;
 import rzahoransky.dqpipeline.visualization.TransmissionVisualizer;
-import rzahoransky.gui.measureSetup.MeasureSetupEntry;
+import rzahoransky.utils.DQTimer;
 
 public class MeasureSetUp extends Properties{
 	
@@ -42,6 +42,7 @@ public class MeasureSetUp extends Properties{
 	private DQTimer timer;
 	private boolean pauseSignalWriting = false;
 	private LaserVoltageVisualizer laserVoltageVisualizer;
+	private boolean smartModeIsEnabled = true;
 	
 
 	private MeasureSetUp() {
@@ -325,6 +326,11 @@ public class MeasureSetUp extends Properties{
 	
 	public LaserVoltageVisualizer getLaserVoltageVisualizer() {
 		return this.laserVoltageVisualizer;
+	}
+
+	public void smartModeIsEnabled(boolean selected) {
+		this.smartModeIsEnabled  = selected;
+		
 	}
 	
 
