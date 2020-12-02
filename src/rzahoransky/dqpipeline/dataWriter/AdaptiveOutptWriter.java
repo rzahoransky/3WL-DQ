@@ -92,8 +92,5 @@ public class AdaptiveOutptWriter extends OutputWriter implements MeasureSetupCha
 			//System.out.println("Smart mode enabled?: "+isEnabled);
 			smartMode = isEnabled;
 		}
-			
-		
 	}
-
 }
