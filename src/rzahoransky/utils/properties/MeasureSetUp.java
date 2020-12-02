@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.Properties;
 
 import calculation.MieList;
@@ -43,6 +44,7 @@ public class MeasureSetUp extends Properties{
 	private boolean pauseSignalWriting = false;
 	private LaserVoltageVisualizer laserVoltageVisualizer;
 	private boolean smartModeIsEnabled = true;
+	private LinkedList<MeasureSetupChangeListener> listeners = new LinkedList<>();
 	
 
 	private MeasureSetUp() {
@@ -328,9 +330,26 @@ public class MeasureSetUp extends Properties{
 		return this.laserVoltageVisualizer;
 	}
 
-	public void smartModeIsEnabled(boolean selected) {
-		this.smartModeIsEnabled  = selected;
-		
+	public void setSmartModeEnabled(boolean enable) {
+		this.smartModeIsEnabled  = enable;
+		informListener(MeasureSetupEntry.SMART_MODE_ENABLED);
+	}
+	
+	public boolean getSmartModeEnabled() {
+		return smartModeIsEnabled;
+	}
+	
+	public void addListener(MeasureSetupChangeListener listener) {
+		listeners.add(listener);
+	}
+	
+	public void removeListener(MeasureSetupChangeListener listener) {
+		listeners.remove(listener);
+	}
+	
+	protected void informListener(MeasureSetupEntry changedElement) {
+		for (MeasureSetupChangeListener listener:listeners)
+			listener.propertyChanged(changedElement);
 	}
 	
 
