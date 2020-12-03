@@ -10,6 +10,7 @@ import rzahoransky.dqpipeline.interfaces.AdapterInterface;
 public class ThreeWLOneHeadSimulator extends AbstractDQPipelineElement implements AdapterInterface{
 	
 	int step = 0;
+	long sleep = 60;
 	int periodLength = 160;
 	int sampleSize = 400;
 	Random r = new Random();
@@ -45,10 +46,20 @@ public class ThreeWLOneHeadSimulator extends AbstractDQPipelineElement implement
 				
 		subsetMeasure.addAll(measure.subList(offset, offset+sampleSize));
 		subsetReference.addAll(reference.subList(offset, offset+sampleSize));
+		
+		//create trigger and mode with 0 values
+		ArrayList<Double> mode = new ArrayList<>();
+		ArrayList<Double> trigger = new ArrayList<>();
+		
+		for (int i = 0; i<subsetReference.size(); i++) {
+			mode.add(0d);
+			trigger.add(0d);
+		}
 
 		
 		
-		DQSignal result = new DQSignal(subsetReference, subsetMeasure);
+		//DQSignal result = new DQSignal(subsetReference, subsetMeasure);
+		DQSignal result = new DQSignal(subsetReference, subsetMeasure, mode, trigger);
 		return result;
 		
 		
@@ -63,23 +74,23 @@ public class ThreeWLOneHeadSimulator extends AbstractDQPipelineElement implement
 		//20% steps
 		
 		for (step = 0;step<0.2*periodLength;step++) {
-			measure.add(r.nextDouble()*0.5+5); //measure:5V+/-0.5V
-			reference.add(r.nextDouble()*0.5+7); //reference: 7V +/-0.5V
+			measure.add(r.nextDouble()*0.1+5); //measure:5V+/-0.5V
+			reference.add(r.nextDouble()*0.1+7); //reference: 7V +/-0.5V
 		}
 		
 		for (;step<0.4*periodLength;step++) {
-			measure.add(r.nextDouble()*0.5+4); //measure:4V+/-0.5V
-			reference.add(r.nextDouble()*0.5+5); //reference: 5V +/-0.5V
+			measure.add(r.nextDouble()*0.1+4); //measure:4V+/-0.5V
+			reference.add(r.nextDouble()*0.1+5); //reference: 5V +/-0.5V
 		}
 		
 		for (;step<0.6*periodLength;step++) {
-			measure.add(r.nextDouble()*0.3+3); //measure:3V+/-0.3V
-			reference.add(r.nextDouble()*0.3+4); //reference: 4V +/-0.3V
+			measure.add(r.nextDouble()*0.01+3); //measure:3V+/-0.3V
+			reference.add(r.nextDouble()*0.01+4); //reference: 4V +/-0.3V
 		}
 		
 		for (;step<periodLength;step++) {
-			measure.add(r.nextDouble()*0.3+0); //measure:0V+/-0.3V
-			reference.add(r.nextDouble()*0.2-2); //reference: -2V +/-0.2V
+			measure.add(r.nextDouble()*0.1+0); //measure:0V+/-0.3V
+			reference.add(r.nextDouble()*0.1-2); //reference: -2V +/-0.2V
 		}
 		
 		DQSignal current = new DQSignal(reference, measure);
@@ -90,6 +101,11 @@ public class ThreeWLOneHeadSimulator extends AbstractDQPipelineElement implement
 
 	@Override
 	public DQSignal processDQElement(DQSignal in) {
+		try {
+			Thread.sleep(sleep);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		return generateMeasurement();
 		
 	}

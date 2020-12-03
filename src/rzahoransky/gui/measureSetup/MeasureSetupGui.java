@@ -46,6 +46,7 @@ import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.dqpipeline.periodMarker.FiveWLMarker;
 import rzahoransky.dqpipeline.periodMarker.MarkerFactory;
 import rzahoransky.dqpipeline.simulation.FiveWLOneHeadSimulator;
+import rzahoransky.dqpipeline.simulation.ThreeWLOneHeadSimulator;
 import rzahoransky.dqpipeline.visualization.DQSinglePeriodMeasurementVisualizer;
 import rzahoransky.dqpipeline.visualization.LaserVoltageVisualizer;
 import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizerChart;
@@ -265,7 +266,8 @@ public class MeasureSetupGui extends JFrame {
 			setup.setProperty(MeasureSetupEntry.NIADAPTER, adapterSelectGUI.getSelectedDevice());
 		} else {
 			JOptionPane.showMessageDialog(this, "No NiDAQ adapter. Will start in simulation mode!");
-			adapter = new FiveWLOneHeadSimulator();
+			//adapter = new FiveWLOneHeadSimulator();
+			adapter = new ThreeWLOneHeadSimulator();
 		}
 
 		MieList[] list = { wl1, wl2, wl3 };
