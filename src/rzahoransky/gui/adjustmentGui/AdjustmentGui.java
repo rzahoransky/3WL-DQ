@@ -25,9 +25,9 @@ import rzahoransky.dqpipeline.listener.DQSignalListener;
 import rzahoransky.dqpipeline.periodMarker.FiveWLMarker;
 import rzahoransky.dqpipeline.periodMarker.MarkerFactory;
 import rzahoransky.dqpipeline.visualization.TransmissionVisualizer;
-import rzahoransky.gui.measureSetup.MeasureSetupEntry;
-import rzahoransky.utils.MeasureSetUp;
 import rzahoransky.utils.TransmissionType;
+import rzahoransky.utils.properties.MeasureSetUp;
+import rzahoransky.utils.properties.MeasureSetupEntry;
 
 public class AdjustmentGui extends JFrame implements DQSignalListener {
 	GridBagConstraints c;

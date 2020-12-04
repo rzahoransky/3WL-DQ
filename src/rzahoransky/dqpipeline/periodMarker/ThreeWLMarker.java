@@ -26,7 +26,7 @@ public class ThreeWLMarker extends AbstractDQPipelineElement {
 			double second = element.get(RawSignalType.ref).get(i);
 			
 			if (second>threshold && first<threshold) {
-				element.addPeriodMark(i);
+				element.addPeriodMark(i); //add this index as next period start
 			}
 		}
 		element.isValid = !element.getPeriodMarker().isEmpty();

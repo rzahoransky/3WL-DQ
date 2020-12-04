@@ -17,14 +17,14 @@ import javax.swing.JOptionPane;
 import presets.Wavelengths;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
-import rzahoransky.gui.measureSetup.MeasureSetupEntry;
 import rzahoransky.utils.DQListUtils;
 import rzahoransky.utils.DQTimer;
 import rzahoransky.utils.DQtype;
 import rzahoransky.utils.ExtractedSignalType;
-import rzahoransky.utils.MeasureSetUp;
 import rzahoransky.utils.RawSignalType;
 import rzahoransky.utils.TransmissionType;
+import rzahoransky.utils.properties.MeasureSetUp;
+import rzahoransky.utils.properties.MeasureSetupEntry;
 import storage.dqMeas.write.MieInfoWriter;
 
 public class OutputWriter extends AbstractDQPipelineElement implements Runnable{

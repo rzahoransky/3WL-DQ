@@ -12,7 +12,7 @@ import calculation.MieList;
 import charts.MieChartPanels;
 import rzahoransky.utils.Charts;
 import rzahoransky.utils.DQtype;
-import rzahoransky.utils.MeasureSetUp;
+import rzahoransky.utils.properties.MeasureSetUp;
 
 public class SingleDQGui extends JTabbedPane{
 	

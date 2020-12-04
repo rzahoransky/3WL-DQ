@@ -46,7 +46,7 @@ public class DQSignal {
 	private double length;
 	private double numberConcentration = 0;
 	
-	protected HashMap<SignalTypeHash, Double> averagedValues = new HashMap<>();
+	protected HashMap<SignalTypeCombination, Double> averagedValues = new HashMap<>();
 	
 	public boolean isValid = true;
 
@@ -167,14 +167,14 @@ public class DQSignal {
 		return values.get(RawSignalType.ref).size();
 	}
 	
-	/** get averaged primitive values from all containing periods of the raw signal
+	/** get averaged values from all periods of the raw signal
 	 * 
 	 * @param refMeas Reference or measurement?
 	 * @param type Offset, wl1, wl2 or wl3?
 	 * @return the averaged values of all containing signal periods
 	 */
 	public double getAveragedValues(RawSignalType refMeas, ExtractedSignalType type) {
-		SignalTypeHash hash = new SignalTypeHash(refMeas, type);
+		SignalTypeCombination hash = new SignalTypeCombination(refMeas, type);
 		if (averagedValues.containsKey(hash)) {
 			return averagedValues.get(hash);
 		}
@@ -197,7 +197,7 @@ public class DQSignal {
 	}
 	
 	public void setAveragedValue(RawSignalType refMeas, ExtractedSignalType type, double averagedValue) {
-		averagedValues.put(new SignalTypeHash(refMeas, type), averagedValue);
+		averagedValues.put(new SignalTypeCombination(refMeas, type), averagedValue);
 	}
 
 	public void setWL1(double d) {
@@ -517,12 +517,12 @@ public class DQSignal {
 }
 
 /** class to determine measurement type. Determines Measurement or Reference as well as type of signal**/
-class SignalTypeHash {
+class SignalTypeCombination {
 	
 	private RawSignalType refOrMeas;
 	private ExtractedSignalType type;
 
-	public SignalTypeHash(RawSignalType refOrMeas, ExtractedSignalType type) {
+	public SignalTypeCombination(RawSignalType refOrMeas, ExtractedSignalType type) {
 		this.refOrMeas = refOrMeas;
 		this.type = type;
 	}
@@ -544,7 +544,7 @@ class SignalTypeHash {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		SignalTypeHash other = (SignalTypeHash) obj;
+		SignalTypeCombination other = (SignalTypeCombination) obj;
 		if (refOrMeas != other.refOrMeas)
 			return false;
 		if (type != other.type)

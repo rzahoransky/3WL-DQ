@@ -181,7 +181,6 @@ public class DQPipeline {
 		
 		public void setInQueue(BlockingQueue<DQSignal> in) {
 			this.in = in;
-
 		}
 
 		public void setQoutQueue(BlockingQueue<DQSignal> out) {
@@ -194,7 +193,7 @@ public class DQPipeline {
 
 		@Override
 		public void run() {
-			while (run && !isInterrupted()) {
+			while (run && !isInterrupted()) { //run until it should be interrupted
 				try {
 					if (in == null) { 
 						//If there is no in-element: This is a NI Adapter (source)
@@ -203,9 +202,9 @@ public class DQPipeline {
 							out.offer(fromAdapter, 1000, TimeUnit.MILLISECONDS); 
 					} else { 
 						//normal DQPipelineElement: Get element from in-queue and offer the result of method processDQElement to the out queue
-						DQSignal elementFrompPredecessor = in.poll(1000, TimeUnit.MILLISECONDS);
-						if (elementFrompPredecessor != null)
-							out.offer(element.processDQElement(elementFrompPredecessor), 1000, TimeUnit.MILLISECONDS);
+						DQSignal elementFromPredecessor = in.poll(1000, TimeUnit.MILLISECONDS);
+						if (elementFromPredecessor != null)
+							out.offer(element.processDQElement(elementFromPredecessor), 1000, TimeUnit.MILLISECONDS);
 					}
 				} catch (InterruptedException e) {
 					// check if thread should terminate
@@ -218,7 +217,7 @@ public class DQPipeline {
 			}
 			// stop();
 			System.out.println("Thread " + element.description() + " ending...");
-			element.endProcessing();
+			element.endProcessing(); //inform this DQPipeline element to end last tasks (e.g. flush write to file)
 			return;
 		}
 		

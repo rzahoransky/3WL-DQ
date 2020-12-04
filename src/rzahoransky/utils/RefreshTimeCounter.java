@@ -1,6 +1,7 @@
 package rzahoransky.utils;
 
-import rzahoransky.gui.measureSetup.MeasureSetupEntry;
+import rzahoransky.utils.properties.MeasureSetUp;
+import rzahoransky.utils.properties.MeasureSetupEntry;
 
 public class RefreshTimeCounter {
 	

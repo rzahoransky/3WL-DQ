@@ -12,7 +12,7 @@ import org.jfree.chart.JFreeChart;
 import charts.MieChartPanels;
 import rzahoransky.dqpipeline.DQPipeline;
 import rzahoransky.utils.Charts;
-import rzahoransky.utils.MeasureSetUp;
+import rzahoransky.utils.properties.MeasureSetUp;
 
 public class DQGui extends JPanel{
 	

@@ -10,7 +10,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
 import rzahoransky.dqpipeline.DQPipeline;
-import rzahoransky.utils.MeasureSetUp;
+import rzahoransky.utils.properties.MeasureSetUp;
 
 public class MeasureToolbar extends JToolBar {
 	
@@ -21,6 +21,7 @@ public class MeasureToolbar extends JToolBar {
 		//add(getPauseBtn());
 		add(getIoBtn());
 		add(getFactorsGuiBtn());
+		add(new SmartModeModifier());
 		add(getShowVoltageVisualizerBtn());
 	}
 	

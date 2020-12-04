@@ -6,8 +6,8 @@ import calculation.MieList;
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.interfaces.AbstractDQPipelineElement;
 import rzahoransky.utils.DQtype;
-import rzahoransky.utils.MeasureSetUp;
 import rzahoransky.utils.RefreshTimeCounter;
+import rzahoransky.utils.properties.MeasureSetUp;
 
 public class SimpleDQLookupDiameterExtractor extends AbstractDQPipelineElement {
 	

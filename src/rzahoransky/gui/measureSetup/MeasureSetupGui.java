@@ -46,6 +46,7 @@ import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 import rzahoransky.dqpipeline.periodMarker.FiveWLMarker;
 import rzahoransky.dqpipeline.periodMarker.MarkerFactory;
 import rzahoransky.dqpipeline.simulation.FiveWLOneHeadSimulator;
+import rzahoransky.dqpipeline.simulation.ThreeWLOneHeadSimulator;
 import rzahoransky.dqpipeline.visualization.DQSinglePeriodMeasurementVisualizer;
 import rzahoransky.dqpipeline.visualization.LaserVoltageVisualizer;
 import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizerChart;
@@ -53,7 +54,8 @@ import rzahoransky.dqpipeline.visualization.TransmissionVisualizer;
 import rzahoransky.gui.adjustmentGui.AdjustmentGui;
 import rzahoransky.gui.measureGui.MeasureGui;
 import rzahoransky.utils.DQTimer;
-import rzahoransky.utils.MeasureSetUp;
+import rzahoransky.utils.properties.MeasureSetUp;
+import rzahoransky.utils.properties.MeasureSetupEntry;
 import storage.dqMeas.read.DQReader;
 
 public class MeasureSetupGui extends JFrame {
@@ -104,13 +106,26 @@ public class MeasureSetupGui extends JFrame {
 
 		// choose interval
 		c.anchor = GridBagConstraints.NORTH;
+		//c.gridwidth = 1;
 		// c.weighty=1;
-		c.fill = GridBagConstraints.BOTH;
+		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx += 2;
-		c.insets = new Insets(0, 30, 0, 0);
+		c.insets = new Insets(0, 20, 0, 0);
 		c.weightx = 1;
 		time.setBorder(test);
 		getContentPane().add(time, c);
+		
+		//add reference usage checkboxes
+		c.insets = new Insets(0, 0, 0, 0);
+		c.gridy++;
+		c.gridx=0;
+		c.weightx=0;
+		c.anchor = GridBagConstraints.BASELINE;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridwidth=GridBagConstraints.REMAINDER;
+		UseRefGui refGui = new UseRefGui();
+		refGui.setBorder(test);
+		getContentPane().add(refGui,c);
 
 		// choose and set up mie File
 		c.gridx = 0;
@@ -226,7 +241,7 @@ public class MeasureSetupGui extends JFrame {
 	}
 
 	private void setupFrame() {
-		setSize(600, 650);
+		setSize(600, 750);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationByPlatform(true);
 		// setLayout(new GridBagLayout());
@@ -251,7 +266,8 @@ public class MeasureSetupGui extends JFrame {
 			setup.setProperty(MeasureSetupEntry.NIADAPTER, adapterSelectGUI.getSelectedDevice());
 		} else {
 			JOptionPane.showMessageDialog(this, "No NiDAQ adapter. Will start in simulation mode!");
-			adapter = new FiveWLOneHeadSimulator();
+			//adapter = new FiveWLOneHeadSimulator();
+			adapter = new ThreeWLOneHeadSimulator();
 		}
 
 		MieList[] list = { wl1, wl2, wl3 };

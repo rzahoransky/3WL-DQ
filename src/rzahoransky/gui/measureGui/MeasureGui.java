@@ -10,7 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JToolBar;
 
 import rzahoransky.dqpipeline.DQPipeline;
-import rzahoransky.utils.MeasureSetUp;
+import rzahoransky.utils.properties.MeasureSetUp;
 
 public class MeasureGui extends JFrame {
 
