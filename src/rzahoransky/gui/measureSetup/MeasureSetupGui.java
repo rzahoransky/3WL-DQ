@@ -402,7 +402,7 @@ public class MeasureSetupGui extends JFrame {
 		JButton abtbtn = new JButton("about...");
 		JFrame about = new JFrame("About");
 		about.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		JLabel text = new JLabel("<html>3WL-DQ 2020-10a<b> by Richard Markus Zahoransky <br> r.zahoransky@gmx.de </b> for Wizard DQ "
+		JLabel text = new JLabel("<html>3WL-DQ 2020-12<b> by Richard Markus Zahoransky <br> r.zahoransky@gmx.de </b> for Wizard DQ "
 				+ "<br><br> this software contains the apache commons libraries and the JFreeChart library"
 				+ "</html>");
 		about.setSize(300, 200);
