@@ -7,6 +7,7 @@ import java.util.OptionalDouble;
 
 import rzahoransky.dqpipeline.dataExtraction.DiameterComperator;
 import rzahoransky.utils.DQListUtils;
+import rzahoransky.utils.DQTimer;
 import rzahoransky.utils.DQtype;
 import rzahoransky.utils.ExtractedSignalType;
 import rzahoransky.utils.RawSignalType;
@@ -40,6 +41,7 @@ public class DQSignal {
 	
 	private HashMap<TransmissionType, ArrayList<Double>> measuredValues = new HashMap<>();
 	private HashMap<DQtype, DQSignalEntry> dq = new HashMap<>();
+	private HashMap<DQtype, RadiusConcentrationElement> particlePropertiesFromSingleDQ = new HashMap<>();
 	
 	protected HashMap<TransmissionType, Double> factors = new HashMap<>();
 
@@ -395,6 +397,14 @@ public class DQSignal {
 	public boolean checkTransmission(double lower, double upper) {
 		return (getHighestTransmission()<upper) && (getLowestTransmission()>lower);
 	}
+	
+	public RadiusConcentrationElement getParticlePropertiesFromDQ(DQtype dqType) {
+		return particlePropertiesFromSingleDQ.get(dqType);
+	}
+	
+	public void setParticlePropertiesForDQ(DQtype dqType, RadiusConcentrationElement properties) {
+		particlePropertiesFromSingleDQ.put(dqType, properties);
+	}
 
 	@Override
 	public int hashCode() {
@@ -510,7 +520,6 @@ public class DQSignal {
 			return false;
 		return true;
 	}
-	
 	
 
 

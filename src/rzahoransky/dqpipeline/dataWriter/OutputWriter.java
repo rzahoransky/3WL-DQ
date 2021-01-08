@@ -102,6 +102,7 @@ public class OutputWriter extends AbstractDQPipelineElement implements Runnable{
 		s.append("Measure length in cm");
 		s.append("DQ1");
 		s.append("DQ2");
+		s.append("DQ3");
 		s.append("Transmission WL1");
 		s.append("Transmission WL2");
 		s.append("Transmission WL3");
@@ -116,6 +117,12 @@ public class OutputWriter extends AbstractDQPipelineElement implements Runnable{
 		s.append("Factor WL1");
 		s.append("Factor WL2");
 		s.append("Factor WL3");
+		s.append("Diameter DQ1 only");
+		s.append("Diameter DQ2 only");
+		s.append("Diameter DQ3 only");
+		s.append("Concentration DQ1 only");
+		s.append("Concentration DQ2 only");
+		s.append("Concentration DQ3 only");
 		return s.toString();
 	}
 
@@ -201,6 +208,7 @@ public class OutputWriter extends AbstractDQPipelineElement implements Runnable{
 		b.append(getAsLocale(in.getMeasureLength()));
 		b.append(in.getDQ(DQtype.DQ1).getDqValue());
 		b.append(in.getDQ(DQtype.DQ2).getDqValue());
+		b.append(in.getDQ(DQtype.DQ3).getDqValue());
 		b.append(getAsLocale(in.getTransmission(TransmissionType.TRANSMISSIONWL1)));
 		b.append(getAsLocale(in.getTransmission(TransmissionType.TRANSMISSIONWL2)));
 		b.append(getAsLocale(in.getTransmission(TransmissionType.TRANSMISSIONWL3)));
@@ -215,6 +223,12 @@ public class OutputWriter extends AbstractDQPipelineElement implements Runnable{
 		b.append(getAsLocale(in.getFactor(TransmissionType.TRANSMISSIONWL1)));
 		b.append(getAsLocale(in.getFactor(TransmissionType.TRANSMISSIONWL2)));
 		b.append(getAsLocale(in.getFactor(TransmissionType.TRANSMISSIONWL3)));
+		b.append(getAsLocale(in.getParticlePropertiesFromDQ(DQtype.DQ1).radius*2.0));
+		b.append(getAsLocale(in.getParticlePropertiesFromDQ(DQtype.DQ2).radius*2.0));
+		b.append(getAsLocale(in.getParticlePropertiesFromDQ(DQtype.DQ3).radius*2.0));
+		b.append(getAsLocale(in.getParticlePropertiesFromDQ(DQtype.DQ1).getVolumeConcentration()));
+		b.append(getAsLocale(in.getParticlePropertiesFromDQ(DQtype.DQ2).getVolumeConcentration()));
+		b.append(getAsLocale(in.getParticlePropertiesFromDQ(DQtype.DQ3).getVolumeConcentration()));
 		return b.toString() + "\r\n";
 	}
 

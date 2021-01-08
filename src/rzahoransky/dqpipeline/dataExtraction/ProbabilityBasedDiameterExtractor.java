@@ -48,7 +48,7 @@ public class ProbabilityBasedDiameterExtractor extends AbstractDQPipelineElement
 		this.wl3 = wl3;
 		dqs.put(DQtype.DQ1, new ReverseDQ(wl1, wl2));
 		dqs.put(DQtype.DQ2, new ReverseDQ(wl2, wl3));
-		//dqs.put(DQtype.DQ3, new ReverseDQ(wl1, wl3));
+		dqs.put(DQtype.DQ3, new ReverseDQ(wl1, wl3));
 	}
 
 	public ProbabilityBasedDiameterExtractor(File zippedMie) {
@@ -60,7 +60,7 @@ public class ProbabilityBasedDiameterExtractor extends AbstractDQPipelineElement
 			this.wl3 = reader.getWl3();
 			dqs.put(DQtype.DQ1, new ReverseDQ(wl1, wl2));
 			dqs.put(DQtype.DQ2, new ReverseDQ(wl2, wl3));
-			//dqs.put(DQtype.DQ3, new ReverseDQ(wl1, wl3));
+			dqs.put(DQtype.DQ3, new ReverseDQ(wl1, wl3));
 
 		} catch (IOException | WavelengthMismatchException e) {
 			e.printStackTrace();
@@ -92,7 +92,8 @@ public class ProbabilityBasedDiameterExtractor extends AbstractDQPipelineElement
 		HashMap<DQtype, List<ReverseDQEntry>> dqHits = new HashMap<>();
 
 		for (DQtype dqType : dqs.keySet()) {
-			dqHits.put(dqType, getDQHits(signal.getDQ(dqType))); // get all possible diameter matches from dqs
+			// get all possible diameter matches from dqs for given signal
+			dqHits.put(dqType, getDQHits(signal.getDQ(dqType))); 
 		}
 
 		ArrayList<DiameterComperator> comperators = new ArrayList<>();
@@ -105,8 +106,8 @@ public class ProbabilityBasedDiameterExtractor extends AbstractDQPipelineElement
 		}
 
 		//LinkedList<DQtype> remainingDQs = new LinkedList<>(Arrays.asList(dqs.keySet()));
-		Set<DQtype> remainingDQs = new HashSet<>(dqs.keySet());
-		remainingDQs.remove(mostHits);
+		Set<DQtype> remainingDQs = new HashSet<>(dqs.keySet()); 
+		remainingDQs.remove(mostHits); //get the remaining dqs to search for most probable particle size
 
 		for (DQtype remaining : remainingDQs) {
 			for (DiameterComperator comperator : comperators) {
@@ -122,7 +123,7 @@ public class ProbabilityBasedDiameterExtractor extends AbstractDQPipelineElement
 
 	private DiameterComperator getBestMatchingComperatorElement(ArrayList<DiameterComperator> comperators) {
 		LinkedList<DiameterComperator> result = new LinkedList<>();
-		for (DiameterComperator comp : comperators) { //filkter for null elements and element with only one match
+		for (DiameterComperator comp : comperators) { //filter for null elements and element with only one match
 			if (comp != null && comp.getSize() > 1)
 				result.add(comp);
 		}

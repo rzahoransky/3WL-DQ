@@ -32,6 +32,7 @@ import rzahoransky.dqpipeline.DQPipeline;
 import rzahoransky.dqpipeline.analogueAdapter.GenericNIDaqAdapter;
 import rzahoransky.dqpipeline.dataExtraction.ConcentrationExtractor;
 import rzahoransky.dqpipeline.dataExtraction.DQExtractor;
+import rzahoransky.dqpipeline.dataExtraction.IndividualDQSizeAndConcentrationExtractor;
 import rzahoransky.dqpipeline.dataExtraction.SimpleDQLookupDiameterExtractor;
 import rzahoransky.dqpipeline.dataExtraction.TransmissionExtractor;
 import rzahoransky.dqpipeline.dataExtraction.rawDataExtraction.FiveWLExtractor;
@@ -49,6 +50,7 @@ import rzahoransky.dqpipeline.simulation.FiveWLOneHeadSimulator;
 import rzahoransky.dqpipeline.simulation.ThreeWLOneHeadSimulator;
 import rzahoransky.dqpipeline.visualization.DQSinglePeriodMeasurementVisualizer;
 import rzahoransky.dqpipeline.visualization.LaserVoltageVisualizer;
+import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizationChartIndividualDQ;
 import rzahoransky.dqpipeline.visualization.ParticleSizeVisualizerChart;
 import rzahoransky.dqpipeline.visualization.TransmissionVisualizer;
 import rzahoransky.gui.adjustmentGui.AdjustmentGui;
@@ -284,6 +286,9 @@ public class MeasureSetupGui extends JFrame {
 
 		// calculate DQ
 		DQExtractor dqExtractor = new DQExtractor();
+		
+		//get particle sizes for individualDQ
+		AbstractDQPipelineElement individualDQParticleSizeExtractor = new IndividualDQSizeAndConcentrationExtractor(wl1, wl2, wl3);
 
 		// Calculate particles from DQ
 		// DQPipelineElement sizeExtractor = new ProbabilityBasedDiameterExtractor(wl1,wl2, wl3);
@@ -296,7 +301,12 @@ public class MeasureSetupGui extends JFrame {
 		DQSinglePeriodMeasurementVisualizer singelPeriodVisualizer = new DQSinglePeriodMeasurementVisualizer(false);
 		TransmissionVisualizer transmissionVisualizer = new TransmissionVisualizer(false);
 		LaserVoltageVisualizer laserVoltage = new LaserVoltageVisualizer(false);
-		ParticleSizeVisualizerChart sizeVisualizer = new ParticleSizeVisualizerChart(false);
+		
+		//"single DQ1/DQ2" Visualization
+		//ParticleSizeVisualizerChart sizeVisualizer = new ParticleSizeVisualizerChart(false);
+		
+		//Visualization with possibility to show diameter based on DQ1, DQ2 or DQ3 only
+		ParticleSizeVisualizerChart sizeVisualizer = new ParticleSizeVisualizationChartIndividualDQ(false);
 
 		setup.addTransmissionVisualizer(transmissionVisualizer);
 		setup.addSinglePeriodVisualizer(singelPeriodVisualizer);
@@ -322,6 +332,7 @@ public class MeasureSetupGui extends JFrame {
 		pipeline.addPipelineElement(transmissionExtractor);
 		pipeline.addPipelineElement(transmissionVisualizer);
 		pipeline.addPipelineElement(dqExtractor);
+		pipeline.addPipelineElement(individualDQParticleSizeExtractor); //required for single DQ1, DQ2 or DQ3 particle size only
 		// pipeline.addPipelineElement(new DQVisualizer());
 		pipeline.addPipelineElement(sizeExtractor);
 		pipeline.addPipelineElement(concentrationExtractor);
@@ -402,7 +413,7 @@ public class MeasureSetupGui extends JFrame {
 		JButton abtbtn = new JButton("about...");
 		JFrame about = new JFrame("About");
 		about.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		JLabel text = new JLabel("<html>3WL-DQ 2020-10a<b> by Richard Markus Zahoransky <br> r.zahoransky@gmx.de </b> for Wizard DQ "
+		JLabel text = new JLabel("<html>3WL-DQ 2021-01<b> by Richard Markus Zahoransky <br> r.zahoransky@gmx.de </b> for Wizard DQ "
 				+ "<br><br> this software contains the apache commons libraries and the JFreeChart library"
 				+ "</html>");
 		about.setSize(300, 200);

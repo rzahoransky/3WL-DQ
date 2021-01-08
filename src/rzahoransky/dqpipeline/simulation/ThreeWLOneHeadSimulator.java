@@ -32,13 +32,27 @@ public class ThreeWLOneHeadSimulator extends AbstractDQPipelineElement implement
 	JSlider offsetRef = new JSlider(JSlider.VERTICAL,-1000,1000,1000);
 
 	public ThreeWLOneHeadSimulator() {
+		setControls();
 		displayControls();
 	}
 	
 	public ThreeWLOneHeadSimulator(int periodLength, int sampleSize) {
 		this.periodLength=periodLength;
 		this.sampleSize=sampleSize;
+		setControls();
 		displayControls();
+	}
+	
+	public void setControls() {
+		wl1Meas.setValue(800);
+		wl2Meas.setValue(600);
+		wl3Meas.setValue(400);
+		offsetMeas.setValue(200);
+		
+		wl1Ref.setValue(850);
+		wl2Ref.setValue(650);
+		wl3Ref.setValue(450);
+		offsetRef.setValue(250);
 	}
 	
 	public void displayControls() {

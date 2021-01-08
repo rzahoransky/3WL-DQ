@@ -2,12 +2,14 @@ package rzahoransky.utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.OptionalDouble;
 import java.util.OptionalLong;
 
 import rzahoransky.dqpipeline.dqSignal.DQSignal;
 import rzahoransky.dqpipeline.dqSignal.DQSignalEntry;
+import rzahoransky.dqpipeline.dqSignal.RadiusConcentrationElement;
 import rzahoransky.dqpipeline.interfaces.DQPipelineElement;
 
 public class DQListUtils {
@@ -106,6 +108,7 @@ public class DQListUtils {
 	public static DQSignal getAverageDQSignal(List<DQSignal> list) {
 		DQSignal out = new DQSignal();
 		int size = list.size();
+		//create arrays to store individuals values which will be averaged later
 		ArrayList<Long> nanoSeconds = new ArrayList<>(size);
 		ArrayList<Long> timestamp = new ArrayList<>(size);
 		ArrayList<Double> diameters = new ArrayList<>(size);
@@ -113,6 +116,7 @@ public class DQListUtils {
 		ArrayList<Double> numberConcentrations = new ArrayList<>(size);
 		ArrayList<Double> dq1s = new ArrayList<>(size);
 		ArrayList<Double> dq2s = new ArrayList<>(size);
+		ArrayList<Double> dq3s = new ArrayList<>(size);
 		ArrayList<Double> TransmissionWL1s = new ArrayList<>(size);
 		ArrayList<Double> TransmissionWL2s = new ArrayList<>(size);
 		ArrayList<Double> TransmissionWL3s = new ArrayList<>(size);
@@ -128,8 +132,14 @@ public class DQListUtils {
 		//ArrayList<Double> FactorWl1s = new ArrayList<>(size);
 		//ArrayList<Double> FactorWl2s = new ArrayList<>(size);
 		//ArrayList<Double> FactorWl3s = new ArrayList<>(size);
+		HashMap<DQtype, ArrayList<Double>> particleRadiusesFromSingleDQ = new HashMap<>();
+		HashMap<DQtype, ArrayList<Double>> particleConcentrationFromSingleDQ = new HashMap<>();
+		for (DQtype dqType: DQtype.values()) {
+			particleRadiusesFromSingleDQ.put(dqType, new ArrayList<>());
+			particleConcentrationFromSingleDQ.put(dqType, new ArrayList<>());
+		}
 
-		
+		//add all single elements into created lists
 		for (DQSignal in: list) {
 			nanoSeconds.add(in.getNanoSecondTimestamp());
 			timestamp.add(in.getTimeStamp());
@@ -138,6 +148,7 @@ public class DQListUtils {
 			numberConcentrations.add(in.getNumberConcentration());
 			dq1s.add(in.getDQ(DQtype.DQ1).getDqValue());
 			dq2s.add(in.getDQ(DQtype.DQ2).getDqValue());
+			dq3s.add(in.getDQ(DQtype.DQ3).getDqValue());
 			TransmissionWL1s.add(in.getTransmission(TransmissionType.TRANSMISSIONWL1));
 			TransmissionWL2s.add(in.getTransmission(TransmissionType.TRANSMISSIONWL2));
 			TransmissionWL3s.add(in.getTransmission(TransmissionType.TRANSMISSIONWL3));
@@ -153,8 +164,15 @@ public class DQListUtils {
 			//FactorWl1s.add(in.getFactor(TransmissionType.TRANSMISSIONWL1));
 			//FactorWl2s.add(in.getFactor(TransmissionType.TRANSMISSIONWL2));
 			//FactorWl3s.add(in.getFactor(TransmissionType.TRANSMISSIONWL3));
+			
+			for (DQtype dqType: DQtype.values()) {
+				particleRadiusesFromSingleDQ.get(dqType).add(in.getParticlePropertiesFromDQ(dqType).radius);
+				particleConcentrationFromSingleDQ.get(dqType).add(in.getParticlePropertiesFromDQ(dqType).concentrationPerm3);
+			}
+			
 		}
 		
+		//create DQSignal with averaged values
 		DQSignal last = list.get(list.size()-1);
 		
 		out.setNanoSecondTimestamp(getAverageLong(nanoSeconds));
@@ -164,6 +182,7 @@ public class DQListUtils {
 		out.setNumberConcentration(getAverage(numberConcentrations));
 		out.setDQ(new DQSignalEntry(DQtype.DQ1, list.get(0).getWL1(), list.get(0).getWL2(), getAverage(dq1s)));
 		out.setDQ(new DQSignalEntry(DQtype.DQ2, list.get(0).getWL2(), list.get(0).getWL3(), getAverage(dq2s)));
+		out.setDQ(new DQSignalEntry(DQtype.DQ3, list.get(0).getWL1(), list.get(0).getWL3(), getAverage(dq3s)));
 		out.addTransmission(TransmissionType.TRANSMISSIONWL1, getAverage(TransmissionWL1s));
 		out.addTransmission(TransmissionType.TRANSMISSIONWL2, getAverage(TransmissionWL2s));
 		out.addTransmission(TransmissionType.TRANSMISSIONWL3, getAverage(TransmissionWL3s));
@@ -176,6 +195,13 @@ public class DQListUtils {
 		out.setAveragedValue(RawSignalType.ref, ExtractedSignalType.wl3wOffset, getAverage(RefWOffset3s));
 		out.setAveragedValue(RawSignalType.ref, ExtractedSignalType.offset, getAverage(RefOffsets));
 		out.setMeasureLength(getAverage(lengths));
+		
+		for (DQtype dqType: DQtype.values()) {
+			double concentration = getAverage(particleConcentrationFromSingleDQ.get(dqType));
+			double radius = getAverage(particleRadiusesFromSingleDQ.get(dqType));
+			RadiusConcentrationElement radiusConcentration = new RadiusConcentrationElement(radius, concentration);
+			out.setParticlePropertiesForDQ(dqType, radiusConcentration);
+		}
 		
 		for (TransmissionType transmission : TransmissionType.values())
 			out.setFactor(transmission, last.getFactor(transmission));

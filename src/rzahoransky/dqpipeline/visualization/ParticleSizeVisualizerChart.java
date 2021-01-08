@@ -55,7 +55,7 @@ public class ParticleSizeVisualizerChart extends AbstractDQPipelineElement imple
 		chart.getTitle().setFont(new Font("Arial", Font.BOLD, 14));
 		// DeviationRenderer r = getRenderer();
 
-		chart.getXYPlot().setDataset(1, concentrationDataSet);
+		chart.getXYPlot().setDataset(1, concentrationDataSet); //add concentration dataset to chart
 
 		// chart.getXYPlot().setRenderer(getRenderer());
 		chart.getXYPlot().setRenderer(0, getRenderer());
@@ -108,7 +108,7 @@ public class ParticleSizeVisualizerChart extends AbstractDQPipelineElement imple
 		return dateAxis;
 	}
 
-	public ChartPanel getChartPanel() {
+	public JPanel getChartPanel() {
 		return chartPanel;
 	}
 
@@ -135,12 +135,12 @@ public class ParticleSizeVisualizerChart extends AbstractDQPipelineElement imple
 
 	}
 
-	private void updateConcentration(DQSignal measurement, YIntervalSeriesCollection concentrationDataset) {
+	protected void updateConcentration(DQSignal measurement, YIntervalSeriesCollection concentrationDataset) {
 		double concentration = Math.max(measurement.getVolumeConcentration(), Double.MIN_NORMAL);
 		concentrationDataset.getSeries(0).add(System.currentTimeMillis(), concentration, concentration, concentration);
 	}
 
-	private void updateDiameter(DQSignal measurement, YIntervalSeriesCollection collection) {
+	protected void updateDiameter(DQSignal measurement, YIntervalSeriesCollection collection) {
 		long now = System.currentTimeMillis();
 
 		YIntervalSeries diameterSeries = collection.getSeries(0);
